@@ -1,12 +1,26 @@
-{% load staticfiles %}
 <!DOCTYPE html>
-<link type="text/css" rel="stylesheet" href="{% static 'mainstyle.css' %}">
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Josef Waller</title>
-</head>
-<body>
-	<h1>Josef Waller.com</h1>
-</body>
+	<head>
+
+		{% include 'partials/links.html' %}
+
+		<title>josefwaller.com</title>
+	</head>
+	<body>
+		<meta charset="UTF-8">
+
+		{% include 'partials/header.html' %}
+		
+		<div class="container">
+			<div class="row">
+				<div class="col-md-10 col-centered">
+					<h2>josefwaller.com</h2>
+					<h5>
+						Welcome to josefwaller.com, home of cool stuff made by josefwaller. You can choose what you would like to view from the menu at the top.
+					</h5>
+				</div>
+			</div>
+		</div>
+		{% include 'partials/footer-ad.html' %}
+	</body>
 </html>
