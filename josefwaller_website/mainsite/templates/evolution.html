@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+	<head>
+		{% include 'partials/links.html' %}
+
+		{% load staticfiles %}
+		<script src="{% static 'evolution/script.js' %}"></script>
+		<script src="{% static 'evolution/setup.js' %}"></script>
+		<script src="{% static 'evolution/simFuncs.js' %}"></script>
+		<script src="{% static 'evolution/coding.js' %}"></script>
+
+		<link href="{% static 'evolution/evolution.css' %}" type="text/css" rel="stylesheet">
+	</head>
+	{% csrf_token %}
+	<body>
+		{% include 'partials/header.html' %}
+		<div class="container">
+			<div class="row">
+				<div class="center">
+					<h1>Evolution</h1>
+				</div>
+			</div>
+			<!-- The top buttons -->
+			<div class="row">
+				<div class="btn-group btn-group-justified" role="group">
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-lg" name="start-button" onclick="
+							setup();
+							simulate(); 
+							document.getElementsByName('start-button')[0].innerHTML = 'Reset';
+						">Start</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button class="btn btn-lg btn-justified" onclick="timeSpeed = 1">Fast</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button class="btn btn-lg" onclick="timeSpeed = 50">Slow</button>
+					</div>
+				</div>
+
+			</div>
+			<div class="row">
+					<canvas id="canvas"></canvas>
+			</div>
+			<div class="row">
+				<div class="btn-group btn-group-justified" role="group">
+					<div class="btn-group btn-group-justified">
+						<button class="btn btn-lg" onclick="save();">Save</button>
+					</div>
+					<div class="btn-group btn-group-justified">
+						<button class="btn btn-lg" onclick="enter();">Load</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

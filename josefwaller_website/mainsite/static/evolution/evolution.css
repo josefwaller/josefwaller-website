@@ -1,0 +1,21 @@
+body
+{
+	color: #d30303;
+}
+.btn
+{
+	border-radius: 0px;
+	background-color: #d30303;
+	color: #ffffff;
+}
+.btn:hover
+{
+	background-color: #fc0303;
+	color: #ffffff;
+}
+canvas {
+  background-color: blue; 
+  width: 100%;
+  height: auto;
+  margin-top: 5px;
+}
