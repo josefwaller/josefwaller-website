@@ -2,7 +2,6 @@ function setup () {
 
 	//ADD CHECKING IF THE WINDOW IS TOO SMALL
 	//DON'T FORGET
-
 	setVariables();
 
 	canvas.width = W;

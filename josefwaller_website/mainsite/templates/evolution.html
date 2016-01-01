@@ -9,9 +9,10 @@
 		<script src="{% static 'evolution/coding.js' %}"></script>
 
 		<link href="{% static 'evolution/evolution.css' %}" type="text/css" rel="stylesheet">
+		<title> Evolution - josefwaller.com </title>
 	</head>
 	{% csrf_token %}
-	<body>
+	<body onload="setup();">
 		{% include 'partials/header.html' %}
 		<div class="container">
 			<div class="row">
@@ -39,7 +40,7 @@
 
 			</div>
 			<div class="row">
-					<canvas id="canvas"></canvas>
+				<canvas id="canvas"></canvas>
 			</div>
 			<div class="row">
 				<div class="btn-group btn-group-justified" role="group">
@@ -51,6 +52,11 @@
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<h3> How it works </h3>
+				<h5> ASDFASDFASDFASDFASF</h5>
+			</div>
 		</div>
+		{% include 'partials/footer-ad.html' %}
 	</body>
 </html>

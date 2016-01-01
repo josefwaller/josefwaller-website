@@ -89,9 +89,7 @@ function setVariables () {
 	}
 
 	W = 900;
-	H = 600;
-
-	u = W / 100
+	H = (canvas.offsetHeight / canvas.offsetWidth) * W
 
 	runSimulation = false;
 

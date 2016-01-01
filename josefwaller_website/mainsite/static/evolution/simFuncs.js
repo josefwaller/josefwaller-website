@@ -24,7 +24,6 @@ function simulate () {
 	time.startTime = getNewTime();
 
 	clearTimeout(interval);
-
 	interval = setTimeout(function () {update()}, timeSpeed);
 
 	runSimulation = true;
@@ -252,11 +251,11 @@ function update () {
 
 	//draws
 
-	if (time.time > time.drawTime + 20){
+	// if (time.time > time.drawTime + 20){
 
-		draw();
+	draw();
 
-	}
+	// }
 
 	if (!hesDeadJim){
 		interval = setTimeout(function () {update()}, timeSpeed);
