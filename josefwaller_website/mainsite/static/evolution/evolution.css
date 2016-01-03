@@ -19,3 +19,7 @@ canvas {
   height: auto;
   margin-top: 5px;
 }
+h2, h5
+{
+	color: black;
+}

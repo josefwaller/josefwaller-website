@@ -27,6 +27,7 @@ var numOfGenerations;
 var genes;
 
 var time;
+var lastDrawTime;
 
 var interval;
 
@@ -57,6 +58,7 @@ function setVariables () {
 	runSimulation = false;
 
 	currentTime = 0;
+	lastDrawTime = 0;
 
 	numOfGenerations = 0;
 
@@ -116,23 +118,19 @@ function draw () {
 
 		ctx.fillRect(a.x, a.y, a.w, a.h);
 	}
+	// Draws only the best evolver
 
-	for (var i = 0; i < evolvers.length; i++){
+	var eve = evolvers[evolvers.length - 1];
 
-		var eve = evolvers[i];
+	if (eve.isAlive){
 
-		ctx.fillText(i, eve.x, eve.y)
+		ctx.fillStyle = "red";
 
-		if (eve.isAlive){
-
-			ctx.fillStyle = "red";
-
-		}else{
-			ctx.fillStyle = "#aa0000";
-		}
-
-		ctx.fillRect(eve.x, eve.y, 10, 10);
+	}else{
+		ctx.fillStyle = "#aa0000";
 	}
+
+	ctx.fillRect(eve.x, eve.y, 10, 10);
 }
 
 function generateGene(){

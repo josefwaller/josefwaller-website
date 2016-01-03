@@ -251,11 +251,12 @@ function update () {
 
 	//draws
 
-	// if (time.time > time.drawTime + 20){
+	 if (lastDrawTime < new Date().getTime() + 1){
 
-	draw();
+		draw();
+		lastDrawTime = new Date().getTime();
 
-	// }
+	}
 
 	if (!hesDeadJim){
 		interval = setTimeout(function () {update()}, timeSpeed);

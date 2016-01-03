@@ -9,7 +9,7 @@
 		<script src="{% static 'evolution/coding.js' %}"></script>
 
 		<link href="{% static 'evolution/evolution.css' %}" type="text/css" rel="stylesheet">
-		<title> Evolution - josefwaller.com </title>
+		<title> Asteroids Evolution - josefwaller.com </title>
 	</head>
 	{% csrf_token %}
 	<body onload="setup();">
@@ -17,25 +17,19 @@
 		<div class="container">
 			<div class="row">
 				<div class="center">
-					<h1>Evolution</h1>
+					<h1>Asteroids Evolution</h1>
 				</div>
 			</div>
 			<!-- The top buttons -->
 			<div class="row">
 				<div class="btn-group btn-group-justified" role="group">
-					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-lg" name="start-button" onclick="
-							setup();
-							simulate(); 
-							document.getElementsByName('start-button')[0].innerHTML = 'Reset';
-						">Start</button>
-					</div>
-					<div class="btn-group" role="group">
-						<button class="btn btn-lg btn-justified" onclick="timeSpeed = 1">Fast</button>
-					</div>
-					<div class="btn-group" role="group">
-						<button class="btn btn-lg" onclick="timeSpeed = 50">Slow</button>
-					</div>
+					<a type="button" class="btn btn-lg" name="start-button" onclick="
+						setup();
+						simulate(); 
+						document.getElementsByName('start-button')[0].innerHTML = 'Reset';
+					">Start</a>
+					<a class="btn btn-lg btn-justified" onclick="timeSpeed = 1">Fast</a>
+					<a class="btn btn-lg" onclick="timeSpeed = 50">Slow</a>
 				</div>
 
 			</div>
@@ -44,17 +38,16 @@
 			</div>
 			<div class="row">
 				<div class="btn-group btn-group-justified" role="group">
-					<div class="btn-group btn-group-justified">
-						<button class="btn btn-lg" onclick="save();">Save</button>
-					</div>
-					<div class="btn-group btn-group-justified">
-						<button class="btn btn-lg" onclick="enter();">Load</button>
-					</div>
+					<a class="btn btn-lg" onclick="save();">Save</a>
+					<a class="btn btn-lg" onclick="enter();">Load</a>
 				</div>
 			</div>
 			<div class="row">
-				<h3> How it works </h3>
-				<h5> ASDFASDFASDFASDFASF</h5>
+				<h2> How it works </h2>
+				<h3> The Players</h3>
+				<h5> Although you only see the best player, the simulation is actually simulating fifty players at the same time. at the end of each round, when the players have all died, it deletes all the players except the one who survived longest, creates 49 other copies of them, and then adds a gene to them.
+				<h3> The Genes </h3>
+				<h5> Each player is basically a list of genes. A gene is basically a movement. It consists of a direction, a speed, a time and a duration. The gene starts moving at the gene time, the player moves in the gene's direction at the gene's speed, and stops when it has been moving longer than the gene's duration.
 			</div>
 		</div>
 		{% include 'partials/footer-ad.html' %}

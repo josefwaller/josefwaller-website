@@ -22,6 +22,12 @@ function csrfSafeMethod(method) {
 }
 function save () {
 
+	// Checks that the simulation has run
+	if (interval == null){
+		alert("Please start simulating before saving.");
+		return;
+	}
+
 	toSave = {
 		startingCoords: [
 			startingCoords.x,
