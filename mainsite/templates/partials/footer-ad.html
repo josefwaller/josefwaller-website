@@ -1,0 +1,48 @@
+<!-- Fills the space so the ad doesn't cover any text -->
+<div id="space-filler-div"></div>
+
+<div id="outside-div">
+	<div id="inside-div"></div>
+</div>
+
+<style>
+#outside-div
+{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	text-align: center;
+}
+#inside-div
+{
+	background-color: #000000;
+	height: 90px;
+	width: 728px;
+	display: block;
+	margin: 0 auto;
+}
+</style>
+
+<script>
+
+var width;
+var height;
+
+// Checks if is on mobile device, and if it is scales down the ad
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+	width = 234;
+	height = 60;
+}else {
+	width = 728;
+	height = 90;
+}
+
+div = $("#inside-div");
+div.css("height", height + "px")
+div.css("width", width + "px")
+
+fillerDiv = $("#space-filler-div")
+fillerDiv.css("height", height + "px")
+
+</script>

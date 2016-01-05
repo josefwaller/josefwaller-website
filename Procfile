@@ -1,0 +1,1 @@
+web: gunicorn josefwaller_website.wsgi:application --log-file -
