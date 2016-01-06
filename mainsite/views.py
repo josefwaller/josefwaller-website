@@ -19,6 +19,9 @@ class EvolutionView (generic.TemplateView):
 class GraphicsView (generic.TemplateView):
 	template_name = 'graphics.html'
 
+class RocketView (generic.TemplateView):
+	template_name = 'rocket.html'
+
 def save_evolution (request):
 
 	try:
