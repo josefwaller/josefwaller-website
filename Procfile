@@ -1,1 +1,1 @@
-web: gunicorn josefwaller_website.wsgi:application --log-file -
+web: gunicorn josefwaller_website.wsgi --log-file -
