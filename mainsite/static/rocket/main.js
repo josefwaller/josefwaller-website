@@ -22,22 +22,35 @@ function main() {
 		new Planet({
 			x: 400, 
 			y: 300, 
-			radius: 20,
+			radius: 40,
 			mass: 1000,
-			velocity_x: 0,
-			velocity_y: 0,
+			vX: 0,
+			vYy: 0,
 			color: "#000000"
-		}),
-		new Planet({
+		})
+	];
+
+	planets.push(new Planet({
 			x: 400, 
 			y: 200, 
 			radius: 10,
 			mass: 1,
-			velocity_x: 2000,
-			velocity_y: 0,
-			color: "#000000"
-		})
-	];
+			vX: 2000,
+			vY: 0,
+			color: "#000000",
+
+			orbitParent: planets[0],
+			orbitHeight: 100,
+			orbitV: 5
+		}))
+
+	rocket = new Rocket({
+		x: 20,
+		y: 20,
+		vX: 0,
+		vY: 0,
+		color: "#ff0000"
+	})
 }
 function mainLoop() {
 
@@ -54,6 +67,9 @@ function mainLoop() {
 			planets[planetIndex].render();
 
 		}
+
+		rocket.update();
+		rocket.render();
 	}
 }
 
