@@ -1,7 +1,7 @@
 var canvas;
 var ctx;
 
-var planets;
+var planets = [];
 var time;
 
 function main() {
@@ -19,21 +19,21 @@ function main() {
 	}
 
 	planets = [
-		Planet({
-			x: 500, 
-			y: 200, 
+		new Planet({
+			x: 400, 
+			y: 300, 
 			radius: 20,
-			mass: 5,
+			mass: 1000,
 			velocity_x: 0,
 			velocity_y: 0,
 			color: "#000000"
 		}),
-		Planet({
-			x: 200, 
+		new Planet({
+			x: 400, 
 			y: 200, 
-			radius: 20,
-			mass: 5,
-			velocity_x: 0,
+			radius: 10,
+			mass: 1,
+			velocity_x: 2000,
 			velocity_y: 0,
 			color: "#000000"
 		})
@@ -45,15 +45,19 @@ function mainLoop() {
 	ctx.fillRect(0, 0, canvas.width, canvas.height)
 
 	time.time += 1
-	for (i = 0;i < planets.length;i++){
-		p = planets[i]
 
-		p.update();
-		p.render();
+	for (planetIndex=0; planetIndex < planets.length; planetIndex++){
+
+		if (planets[planetIndex] !== null){
+
+			planets[planetIndex].update();
+			planets[planetIndex].render();
+
+		}
 	}
 }
 
 $(document.body).ready(function() {
 	main()
-	interval = window.setInterval(mainLoop, 1000 / 60)
+	interval = window.setInterval(mainLoop, 1000 / 120)
 })

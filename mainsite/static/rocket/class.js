@@ -1,10 +1,26 @@
+id = 0
+
 // Used to create class-like objects in javascript
-function Class (class_obj){
+function Class (classObj){
 
 	// Returns a function that returns the class object
 	return (function(params){
-		// Initializes the object
-		class_obj.init(params)
-		return class_obj;
+
+		classObj.init(params)
+
+		var newObj = {};
+		for (i in classObj){
+			newObj[i] = classObj[i];
+		}
+
+		newObj.id = id;
+		id ++;
+
+		// Returns the new copy
+		return newObj;
 	})
+}
+
+function cloneObject (){
+
 }
