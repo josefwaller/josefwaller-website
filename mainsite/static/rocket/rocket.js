@@ -6,6 +6,13 @@ Rocket = Class({
 	vX: 0,
 	vY: 0,
 
+	isLanded: false,
+	planetLanded: null,
+	offsetX: 0,
+	offsetY: 0,
+
+	rotation: 0,
+
 	init: function(p){
 		this.x = p.x;
 		this.y = p.y;
@@ -19,48 +26,59 @@ Rocket = Class({
 
 		this.color = p.color;
 
+		this.vY = force * Math.cos(this.rotation);
+		this.vX = force * Math.sin(this.rotation);
+
+		this.rotation = angle;
+
 	},
 
 	update: function(){
+
 		this.x += this.vX * time.deltaTime;
 		this.y += this.vY * time.deltaTime;
 
+		landedThisFrame = false;
+
 		for (i = 0; i < planets.length; i++){
 			p = planets[i]
+			console.log(p.x)
 			// Checks for collision
-			disX = Math.abs(this.x - p.x);
-			disY = Math.abs(this.y - p.y);
+			disX = Math.abs((this.x + this.w) - p.x);
+			disY = Math.abs((this.y + this.h) - p.y);
 			dis = Math.sqrt(Math.pow(disX, 2) + Math.pow(disY, 2));
 
-			if (dis <= 2 * this.r || dis <= 2 * p.r){
-				// if (this.mass >= p.mass){
-				// 	this.mass += p.mass;
-				// 	this.vX = ((this.vX * this.mass) + (p.vX * p.mass)) / (p.mass - this.mass)
-				// 	this.vY = ((this.vY * this.mass) + (p.vY * p.mass)) / (p.mass - this.mass)
-					
-				// 	totalArea = Math.PI * Math.pow(this.r, 2) + Math.PI * Math.pow(p.r, 2)
-				// 	this.r = Math.sqrt(totalArea / Math.PI)
-				// 	console.log(Math.sqrt((Math.PI * Math.pow(p.r, 2)) / Math.PI))
-				// 	planets[i] = null;
-				// }
+			if (dis <= p.r){
+
+				if (!this.isLanded){
+
+					// lands on planet
+					this.isLanded = true;
+					this.vX = 0;
+					this.vY = 0;
+					this.planetLanded = p;
+					this.offsetX = this.x - p.x;
+					this.offsetY = this.y - p.y;
+					landedThisFrame = true;
+				}else {
+					this.x = this.planetLanded.x + this.offsetX;
+					this.y = this.planetLanded.y + this.offsetY;
+				}
+
 			}else {
 
 				// Gets the angle
-				if (disY > disX){
-					theta = Math.asin(disX / disY)
-				}else {
-					theta = Math.asin(disY / disX)
-				}
+				theta = Math.asin(disY / dis)
 
 				// Force of gravity 
 				// Fg = G(m1m2)/(r^2)
 
 				G = 6.67 * Math.pow(10, -4)
-				Fg = (G * this.mass * p.mass) / Math.sqrt(dis, 2) * (Math.abs(dis) / dis);
+				Fg = (G * this.mass * p.mass) / Math.sqrt(dis, 2);
 
 				// Gets the different axis' accelration
-				FgX = Fg * Math.sin(theta);
-				FgY = Fg * Math.cos(theta);
+				FgX = Fg * Math.cos(theta);
+				FgY = Fg * Math.sin(theta);
 
 				if (this.x > p.x){
 					this.vX -= FgX / this.mass * time.deltaTime;
@@ -72,16 +90,34 @@ Rocket = Class({
 				}else {
 					this.vY += FgY / this.mass * time.deltaTime;
 				}
+
+				//Adds Torque to rotation
 			}
+		}
+
+		if (!landedThisFrame){
+			this.isLanded = false;
 		}
 
 	},
 
 	render: function(){
 
-		ctx.fillStyle = this.color;
+		centerX = this.x + this.w / 2;
+		centerY = this.y + this.h / 2;
 
+		ctx.save();
+
+		ctx.translate(centerX, centerY)
+		ctx.rotate(this.rotation);
+		ctx.translate(-centerX, -centerY)
+
+		ctx.fillStyle = this.color;
 		ctx.fillRect(this.x, this.y, this.w, this.h);
+
+		ctx.translate(centerX, centerY);
+		ctx.rotate(- this.rotation);
+		ctx.translate(-centerX, -centerY);
 
 	}
 })

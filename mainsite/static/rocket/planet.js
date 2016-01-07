@@ -28,7 +28,7 @@ Planet = Class({
 		this.color = p.color;
 
 		if (p.orbitParent != null){
-			console.log("ASDF")
+
 			this.orbitParent = p.orbitParent;
 			this.orbitHeight = p.orbitHeight;
 			this.orbitV = p.orbitV / 1000;
@@ -40,25 +40,20 @@ Planet = Class({
 	update: function(){
 
 		// Planets are on a fixed orbit
-		
+
 		if (this.inOrbit){
 			// Positive velocity is clockwise, negative is anticlockwise
-			circumPercent = this.orbitV / (2 * Math.PI * this.orbitParent.r);
-			degrees = circumPercent * 360;
+			radians = this.orbitV / (2 * Math.PI * this.orbitParent.r);
 
-			this.orbitDegree += degrees;
+			this.orbitDegree += radians;
 
-			if (this.orbitDegree > 360){
-				this.orbitDegree -= 360;
-			}
+			console.log(this.orbitDegree)
 
 			yAddon = this.orbitHeight * Math.sin(this.orbitDegree);
 			xAddon = this.orbitHeight * Math.cos(this.orbitDegree);
 
 			this.x = this.orbitParent.x + xAddon;
 			this.y = this.orbitParent.y + yAddon;
-
-			console.log(this.orbitDegree)
 
 		}
 	},

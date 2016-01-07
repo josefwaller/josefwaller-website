@@ -20,7 +20,3 @@ function Class (classObj){
 		return newObj;
 	})
 }
-
-function cloneObject (){
-
-}
