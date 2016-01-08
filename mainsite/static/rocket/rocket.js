@@ -26,10 +26,10 @@ Rocket = Class({
 
 		this.color = p.color;
 
-		this.rotation = angle;
+		this.rotation = angle % (2 * Math.PI);
 
-		this.vY = force * Math.cos(this.rotation);
-		this.vX = force * Math.sin(this.rotation);
+		this.vY = - force * Math.cos(this.rotation);
+		this.vX = - force * Math.sin(this.rotation);
 
 	},
 
@@ -43,8 +43,8 @@ Rocket = Class({
 		for (i = 0; i < planets.length; i++){
 			p = planets[i]
 			// Checks for collision
-			disX = Math.abs((this.x + this.w) - p.x);
-			disY = Math.abs((this.y + this.h) - p.y);
+			disX = Math.abs((this.x + (this.w / 2)) - p.x);
+			disY = Math.abs((this.y + (this.h / 2)) - p.y);
 			dis = Math.sqrt(Math.pow(disX, 2) + Math.pow(disY, 2));
 
 			if (dis <= p.r){
@@ -89,8 +89,6 @@ Rocket = Class({
 				}else {
 					this.vY += FgY / this.mass * time.deltaTime;
 				}
-
-				//Adds Torque to rotation
 			}
 		}
 
@@ -102,17 +100,40 @@ Rocket = Class({
 
 	render: function(){
 
+		// Gets the center of the rocket
 		centerX = this.x + this.w / 2;
 		centerY = this.y + this.h / 2;
 
-		ctx.save();
-
+		// Rotates it
 		ctx.translate(centerX, centerY)
 		ctx.rotate(-this.rotation);
 		ctx.translate(-centerX, -centerY)
 
+		// draws main box
 		ctx.fillStyle = this.color;
-		ctx.fillRect(this.x, this.y, this.w, this.h);
+		ctx.fillRect(this.x, this.y + this.h * 1/4 , this.w, this.h * 3/4);
+
+		// draws cone triangle
+		ctx.beginPath();
+		ctx.moveTo(this.x + this.w * 1/2, this.y);
+		ctx.lineTo(this.x, this.y + this.h * 1/4);
+		ctx.lineTo(this.x + this.w, this.y + this.h * 1/4);
+		ctx.fill();
+
+		//Draws left base triangle
+		finWidth = 5;
+		ctx.beginPath();
+		ctx.moveTo(this.x, this.y + this.h * 2/3);
+		ctx.lineTo(this.x, this.y + this.h);
+		ctx.lineTo(this.x - finWidth, this.y + this.h + finWidth / 2)
+		ctx.fill();
+
+		// Draws right fin
+		ctx.beginPath();
+		ctx.moveTo(this.x + this.w, this.y + this.h * 2/3);
+		ctx.lineTo(this.x + this.w, this.y + this.h);
+		ctx.lineTo(this.x +this.w + finWidth, this.y + this.h + finWidth / 2)
+		ctx.fill();
 
 		ctx.translate(centerX, centerY);
 		ctx.rotate(this.rotation);

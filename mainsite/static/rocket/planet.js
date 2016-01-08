@@ -50,17 +50,27 @@ Planet = Class({
 		if (this.inOrbit){
 			// Positive velocity is clockwise, negative is anticlockwise
 
+			// Gets the percentage of the circumfrence to orbit
 			radians = this.orbitV / (this.orbitParent.r + this.orbitHeight)
 
+			// Adds the rotation for this frame
 			this.orbitDegree += radians;
 
+			// Checks if the rotation is over tau, and if it is subtracts tau
 			if (this.orbitDegree > 2 * Math.PI){
 				this.orbitDegree -= 2 * Math.PI;
 			}
 
+			// Gets the x and y corrdinate
+
+			// -> sin(t) = opp/hyp
+			// -> sin(orbDeg) = x/orbHeight
+			// -> orbHeight * sin(orgDeg) = x
+			// same for y, except cos() instead of sin()
 			yAddon = (this.orbitHeight) * Math.sin(this.orbitDegree);
 			xAddon = (this.orbitHeight) * Math.cos(this.orbitDegree);
 
+			// Sets the y position
 			this.x = this.orbitParent.x + xAddon;
 			this.y = this.orbitParent.y + yAddon;
 
@@ -70,6 +80,7 @@ Planet = Class({
 	// Draws the planet
 	render: function(){
 
+		// Checks that it is in the canvas
 		if (0 < this.x + this.r && this.x - this.r < canvas.width){
 			if (0 < this.y + this.r && this.y - this.r < canvas.height){
 
