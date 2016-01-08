@@ -26,10 +26,10 @@ Rocket = Class({
 
 		this.color = p.color;
 
+		this.rotation = angle;
+
 		this.vY = force * Math.cos(this.rotation);
 		this.vX = force * Math.sin(this.rotation);
-
-		this.rotation = angle;
 
 	},
 
@@ -42,7 +42,6 @@ Rocket = Class({
 
 		for (i = 0; i < planets.length; i++){
 			p = planets[i]
-			console.log(p.x)
 			// Checks for collision
 			disX = Math.abs((this.x + this.w) - p.x);
 			disY = Math.abs((this.y + this.h) - p.y);
@@ -109,14 +108,14 @@ Rocket = Class({
 		ctx.save();
 
 		ctx.translate(centerX, centerY)
-		ctx.rotate(this.rotation);
+		ctx.rotate(-this.rotation);
 		ctx.translate(-centerX, -centerY)
 
 		ctx.fillStyle = this.color;
 		ctx.fillRect(this.x, this.y, this.w, this.h);
 
 		ctx.translate(centerX, centerY);
-		ctx.rotate(- this.rotation);
+		ctx.rotate(this.rotation);
 		ctx.translate(-centerX, -centerY);
 
 	}

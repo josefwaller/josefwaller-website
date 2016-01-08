@@ -27,12 +27,18 @@ Planet = Class({
 		this.vY = p.vY / 1000;
 		this.color = p.color;
 
-		if (p.orbitParent != null){
+		if (p.inOrbit == true ){
 
 			this.orbitParent = p.orbitParent;
 			this.orbitHeight = p.orbitHeight;
 			this.orbitV = p.orbitV / 1000;
 			this.inOrbit = true;
+
+			this.x = this.orbitParent.x + this.orbitHeight;
+			this.y = this.orbitParent.y;
+
+		}else {
+			this.inOrbit = false
 		}
 	},
 
@@ -43,14 +49,17 @@ Planet = Class({
 
 		if (this.inOrbit){
 			// Positive velocity is clockwise, negative is anticlockwise
-			radians = this.orbitV / (2 * Math.PI * this.orbitParent.r);
+
+			radians = this.orbitV / (this.orbitParent.r + this.orbitHeight)
 
 			this.orbitDegree += radians;
 
-			console.log(this.orbitDegree)
+			if (this.orbitDegree > 2 * Math.PI){
+				this.orbitDegree -= 2 * Math.PI;
+			}
 
-			yAddon = this.orbitHeight * Math.sin(this.orbitDegree);
-			xAddon = this.orbitHeight * Math.cos(this.orbitDegree);
+			yAddon = (this.orbitHeight) * Math.sin(this.orbitDegree);
+			xAddon = (this.orbitHeight) * Math.cos(this.orbitDegree);
 
 			this.x = this.orbitParent.x + xAddon;
 			this.y = this.orbitParent.y + yAddon;
@@ -63,7 +72,7 @@ Planet = Class({
 
 		if (0 < this.x + this.r && this.x - this.r < canvas.width){
 			if (0 < this.y + this.r && this.y - this.r < canvas.height){
-				
+
 				ctx.beginPath();
 				ctx.fillStyle = this.color;
 				ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
