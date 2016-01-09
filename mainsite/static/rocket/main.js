@@ -24,14 +24,12 @@ function init () {
 	}
 
 	// Checks if there is a save in the url
-	if(window.location.hash != null){
-		console.log(window.location.hash)
+	if(window.location.hash.includes("#")){
 		getUrl();
 	}else {
-		// SEts to default
-		console.log("ASDF")
+		// Sets to default
 		map = 0;
-		setAttr();
+		clearAttr();
 	}
 
 	// Gets teh canvas and context
@@ -139,7 +137,6 @@ function setup(){
 		orbitV: 1000,
 		inOrbit: true
 	}
-	console.log(parseInt(map))
 	// Sets up depending on the map
 	switch(map){
 
