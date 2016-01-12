@@ -7,6 +7,9 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 import json
 import pprint
+import sys
+import traceback
+
 # Create your views here.
 
 
@@ -32,19 +35,28 @@ def save_evolution (request):
 		# Parses the data
 		data = json.loads(json_data)
 
+
 		# Creates a new evolution save
 		# Since Django models do not have a dictionary field, they are saved as a json string
+
 		new_save = models.EvolutionSave(
 			starting_coords=json.dumps(data['startingCoords']),
 			genes=json.dumps(data['genes']),
 			asteroids=json.dumps(data['asteroids'])
 		)
+
 		new_save.save()
-		
+
 		# returns the id
 		return HttpResponse(new_save.id)
 
+
 	except:
+
+		exc_type, exc_value, exc_traceback = sys.exc_info()
+		lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
+		print (''.join('!! ' + line for line in lines))  # Log it or whatever here
+
 		error_message = "failure"
 		return HttpResponse(error_message)
 

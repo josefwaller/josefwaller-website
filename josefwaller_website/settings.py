@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '98w3kl6-xg(91_(k_#7+(s+vj=qt6@xo#b&xes3=_xej-xtf$_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['.josefwaller-website.herokuapp.com', '.josefwaller.com']
 
@@ -78,10 +78,8 @@ WSGI_APPLICATION = 'josefwaller_website.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
-DATABASES = {
-    'default': dj_database_url.config()
-}
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(default='postgres://xbvnosxntqciyf:4qIle7fIQ1DWTViowcM7ToYxTG@ec2-54-235-170-124.compute-1.amazonaws.com:5432/d60kmhv8ho05g9')
 
 # Enable Persistent Connections
 DATABASES['default']['CONN_MAX_AGE'] = 500
