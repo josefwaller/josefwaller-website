@@ -47,6 +47,8 @@ function init () {
 		time: 0,
 	}
 
+	resize()
+
 }
 
 function resize (){
@@ -56,7 +58,8 @@ function resize (){
 
 	// Checks if on mobile, if is changes button group
 	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-		$("#scen-group").removeClass("btn-group-justifed");
+		console.log("ASDF")
+		$("#scen-group").removeClass("btn-group-justified");
 		$("#scen-group").addClass("btn-group-vertical");
 	}
 }
