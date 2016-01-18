@@ -25,6 +25,9 @@ class GraphicsView (generic.TemplateView):
 class RocketView (generic.TemplateView):
 	template_name = 'rocket.html'
 
+class RPGMakerView (generic.TemplateView):
+	template_name = 'rpgmaker.html'
+
 def save_evolution (request):
 
 	try:
