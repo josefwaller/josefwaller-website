@@ -6,8 +6,6 @@ function Class (classObj){
 	// Returns a function that returns the class object
 	return (function(params){
 
-		classObj.init(params)
-
 		var newObj = {};
 		for (i in classObj){
 			newObj[i] = classObj[i];
@@ -15,6 +13,8 @@ function Class (classObj){
 
 		newObj.id = id;
 		id ++;
+
+		classObj.init(params)
 
 		// Returns the new copy
 		return newObj;

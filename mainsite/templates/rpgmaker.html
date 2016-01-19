@@ -7,8 +7,10 @@
 		<link type="text/css" rel="Stylesheet" href="{% static 'rpg/rpgmaker.css'%}">
 
 		<!-- scripts -->
+
 		<script src="{% static 'rocket/class.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/setup.js'%}" type="text/javascript"></script>
+		<script src="{% static 'rpg/art.js'%}" type="text/javascript"></script>
 
 		<!-- Font -->
 		<link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
@@ -27,7 +29,7 @@
 			<div class="row">
 				<div class="col-md-8 col-centered">
 					<canvas id="level-canvas"></canvas>
-					<div class="btn-group btn-group-justified">
+					<div class="btn-group btn-group-justified level-editor-btn-group">
 						<a class="btn btn-lg">ASDF</a>
 						<a class="btn btn-lg">ASDF</a>
 						<a class="btn btn-lg">ASDF</a>
@@ -37,7 +39,7 @@
 						<a class="btn btn-lg">ASDF</a>
 						<a class="btn btn-lg">ASDF</a>
 					</div>
-					<div class="btn-group btn-group-justified">
+					<div class="btn-group btn-group-justified level-editor-btn-group">
 						<a class="btn btn-lg">ASDF</a>
 						<a class="btn btn-lg">ASDF</a>
 						<a class="btn btn-lg">ASDF</a>
@@ -72,6 +74,7 @@
 					</div>
 				</div>
 			</div>
+			<audio id="sound" src="{% static 'rpg/1.wav' %}"></audio>
 		</div>
 
 		{% include 'partials/footer-ad.html' %}
