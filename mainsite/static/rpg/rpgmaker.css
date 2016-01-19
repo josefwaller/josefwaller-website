@@ -5,8 +5,19 @@
 	color: #ffffff;
 	background-color: #c60d0d;
 	border-radius: 0px;
+	margin-top: 0px;
+	border: 0px;
 }
 h1
 {
 	font-family: 'Press Start 2P', cursive;
+}
+canvas
+{
+	margin-top: 0px;
+	margin-bottom: 0px
+}
+#color-btns>.btn
+{
+	color: #ffffff;
 }
