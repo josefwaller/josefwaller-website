@@ -17,7 +17,12 @@ canvas
 	margin-top: 0px;
 	margin-bottom: 0px
 }
+#color-btns
+{
+	margin-top: -5px;
+}
 #color-btns>.btn
 {
 	color: #ffffff;
+	border: 2px solid #555555;
 }
