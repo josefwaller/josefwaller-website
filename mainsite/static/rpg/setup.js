@@ -4,14 +4,14 @@ var background;
 var screens;
 
 var colors = [
-	"#aaaaaa",
-	"#000000",
-	"#ff0000",
-	"#00ff00",
-	"#0000ff",
-	"#ffff00",
-	"#00ffff",
-	"#ff00ff"
+	{r:0, g:0, b:0, sat:100, bright:100, hue:0},
+	{r:0, g:0, b:0, sat:100, bright:100},
+	{r:0, g:0, b:0, sat:100, bright:100},
+	{r:0, g:0, b:0, sat:100, bright:100},
+	{r:0, g:0, b:0, sat:100, bright:100},
+	{r:0, g:0, b:0, sat:100, bright:100},
+	{r:0, g:0, b:0, sat:100, bright:100},
+	{r:0, g:0, b:0, sat:100, bright:100},
 ]
 
 var currentScreen;
@@ -72,6 +72,10 @@ function setup () {
 	$(document).mousemove(function(event) {
 		mousePos.x = event.pageX,
 		mousePos.y = event.pageY
+	})
+
+	$(document).click(function(event){
+		art.onClick();
 	})
 
 	window.setInterval(update, 1000/60)

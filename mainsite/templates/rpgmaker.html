@@ -11,6 +11,7 @@
 		<script src="{% static 'rocket/class.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/setup.js'%}" type="text/javascript"></script>
 		<script src="{% static 'rpg/art.js'%}" type="text/javascript"></script>
+		<script src="{% static 'rpg/colorBar.js'%}" type="text/javascript"></script>
 
 		<!-- Font -->
 		<link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
@@ -67,6 +68,7 @@
 						<a class="btn btn-md">ASDF</a>
 					</div>
 					<canvas id="art-canvas"></canvas>
+					<img id="gradiant" style="display:none" src="{% static 'images/rpgmaker/gradient.jpg' %}">
 					<div class="btn-group btn-group-justified" id="color-btns" role="group">
 						<a class="btn btn-lg"></a>
 						<a class="btn btn-lg"></a>
@@ -87,7 +89,7 @@
 					</div>
 				</div>
 			</div>
-			<audio id="sound" src="{% static 'rpg/1.wav' %}"></audio>
+			<audio id="sound" src="{% static 'rpg/beeps/1.wav' %}"></audio>
 		</div>
 
 		{% include 'partials/footer-ad.html' %}

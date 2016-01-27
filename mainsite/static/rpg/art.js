@@ -1,3 +1,6 @@
+var selectedColor = 0;
+
+
 var Art = Class({
 	canvas: null,
 	ctx: null,
@@ -5,9 +8,30 @@ var Art = Class({
 	w: 600,
 	h: null,
 
+	red: 0,
+	blue: 0,
+	green: 0,
+
+	offsetX: 0,
+	offsetY: 0,
+
 	size: 0,
+	pixelSize: 0,
+
+	mouseX: 0,
+	mouseY: 0,
+
+	barX: 0,
+	barY: 0,
+	barW: 0,
+	barH: 0,
+
+	colorBar: null,
+	saturationBar: null,
+	brightnessBar: null,
 
 	init: function(size) {
+		console.log(colors[0])
 		this.canvas = $("#art-canvas");
 		this.ctx = this.canvas[0].getContext("2d");
 
@@ -17,28 +41,98 @@ var Art = Class({
 		this.canvas[0].height = this.h;
 
 		this.size = size
+		this.offsetX = this.w * (1/10)
+		this.offsetY = this.h * (1/20)
+		this.pixelSize = (this.h - 2 * this.offsetY) / this.size;
+
+		this.colorBar = new ColorBar({
+			x: this.offsetX + this.pixelSize * this.size + 30, 
+			y: this.offsetY, 
+			w: 200, 
+			h: 20,
+			img: $("#gradiant")[0]
+		});
+
+		this.saturationBar = new ColorBar({
+			x: this.offsetX + this.pixelSize * this.size + 30, 
+			y: this.offsetY + 100, 
+			w: 200, 
+			h: 20,
+			img: null
+		});
+
+		this.brightnessBar = new ColorBar({
+			x: this.offsetX + this.pixelSize * this.size + 30,
+			y: this.offsetY + 200,
+			w: 200,
+			h: 20,
+			img: null
+		});
 
 		// Sets the button's colors
 		colorButtons = $("#color-btns");
-		console.log(colorButtons)
+
 		for (i = 0; i < colorButtons.children().length; i++){
 			div = $(colorButtons.children()[i]);
 			
+			if (colors[i].bright < 50){
+				div.css("color", "#ffffff")
+			}
 			div.css("background-color", colors[i])
 			div.html(colors[i])
-			div.click({colorIndex: i, a:div}, function(event){
+			div.click({colorIndex: i}, function(event){
 
-				colorIndex = event.data.colorIndex
-				colors[colorIndex] = prompt("Enter color");
-				a = $("#color-btns").children().eq(colorIndex);
-				a.html(colors[colorIndex])
-				a.css({"background-color": colors[colorIndex]})
+				selectedColor = event.data.colorIndex;
 			})
 		}
+
 	},
 
 	update: function() {
+		this.mouseX = (mousePos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width
+		this.mouseY = (mousePos.y - this.canvas.offset().top) / this.canvas.height() * this.canvas[0].height
+
 		this.draw();
+
+	},
+	onClick: function() {
+		this.colorBar.onClick(ctx, this.mouseX, this.mouseY, function(mouseX, mouseY, x, width) {
+
+			percentage = (mouseX - x) / width;
+
+			red = getColorValue(7, 3, percentage);
+			blue = getColorValue(1, 5, percentage);
+			green = getColorValue(4, 9, percentage);
+
+			colors[selectedColor].r = red;
+			colors[selectedColor].g = green;
+			colors[selectedColor].b = blue;
+
+			color = getFullHexColor(colors[selectedColor]);
+			// Changes the button's color and css
+			div = $(colorButtons.children()[selectedColor]);
+			
+			div.css("background-color", color)
+			div.html(color);
+		});
+
+		this.saturationBar.onClick(ctx, this.mouseX, this.mouseY, function(mouseX, mouseY, x, width){
+			percentage = (mouseX - x) / width;
+
+			saturation = percentage * 255;
+
+			colors[selectedColor].sat = saturation
+
+
+			hexColor = getFullHexColor(colors[selectedColor])
+
+			// Changes the button's color and css
+			div = $(colorButtons.children()[selectedColor]);
+			
+			div.css("background-color", hexColor)
+			div.html(hexColor);
+
+		})
 	},
 
 	draw: function() {
@@ -47,16 +141,18 @@ var Art = Class({
 		ctx = this.ctx;
 
 		// Draws background
-		ctx.fillStyle = "#404040"
-		ctx.fillRect(0, 0, this.w, this.h)
+		ctx.fillStyle = "#404040";
+		ctx.fillRect(0, 0, this.w, this.h);
 
 		// Draws white background
-		offsetX = this.w * (1/8)
-		offsetY = this.h * (1/20)
-		pixelSize = (this.h - 2 * offsetY) / size;
 
 		ctx.fillStyle = "#bcd5da";
-		ctx.fillRect(offsetX, offsetY, this.size * pixelSize, this.size * pixelSize)
+		ctx.fillRect(
+			this.offsetX, 
+			this.offsetY, 
+			this.size * this.pixelSize, 
+			this.size * this.pixelSize
+		);
 
 		// Draws grid
 		for (i = 0; i <= this.size; i++){
@@ -65,39 +161,103 @@ var Art = Class({
 
 			// Draws x line
 			ctx.fillRect(
-				offsetX + pixelSize * i, 
-				offsetY, 
+				this.offsetX + this.pixelSize * i, 
+				this.offsetY, 
 				1, 
-				this.size * pixelSize);
+				this.size * this.pixelSize);
 
 			// Draws y line
 			ctx.fillRect(
-				offsetX, 
-				offsetY + pixelSize * i, 
-				this.size * pixelSize, 
+				this.offsetX, 
+				this.offsetY + this.pixelSize * i, 
+				this.size * this.pixelSize, 
 				1);
 
 		}
 
-		// Gets the pixel the mouse is hovering on
-		mouseX = (mousePos.x - (pixelSize / 2) - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width
-		mouseY = (mousePos.y - (pixelSize / 2) - this.canvas.offset().top) / this.canvas.height() * this.canvas[0].height
-
-		if (mouseX > offsetX && mouseX < offsetX + (this.size - 1) * pixelSize){
-			if (mouseY > offsetY && mouseY < offsetY + (this.size - 1) * pixelSize){
+		// Checks if the mouse is on the grid
+		if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + (this.size * this.pixelSize)){
+			if (this.mouseY > this.offsetY && this.mouseY < this.offsetY + (this.size * this.pixelSize)){
 				// Draws highlighted pixel
-				pixelX = Math.round((mouseX - offsetX) / pixelSize)
-				pixelY = Math.round((mouseY - offsetY) / pixelSize)
+				pixelX = Math.round((this.mouseX - this.offsetX - (this.pixelSize/2)) / this.pixelSize);
+				pixelY = Math.round((this.mouseY - this.offsetY - (this.pixelSize/2)) / this.pixelSize);
 
 				// Draws the highlighted pixel
 				ctx.fillStyle = "#ffffff"
 				ctx.fillRect(
-					offsetX + pixelX * pixelSize,
-					offsetY + pixelY * pixelSize,
-					pixelSize + 1,
-					pixelSize + 1)
+					this.offsetX + pixelX * this.pixelSize,
+					this.offsetY + pixelY * this.pixelSize,
+					this.pixelSize + 1,
+					this.pixelSize + 1);
 			}
 		}
 
+		this.colorBar.draw(ctx);
+
+		brightness = colors[selectedColor].bright;
+
+		this.saturationBar.draw(ctx, [{r:brightness, g:brightness, b:brightness}, colors[selectedColor]])
+
+		black = {r: 0, g: 0, b:0};
+		white = {r: 255, g: 255, b: 255}
+		this.brightnessBar.draw(ctx, [black, colors[selectedColor], white]);
+
 	}
 })
+
+function getColorValue(startPoint, endPoint, percentage){
+
+	start = startPoint;
+	end = endPoint;
+	loops = false;
+	if (start > end){
+		if (percentage < (end/9) || percentage > (start/9)){
+			loops = true
+		}
+	}
+
+	if (percentage < (end/9) && percentage > (start/9) || loops){
+
+		// Cehcks for blending
+		if ((end/9) > percentage && percentage > ((end - 1)/9)){
+
+			color = Math.round(255 * ( 1 - (percentage - ((end - 1)/9)) / (1/9)))
+
+		}else if (start/9 < percentage && (start + 1) / 9 > percentage){
+
+			color = Math.round(255 * ((percentage - ((start)/9)) / (1/9)))
+
+		}else {
+			color = 255;
+		}
+	}else {
+		color = 0;
+	}
+
+	return color;
+}
+
+function toHex(color) {
+
+	c = color.toString(16);
+	if (c.length < 2){
+		c = "0" + c;
+	}
+
+	return c;
+
+}
+
+
+function getFullHexColor(color) {
+
+	percentage = (color.sat / 255)
+
+	finishedColor = {
+		r: Math.round((color.bright * (1 - percentage) + color.r * percentage)),
+		g: Math.round((color.bright * (1 - percentage) + color.g * percentage)),
+		b: Math.round((color.bright * (1 - percentage) + color.b * percentage))
+	};
+
+	return "#" + toHex(finishedColor.r) + toHex(finishedColor.g) + toHex(finishedColor.b);
+}
