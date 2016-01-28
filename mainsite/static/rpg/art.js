@@ -1,4 +1,6 @@
 var selectedColor = 0;
+var selectedObject = "player";
+var selectedSprite = "runOne";
 
 
 var Art = Class({
@@ -99,6 +101,16 @@ var Art = Class({
 		this.colorBar.checkForSelection(this.mouseX, this.mouseY);
 		this.saturationBar.checkForSelection(this.mouseX, this.mouseY);
 		this.brightnessBar.checkForSelection(this.mouseX, this.mouseY);
+
+		// Checks if the mouse is on the canvas
+		if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + this.size * this.pixelSize){
+			if (this.mouseY > this.offsetY && this.mouseY < this.offsetY + this.size * this.pixelSize){
+				pixel = this.getSelectedPixel();
+				sprite = sprites[selectedObject][selectedSprite];
+				sprite[pixel[0]][pixel[1]] = selectedColor;
+
+			}
+		}
 	},
 	onMouseUp: function() {
 		this.colorBar.isSelected = false;
@@ -179,18 +191,42 @@ var Art = Class({
 
 		}
 
+		//draws current sprite
+
+		for (x = 0; x < this.size; x++){
+			for (y = 0; y < this.size; y++){
+
+				if (sprites[selectedObject][selectedSprite][x][y] !== null){
+
+					// Gets the color
+					color = colors[sprites[selectedObject][selectedSprite][x][y]];
+
+					// Draws the pixel
+					ctx.fillStyle = color.hex;
+					ctx.fillRect(
+						this.offsetX + this.pixelSize * x,
+						this.offsetY + this.pixelSize * y,
+						this.pixelSize,
+						this.pixelSize
+					);
+
+				}
+
+			}
+		}
+
 		// Checks if the mouse is on the grid
 		if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + (this.size * this.pixelSize)){
 			if (this.mouseY > this.offsetY && this.mouseY < this.offsetY + (this.size * this.pixelSize)){
 				// Draws highlighted pixel
-				pixelX = Math.round((this.mouseX - this.offsetX - (this.pixelSize/2)) / this.pixelSize);
-				pixelY = Math.round((this.mouseY - this.offsetY - (this.pixelSize/2)) / this.pixelSize);
+
+				pixel = this.getSelectedPixel();
 
 				// Draws the highlighted pixel
 				ctx.fillStyle = "#ffffff"
 				ctx.fillRect(
-					this.offsetX + pixelX * this.pixelSize,
-					this.offsetY + pixelY * this.pixelSize,
+					this.offsetX + pixel[0] * this.pixelSize,
+					this.offsetY + pixel[1] * this.pixelSize,
 					this.pixelSize + 1,
 					this.pixelSize + 1);
 			}
@@ -213,6 +249,16 @@ var Art = Class({
 		this.colorBar.setCrosshairs(colors[selectedColor].hue);
 		this.saturationBar.setCrosshairs(colors[selectedColor].sat / 255);
 		this.brightnessBar.setCrosshairs(colors[selectedColor].bright / 255);
+	},
+
+	getSelectedPixel: function(){
+
+		// Gets the pixel
+		pixelX = Math.round((this.mouseX - this.offsetX - (this.pixelSize/2)) / this.pixelSize);
+		pixelY = Math.round((this.mouseY - this.offsetY - (this.pixelSize/2)) / this.pixelSize);
+
+		return [pixelX, pixelY];
+
 	}
 })
 
@@ -292,4 +338,7 @@ function changeButtonColor() {
 	}else {
 		div.css("color", "#000000")
 	}
+
+	// Sets the color hex value
+	colors[selectedColor].hex = hexColor;
 }

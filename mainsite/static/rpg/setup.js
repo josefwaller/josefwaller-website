@@ -4,7 +4,7 @@ var background;
 var screens;
 
 var colors = [
-	{r:0, g:0, b:0, sat:100, bright:100, hue:0},
+	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:null},
 	{r:0, g:0, b:0, sat:100, bright:100},
 	{r:0, g:0, b:0, sat:100, bright:100},
 	{r:0, g:0, b:0, sat:100, bright:100},
@@ -29,32 +29,31 @@ var mouse = {
 function setup () {
 	
 	sprites = {
-		player: [],
-		enemy_one: [],
-		enemy_two: [],
-		chest: [],
-		npc_one: [],
-		npc_two: [],
-		npc_three: [],
-		item_one: [],
-		item_two: [],
-		item_three: [],
-
-		door_one: [],
-		door_two: [],
-		key_one: [],
-		key_two: []
+		player: {
+			runOne: [],
+			runTwo: []
+		},
+		enemy_one: {
+			runOne: [],
+			runTwo: []
+		}
 	}
 
 	// Fills the empty arrays
 	size = 10
 	for (s in sprites){
-		while (sprites[s].length < size){
-			var arr = []
-			while (arr.length < size){
-				arr.push(null)
+
+		for (index in sprites[s]){
+
+			while (sprites[s][index].length < size){
+
+				var arr = []
+				while (arr.length < size){
+					arr.push(null)
+				}
+
+				sprites[s][index].push(arr)
 			}
-			sprites[s].push(arr)
 		}
 	}
 
