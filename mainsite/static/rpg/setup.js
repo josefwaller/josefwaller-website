@@ -17,9 +17,13 @@ var colors = [
 var currentScreen;
 var art;
 
-var mousePos = {
-	x:0,
-	y:0
+var mouse = {
+	pos : {
+		x:0,
+		y:0
+	},
+	click: false,
+	hold: false
 }
 
 function setup () {
@@ -70,15 +74,19 @@ function setup () {
 	}
 
 	$(document).mousemove(function(event) {
-		mousePos.x = event.pageX,
-		mousePos.y = event.pageY
+		mouse.pos.x = event.pageX,
+		mouse.pos.y = event.pageY
 	})
 
-	$(document).click(function(event){
-		art.onClick();
+	$(document).mousedown(function(event){
+		mouse.down = true;
+		mouse.click = true;
+	})
+	$(document).mouseup(function(event){
+		mouse.down = false;
 	})
 
-	window.setInterval(update, 1000/60)
+	window.setInterval(update, 1000/30)
 
 }
 
@@ -104,6 +112,18 @@ function changeScreen(event) {
 
 function update() {
 	art.update();
+
+	if (mouse.down){
+		art.onMouseHold();
+	}else {
+		art.onMouseUp();
+	}
+
+	if (mouse.click){
+		art.onClick();
+
+		mouse.click = false;
+	}
 }
 
 $(document.body).ready(setup)

@@ -31,7 +31,7 @@ var Art = Class({
 	brightnessBar: null,
 
 	init: function(size) {
-		console.log(colors[0])
+
 		this.canvas = $("#art-canvas");
 		this.ctx = this.canvas[0].getContext("2d");
 
@@ -82,23 +82,32 @@ var Art = Class({
 			div.html(colors[i])
 			div.click({colorIndex: i}, function(event){
 
-				selectedColor = event.data.colorIndex;
+				selectColor(event.data.colorIndex);
 			})
 		}
 
 	},
 
 	update: function() {
-		this.mouseX = (mousePos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width
-		this.mouseY = (mousePos.y - this.canvas.offset().top) / this.canvas.height() * this.canvas[0].height
+		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width
+		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.canvas[0].height
 
 		this.draw();
 
 	},
 	onClick: function() {
-		this.colorBar.onClick(ctx, this.mouseX, this.mouseY, function(mouseX, mouseY, x, width) {
+		this.colorBar.checkForSelection(this.mouseX, this.mouseY);
+		this.saturationBar.checkForSelection(this.mouseX, this.mouseY);
+		this.brightnessBar.checkForSelection(this.mouseX, this.mouseY);
+	},
+	onMouseUp: function() {
+		this.colorBar.isSelected = false;
+		this.saturationBar.isSelected = false;
+		this.brightnessBar.isSelected = false;
+	},
+	onMouseHold: function(){
 
-			percentage = (mouseX - x) / width;
+		this.colorBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage) {
 
 			red = getColorValue(7, 3, percentage);
 			blue = getColorValue(1, 5, percentage);
@@ -108,33 +117,28 @@ var Art = Class({
 			colors[selectedColor].g = green;
 			colors[selectedColor].b = blue;
 
-			color = getFullHexColor(colors[selectedColor]);
-			// Changes the button's color and css
-			div = $(colorButtons.children()[selectedColor]);
-			
-			div.css("background-color", color)
-			div.html(color);
+			colors[selectedColor].hue = percentage;
+
+			changeButtonColor();
 		});
 
-		this.saturationBar.onClick(ctx, this.mouseX, this.mouseY, function(mouseX, mouseY, x, width){
-			percentage = (mouseX - x) / width;
+		this.saturationBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage){
 
 			saturation = percentage * 255;
 
-			colors[selectedColor].sat = saturation
+			colors[selectedColor].sat = saturation;
 
+			changeButtonColor();
 
-			hexColor = getFullHexColor(colors[selectedColor])
+		});
 
-			// Changes the button's color and css
-			div = $(colorButtons.children()[selectedColor]);
-			
-			div.css("background-color", hexColor)
-			div.html(hexColor);
+		this.brightnessBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage){
+			// Sets the proper brightness
+			colors[selectedColor].bright = 255 * percentage;
 
+			changeButtonColor();
 		})
 	},
-
 	draw: function() {
 
 		// Gets ctx for reference
@@ -201,7 +205,6 @@ var Art = Class({
 		black = {r: 0, g: 0, b:0};
 		white = {r: 255, g: 255, b: 255}
 		this.brightnessBar.draw(ctx, [black, colors[selectedColor], white]);
-
 	}
 })
 
@@ -248,7 +251,6 @@ function toHex(color) {
 
 }
 
-
 function getFullHexColor(color) {
 
 	percentage = (color.sat / 255)
@@ -260,4 +262,31 @@ function getFullHexColor(color) {
 	};
 
 	return "#" + toHex(finishedColor.r) + toHex(finishedColor.g) + toHex(finishedColor.b);
+}
+
+function changeButtonColor() {
+
+	// Gets the color in hex vaLUE
+	hexColor = getFullHexColor(colors[selectedColor])
+
+	// Gets the button
+	div = $(colorButtons.children()[selectedColor]);
+	
+	// Changes the background color
+	div.css("background-color", hexColor);
+
+	// Sets the text
+	div.html(hexColor);
+
+	// Changes the text color
+	if (colors[selectedColor].bright < 128){
+		div.css("color", "#ffffff");
+	}else {
+		div.css("color", "#000000")
+	}
+}
+
+function selectColor(colorIndex) {
+
+	selectedColor = colorIndex;
 }

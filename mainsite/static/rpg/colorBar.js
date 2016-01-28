@@ -88,19 +88,39 @@ var ColorBar = Class({
 
 	},
 
-	onClick: function(ctx, mouseX, mouseY, onSuccess){
+	onHold: function(ctx, mouseX, mouseY, onSuccess){
 
+		if (this.isSelected){
+
+			// Checks if the mouse is on the gradiant
+			// if not, places the crosshair at the appropriate end 
+			if (mouseX > this.x){
+				if (mouseX < this.x + this.w){
+					outputX = mouseX;
+				}else {
+
+					outputX = this.x + this.w;
+				}
+			}else {
+				outputX = this.x;
+			}
+
+			this.crosshairX = outputX;
+			this.crosshairY = this.y + this.h / 2;
+
+			percentage = (outputX - this.x) / this.w;
+			onSuccess(percentage);
+		}
+	},
+
+	checkForSelection: function(mouseX, mouseY){
 
 		// Checks if the mouse is on the color gradient
 		if (mouseX > this.x && mouseX < this.x + this.w){
 
 			if (mouseY > this.y && mouseY < this.y + this.h){
 
-				this.crosshairX = mouseX;
-				this.crosshairY = mouseY;
-
-				onSuccess(mouseX, mouseY, this.x, this.w);
-
+				this.isSelected = true;
 			}
 		}
 	}
