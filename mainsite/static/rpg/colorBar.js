@@ -123,5 +123,9 @@ var ColorBar = Class({
 				this.isSelected = true;
 			}
 		}
+	},
+
+	setCrosshairs: function(percentage) {
+		this.crosshairX = this.x + this.w * percentage;
 	}
 })

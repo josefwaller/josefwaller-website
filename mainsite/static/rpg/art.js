@@ -82,7 +82,7 @@ var Art = Class({
 			div.html(colors[i])
 			div.click({colorIndex: i}, function(event){
 
-				selectColor(event.data.colorIndex);
+				art.selectColor(event.data.colorIndex);
 			})
 		}
 
@@ -205,6 +205,14 @@ var Art = Class({
 		black = {r: 0, g: 0, b:0};
 		white = {r: 255, g: 255, b: 255}
 		this.brightnessBar.draw(ctx, [black, colors[selectedColor], white]);
+	},
+
+	selectColor: function(colorIndex) {
+		selectedColor = colorIndex;
+
+		this.colorBar.setCrosshairs(colors[selectedColor].hue);
+		this.saturationBar.setCrosshairs(colors[selectedColor].sat / 255);
+		this.brightnessBar.setCrosshairs(colors[selectedColor].bright / 255);
 	}
 })
 
@@ -284,9 +292,4 @@ function changeButtonColor() {
 	}else {
 		div.css("color", "#000000")
 	}
-}
-
-function selectColor(colorIndex) {
-
-	selectedColor = colorIndex;
 }
