@@ -32,6 +32,8 @@ var Art = Class({
 	saturationBar: null,
 	brightnessBar: null,
 
+	objectCanvases: [],
+
 	init: function(size) {
 
 		this.canvas = $("#art-canvas");
@@ -88,6 +90,22 @@ var Art = Class({
 			})
 		}
 
+		// Sets all the canvases in the sprite buttons
+		spriteButtonGroup = $("#art-sprites-btns");
+		for (i in sprites[selectedObject].length){10
+
+			
+
+			// Creates button
+			button = spriteButtonGroup.append("<a class='btn btn-lg' id='" + i + "'></a>");
+			// Creates canvas
+			canvas = button.append("<canvas id='" + i + "-canvas'></canvas>");
+
+			// Creats manager
+			objectManager.push(spriteCanvas({canvas: canvas, object: selectedObject, sprite: i}));
+
+			objectManager[objectManager.length - 1].draw();
+		}
 	},
 
 	update: function() {
@@ -242,7 +260,6 @@ var Art = Class({
 		white = {r: 255, g: 255, b: 255}
 		this.brightnessBar.draw(ctx, [black, colors[selectedColor], white]);
 	},
-
 	selectColor: function(colorIndex) {
 		selectedColor = colorIndex;
 
@@ -250,7 +267,6 @@ var Art = Class({
 		this.saturationBar.setCrosshairs(colors[selectedColor].sat / 255);
 		this.brightnessBar.setCrosshairs(colors[selectedColor].bright / 255);
 	},
-
 	getSelectedPixel: function(){
 
 		// Gets the pixel
@@ -258,7 +274,6 @@ var Art = Class({
 		pixelY = Math.round((this.mouseY - this.offsetY - (this.pixelSize/2)) / this.pixelSize);
 
 		return [pixelX, pixelY];
-
 	}
 })
 
@@ -302,7 +317,6 @@ function toHex(color) {
 	}
 
 	return c;
-
 }
 
 function getFullHexColor(color) {
