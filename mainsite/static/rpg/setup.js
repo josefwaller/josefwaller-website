@@ -98,7 +98,6 @@ function changeScreen(event) {
 	switch(i){
 		case 0:
 			screens.levelEditor.show();
-			console.log("ASDF")
 			break;
 		case 1:
 			screens.art.show();

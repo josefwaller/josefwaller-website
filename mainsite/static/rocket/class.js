@@ -9,8 +9,8 @@ function Class (classObj){
 		classObj.init(params)
 
 		var newObj = {};
-		for (i in classObj){
-			newObj[i] = classObj[i];
+		for (classObjIndex in classObj){
+			newObj[classObjIndex] = classObj[classObjIndex];
 		}
 
 		newObj.id = id;

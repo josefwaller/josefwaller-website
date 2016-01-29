@@ -32,7 +32,8 @@ var Art = Class({
 	saturationBar: null,
 	brightnessBar: null,
 
-	objectCanvases: [],
+	spriteCanvases: {},
+	objectCanvases: {},
 
 	init: function(size) {
 
@@ -92,19 +93,55 @@ var Art = Class({
 
 		// Sets all the canvases in the sprite buttons
 		spriteButtonGroup = $("#art-sprites-btns");
-		for (i in sprites[selectedObject].length){10
-
-			
+		for (i in sprites[selectedObject]){
 
 			// Creates button
-			button = spriteButtonGroup.append("<a class='btn btn-lg' id='" + i + "'></a>");
+			button = $("<a class='btn btn-lg' id='" + i + "'></a>");
+			button.click({sprite: i}, function(event) {
+
+				sprite = event.data.sprite;
+				selectedSprite = sprite;
+
+			})
 			// Creates canvas
-			canvas = button.append("<canvas id='" + i + "-canvas'></canvas>");
+			canvas = $("<canvas id='" + i + "-canvas'></canvas>");
+
+			spriteButtonGroup.append(button);
+
+			button.append(canvas);
+			button.append("<br>" + i);
 
 			// Creats manager
-			objectManager.push(spriteCanvas({canvas: canvas, object: selectedObject, sprite: i}));
+			this.spriteCanvases[i] = spriteCanvas({canvas: canvas, object: selectedObject, sprite: i});
+			this.spriteCanvases[i].draw();
+		}
 
-			objectManager[objectManager.length - 1].draw();
+		objectButtonGroup = $("#art-objects-btns");
+		for (i in sprites){
+
+			// Creates button
+			button = $("<a class='btn btn-lg' id='" + i + "'></a>");
+			button.click({sprite: i}, function(event) {
+
+				sprite = event.data.sprite;
+				selectedSprite = sprite;
+
+			})
+			// Creates canvas
+			canvas = $("<canvas id='" + i + "-canvas'></canvas>");
+
+			objectButtonGroup.append(button);
+
+			button.append(canvas);
+			button.append("<br>" + i);
+
+			// Gets the first sprite
+			spriteName = Object.keys(sprites[i])[0];
+
+			// Creats manager
+			this.spriteCanvases[i] = spriteCanvas({canvas: canvas, object: i, sprite: spriteName});
+			this.spriteCanvases[i].draw();
+
 		}
 	},
 
@@ -126,6 +163,8 @@ var Art = Class({
 				pixel = this.getSelectedPixel();
 				sprite = sprites[selectedObject][selectedSprite];
 				sprite[pixel[0]][pixel[1]] = selectedColor;
+
+				this.spriteCanvases[selectedSprite].draw();
 
 			}
 		}
@@ -355,4 +394,10 @@ function changeButtonColor() {
 
 	// Sets the color hex value
 	colors[selectedColor].hex = hexColor;
+
+	//Sets all the sprite canvases colors
+	for (i in art.spriteCanvases){
+
+		art.spriteCanvases[i].draw();
+	}
 }
