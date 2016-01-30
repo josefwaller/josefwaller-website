@@ -118,8 +118,8 @@ var Art = Class({
 			spriteName = Object.keys(sprites[i])[0];
 
 			// Creats manager
-			this.spriteCanvases[i] = spriteCanvas({canvas: canvas, object: i, sprite: spriteName});
-			this.spriteCanvases[i].draw();
+			this.objectCanvases[i] = spriteCanvas({canvas: canvas, object: i, sprite: spriteName});
+			this.objectCanvases[i].draw();
 
 		}
 	},
@@ -132,9 +132,17 @@ var Art = Class({
 
 	},
 	onClick: function() {
+		// Checks if the bars are selected
 		this.colorBar.checkForSelection(this.mouseX, this.mouseY);
 		this.saturationBar.checkForSelection(this.mouseX, this.mouseY);
 		this.brightnessBar.checkForSelection(this.mouseX, this.mouseY);
+	},
+	onMouseUp: function() {
+		this.colorBar.isSelected = false;
+		this.saturationBar.isSelected = false;
+		this.brightnessBar.isSelected = false;
+	},
+	onMouseHold: function(){
 
 		// Checks if the mouse is on the canvas
 		if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + this.size * this.pixelSize){
@@ -144,16 +152,10 @@ var Art = Class({
 				sprite[pixel[0]][pixel[1]] = selectedColor;
 
 				this.spriteCanvases[selectedSprite].draw();
+				this.objectCanvases[selectedObject].draw();
 
 			}
 		}
-	},
-	onMouseUp: function() {
-		this.colorBar.isSelected = false;
-		this.saturationBar.isSelected = false;
-		this.brightnessBar.isSelected = false;
-	},
-	onMouseHold: function(){
 
 		this.colorBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage) {
 

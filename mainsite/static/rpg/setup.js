@@ -4,14 +4,14 @@ var background;
 var screens;
 
 var colors = [
-	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:null},
-	{r:0, g:0, b:0, sat:100, bright:100},
-	{r:0, g:0, b:0, sat:100, bright:100},
-	{r:0, g:0, b:0, sat:100, bright:100},
-	{r:0, g:0, b:0, sat:100, bright:100},
-	{r:0, g:0, b:0, sat:100, bright:100},
-	{r:0, g:0, b:0, sat:100, bright:100},
-	{r:0, g:0, b:0, sat:100, bright:100},
+	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"}
 ]
 
 var currentScreen;
@@ -73,11 +73,13 @@ function setup () {
 		music: $("#music")
 	}
 
+	// Sets mouse position when it moves
 	$(document).mousemove(function(event) {
 		mouse.pos.x = event.pageX,
 		mouse.pos.y = event.pageY
 	})
 
+	// Sets mouse values in current situation
 	$(document).mousedown(function(event){
 		mouse.down = true;
 		mouse.click = true;
@@ -86,7 +88,7 @@ function setup () {
 		mouse.down = false;
 	})
 
-	window.setInterval(update, 1000/30)
+	window.setInterval(update, 1000/60)
 
 }
 
