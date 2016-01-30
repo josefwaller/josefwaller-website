@@ -90,41 +90,20 @@ var Art = Class({
 				art.selectColor(event.data.colorIndex);
 			})
 		}
+		this.changeSpriteButtons();
 
-		// Sets all the canvases in the sprite buttons
-		spriteButtonGroup = $("#art-sprites-btns");
-		for (i in sprites[selectedObject]){
-
-			// Creates button
-			button = $("<a class='btn btn-lg' id='" + i + "'></a>");
-			button.click({sprite: i}, function(event) {
-
-				sprite = event.data.sprite;
-				selectedSprite = sprite;
-
-			})
-			// Creates canvas
-			canvas = $("<canvas id='" + i + "-canvas'></canvas>");
-
-			spriteButtonGroup.append(button);
-
-			button.append(canvas);
-			button.append("<br>" + i);
-
-			// Creats manager
-			this.spriteCanvases[i] = spriteCanvas({canvas: canvas, object: selectedObject, sprite: i});
-			this.spriteCanvases[i].draw();
-		}
-
+		// Creates the object button groups
 		objectButtonGroup = $("#art-objects-btns");
 		for (i in sprites){
 
 			// Creates button
 			button = $("<a class='btn btn-lg' id='" + i + "'></a>");
-			button.click({sprite: i}, function(event) {
+			button.click({obj: i}, function(event) {
 
-				sprite = event.data.sprite;
-				selectedSprite = sprite;
+				obj = event.data.obj;
+				selectedObject = obj;
+
+				art.changeSpriteButtons();
 
 			})
 			// Creates canvas
@@ -313,6 +292,36 @@ var Art = Class({
 		pixelY = Math.round((this.mouseY - this.offsetY - (this.pixelSize/2)) / this.pixelSize);
 
 		return [pixelX, pixelY];
+	},
+
+	changeSpriteButtons: function() {
+
+		this.spriteCanvases = {};
+		// Sets all the canvases in the sprite buttons
+		spriteButtonGroup = $("#art-sprites-btns");
+		spriteButtonGroup.html("");
+		for (i in sprites[selectedObject]){
+
+			// Creates button
+			button = $("<a class='btn btn-lg' id='" + i + "'></a>");
+			button.click({sprite: i}, function(event) {
+
+				sprite = event.data.sprite;
+				selectedSprite = sprite;
+
+			})
+			// Creates canvas
+			canvas = $("<canvas id='" + i + "-canvas'></canvas>");
+
+			spriteButtonGroup.append(button);
+
+			button.append(canvas);
+			button.append("<br>" + i);
+
+			// Creats manager
+			this.spriteCanvases[i] = spriteCanvas({canvas: canvas, object: selectedObject, sprite: i});
+			this.spriteCanvases[i].draw();
+		}
 	}
 })
 

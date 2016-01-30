@@ -35,7 +35,8 @@ function setup () {
 		},
 		enemy_one: {
 			runOne: [],
-			runTwo: []
+			runTwo: [],
+			attack: []
 		}
 	}
 
