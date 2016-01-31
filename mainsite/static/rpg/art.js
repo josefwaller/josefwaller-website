@@ -35,6 +35,8 @@ var Art = Class({
 	spriteCanvases: {},
 	objectCanvases: {},
 
+	isErasing: false,
+
 	init: function(size) {
 
 		this.canvas = $("#art-canvas");
@@ -76,20 +78,30 @@ var Art = Class({
 
 		// Sets the button's colors
 		colorButtons = $("#color-btns");
-
-		for (i = 0; i < colorButtons.children().length; i++){
-			div = $(colorButtons.children()[i]);
+		colorButtons.html("");
+		for (i = 0; i < colors.length; i++){
+			div = $("<a class='btn btn-lg'></a>");
+			colorButtons.append(div);
 			
 			if (colors[i].bright < 50){
 				div.css("color", "#ffffff")
 			}
-			div.css("background-color", colors[i])
-			div.html(colors[i])
+			div.css("background-color", colors[i].hex)
+			div.html(colors[i].hex)
 			div.click({colorIndex: i}, function(event){
 
 				art.selectColor(event.data.colorIndex);
 			})
 		}
+		// Creates the eraser button
+		eraserDiv = $("<a class='btn btn-lg'>Eraser</a>");
+		eraserDiv.click(function(event) {
+			art.isErasing = true;
+		})
+		eraserDiv.css("background-color", "#66ccff");
+		eraserDiv.css("color", "#ffffff");
+		colorButtons.append(eraserDiv);
+
 		this.changeSpriteButtons();
 
 		// Creates the object button groups
@@ -144,18 +156,8 @@ var Art = Class({
 	},
 	onMouseHold: function(){
 
-		// Checks if the mouse is on the canvas
-		if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + this.size * this.pixelSize){
-			if (this.mouseY > this.offsetY && this.mouseY < this.offsetY + this.size * this.pixelSize){
-				pixel = this.getSelectedPixel();
-				sprite = sprites[selectedObject][selectedSprite];
-				sprite[pixel[0]][pixel[1]] = selectedColor;
-
-				this.spriteCanvases[selectedSprite].draw();
-				this.objectCanvases[selectedObject].draw();
-
-			}
-		}
+		// Used so that the user cannot draw on the canvas while changing color
+		var changingColor = false;
 
 		this.colorBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage) {
 
@@ -170,6 +172,8 @@ var Art = Class({
 			colors[selectedColor].hue = percentage;
 
 			changeButtonColor();
+
+			changingColor = true;
 		});
 
 		this.saturationBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage){
@@ -180,6 +184,8 @@ var Art = Class({
 
 			changeButtonColor();
 
+			changingColor = true;
+
 		});
 
 		this.brightnessBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage){
@@ -187,7 +193,30 @@ var Art = Class({
 			colors[selectedColor].bright = 255 * percentage;
 
 			changeButtonColor();
+
+			changingColor = true;
 		})
+
+		// Checks if the mouse is on the canvas
+		if (!changingColor){
+			if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + this.size * this.pixelSize){
+				if (this.mouseY > this.offsetY && this.mouseY < this.offsetY + this.size * this.pixelSize){
+
+					pixel = this.getSelectedPixel();
+					sprite = sprites[selectedObject][selectedSprite];
+
+					if (!this.isErasing){
+						sprite[pixel[0]][pixel[1]] = selectedColor;
+					}else {
+						sprite[pixel[0]][pixel[1]] = null;
+					}
+
+					this.spriteCanvases[selectedSprite].draw();
+					this.objectCanvases[selectedObject].draw();
+
+				}
+			}
+		}
 	},
 	draw: function() {
 
@@ -411,4 +440,6 @@ function changeButtonColor() {
 
 		art.spriteCanvases[i].draw();
 	}
+
+	art.objectCanvases[selectedObject].draw();
 }
