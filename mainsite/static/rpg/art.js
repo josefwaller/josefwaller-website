@@ -35,7 +35,17 @@ var Art = Class({
 	spriteCanvases: {},
 	objectCanvases: {},
 
+	animationDisplay: {
+		x: 0,
+		y: 0,
+		w: 0,
+		h: 0
+	},
+
+	copyButton: null,
+
 	isErasing: false,
+	isCopying: true,
 
 	init: function(size) {
 
@@ -62,7 +72,7 @@ var Art = Class({
 
 		this.saturationBar = new ColorBar({
 			x: this.offsetX + this.pixelSize * this.size + 30, 
-			y: this.offsetY + 100, 
+			y: this.offsetY + 30, 
 			w: 200, 
 			h: 20,
 			img: null
@@ -70,29 +80,45 @@ var Art = Class({
 
 		this.brightnessBar = new ColorBar({
 			x: this.offsetX + this.pixelSize * this.size + 30,
-			y: this.offsetY + 200,
+			y: this.offsetY + 60,
 			w: 200,
 			h: 20,
 			img: null
 		});
 
+		this.copyButton = new Button({
+			x: this.offsetX + this.pixelSize * this.size + 30,
+			y: this.offsetY + 90,
+			w: 200,
+			h: 150
+		});
+
 		// Sets the button's colors
 		colorButtons = $("#color-btns");
 		colorButtons.html("");
+
 		for (i = 0; i < colors.length; i++){
+
+			// Creates button for the color
 			div = $("<a class='btn btn-lg'></a>");
 			colorButtons.append(div);
 			
-			if (colors[i].bright < 50){
-				div.css("color", "#ffffff")
+			// Sets the text color so it is visible
+			if (colors[i].bright < 128){
+				div.css("color", "#ffffff");
+			}else {
+				div.css("color", "#000000");
 			}
+
 			div.css("background-color", colors[i].hex)
 			div.html(colors[i].hex)
 			div.click({colorIndex: i}, function(event){
 
 				art.selectColor(event.data.colorIndex);
+
 			})
 		}
+
 		// Creates the eraser button
 		eraserDiv = $("<a class='btn btn-lg'>Eraser</a>");
 		eraserDiv.click(function(event) {
@@ -309,7 +335,12 @@ var Art = Class({
 		white = {r: 255, g: 255, b: 255}
 		this.brightnessBar.draw(ctx, [black, colors[selectedColor], white]);
 	},
+
 	selectColor: function(colorIndex) {
+
+		this.isErasing = false;
+
+		// Selects a color and sets the crosshairs appropriatly
 		selectedColor = colorIndex;
 
 		this.colorBar.setCrosshairs(colors[selectedColor].hue);
@@ -325,7 +356,10 @@ var Art = Class({
 		return [pixelX, pixelY];
 	},
 
+
 	changeSpriteButtons: function() {
+
+		// Resets all of the sprite buttons
 
 		this.spriteCanvases = {};
 		// Sets all the canvases in the sprite buttons
