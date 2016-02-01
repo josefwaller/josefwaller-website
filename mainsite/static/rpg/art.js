@@ -45,9 +45,12 @@ var Art = Class({
 	copyButton: null,
 
 	isErasing: false,
-	isCopying: true,
+	isCopying: false,
+	isClickingCancel: false,
 
-	init: function(size) {
+	copyObject: null,
+
+	init: function(p) {
 
 		this.canvas = $("#art-canvas");
 		this.ctx = this.canvas[0].getContext("2d");
@@ -57,7 +60,7 @@ var Art = Class({
 		this.canvas[0].width = this.w;
 		this.canvas[0].height = this.h;
 
-		this.size = size
+		this.size = p.size
 		this.offsetX = this.w * (1/10)
 		this.offsetY = this.h * (1/20)
 		this.pixelSize = (this.h - 2 * this.offsetY) / this.size;
@@ -90,8 +93,30 @@ var Art = Class({
 			x: this.offsetX + this.pixelSize * this.size + 30,
 			y: this.offsetY + 90,
 			w: 200,
-			h: 150
+			h: 150,
+			text: null,
+			color: "#000000",
+			onClick: function(){
+				art.isCopying = !art.isCopying;
+			}
 		});
+
+		text = "Cancel"
+		this.ctx.font = "20px Arial"
+
+		this.copyCancelButton = new Button({
+			x: (this.w - this.ctx.measureText(text).width) / 2,
+			y: this.h / 2,
+			w: this.ctx.measureText(text).width,
+			h: 20,
+			color: null,
+			text: text,
+			font: "20px Arial",
+			textColor: "#ffffff",
+			onClick: function() {
+				art.isClickingCancel = true;
+			}
+		})
 
 		// Sets the button's colors
 		colorButtons = $("#color-btns");
@@ -139,9 +164,7 @@ var Art = Class({
 			button.click({obj: i}, function(event) {
 
 				obj = event.data.obj;
-				selectedObject = obj;
-
-				art.changeSpriteButtons();
+				art.changeSelectedObject(obj);
 
 			})
 			// Creates canvas
@@ -161,26 +184,35 @@ var Art = Class({
 
 		}
 	},
-
 	update: function() {
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width
 		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.canvas[0].height
 
 		this.draw();
-
 	},
 	onClick: function() {
 		// Checks if the bars are selected
 		this.colorBar.checkForSelection(this.mouseX, this.mouseY);
 		this.saturationBar.checkForSelection(this.mouseX, this.mouseY);
 		this.brightnessBar.checkForSelection(this.mouseX, this.mouseY);
+
+		this.copyButton.checkForClick(this.mouseX, this.mouseY);
+
+		if (this.isCopying){
+			this.copyCancelButton.checkForClick(this.mouseX, this.mouseY);
+		}
 	},
 	onMouseUp: function() {
 		this.colorBar.isSelected = false;
 		this.saturationBar.isSelected = false;
 		this.brightnessBar.isSelected = false;
+
+		if (this.isClickingCancel){
+			this.isCopying = false;
+			this.isClickingCancel = false;
+		}
 	},
-	onMouseHold: function(){
+	onMouseHold: function() {
 
 		// Used so that the user cannot draw on the canvas while changing color
 		var changingColor = false;
@@ -224,7 +256,7 @@ var Art = Class({
 		})
 
 		// Checks if the mouse is on the canvas
-		if (!changingColor){
+		if (!changingColor && !this.isCopying){
 			if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + this.size * this.pixelSize){
 				if (this.mouseY > this.offsetY && this.mouseY < this.offsetY + this.size * this.pixelSize){
 
@@ -237,8 +269,7 @@ var Art = Class({
 						sprite[pixel[0]][pixel[1]] = null;
 					}
 
-					this.spriteCanvases[selectedSprite].draw();
-					this.objectCanvases[selectedObject].draw();
+					this.updateSelectedButtons();
 
 				}
 			}
@@ -325,17 +356,37 @@ var Art = Class({
 			}
 		}
 
+		// Draws bars/buttons
 		this.colorBar.draw(ctx);
 
 		brightness = colors[selectedColor].bright;
-
 		this.saturationBar.draw(ctx, [{r:brightness, g:brightness, b:brightness}, colors[selectedColor]])
 
 		black = {r: 0, g: 0, b:0};
 		white = {r: 255, g: 255, b: 255}
 		this.brightnessBar.draw(ctx, [black, colors[selectedColor], white]);
-	},
 
+		this.copyButton.draw(ctx);
+
+		if (this.isCopying){
+
+			// Draws transparent white layer
+			ctx.globalAlpha = 0.5;
+			ctx.fillStyle = "#cccccc";
+			ctx.fillRect(0, 0, this.w, this.h);
+			ctx.globalAlpha = 1;
+
+			// Draws text
+			ctx.fillStyle = "#ffffff";
+			ctx.font = "30px Arial";
+			text = "Choose a sprite to copy";
+
+			x = (this.w - ctx.measureText(text).width) / 2;
+			ctx.fillText(text, x, this.h / 3);
+
+			this.copyCancelButton.draw(ctx);
+		}
+	},
 	selectColor: function(colorIndex) {
 
 		this.isErasing = false;
@@ -347,7 +398,7 @@ var Art = Class({
 		this.saturationBar.setCrosshairs(colors[selectedColor].sat / 255);
 		this.brightnessBar.setCrosshairs(colors[selectedColor].bright / 255);
 	},
-	getSelectedPixel: function(){
+	getSelectedPixel: function() {
 
 		// Gets the pixel
 		pixelX = Math.round((this.mouseX - this.offsetX - (this.pixelSize/2)) / this.pixelSize);
@@ -355,8 +406,6 @@ var Art = Class({
 
 		return [pixelX, pixelY];
 	},
-
-
 	changeSpriteButtons: function() {
 
 		// Resets all of the sprite buttons
@@ -372,7 +421,7 @@ var Art = Class({
 			button.click({sprite: i}, function(event) {
 
 				sprite = event.data.sprite;
-				selectedSprite = sprite;
+				art.changeSprite(sprite);
 
 			})
 			// Creates canvas
@@ -387,6 +436,51 @@ var Art = Class({
 			this.spriteCanvases[i] = spriteCanvas({canvas: canvas, object: selectedObject, sprite: i});
 			this.spriteCanvases[i].draw();
 		}
+	},
+	changeSprite: function(spriteIndex) {
+		// Changes the sprite or copies it
+
+		if (this.isCopying){
+
+			obj = selectedObject;
+
+			// Checks if it is in the same object
+			if (this.copyObject !== null){
+				obj = this.copyObject;
+				this.copyObject = null;
+			}
+
+			// Loops through and copys the sprite
+			for (x = 0; x < sprites[obj][selectedSprite].length; x++){
+				for (y = 0; y < sprites[obj][selectedSprite][x].length; y++){
+					sprites[obj][selectedSprite][x][y] = sprites[selectedObject][spriteIndex][x][y];
+				}
+			}
+			art.isCopying = false;
+
+			// Switches back to selected object if the user copied a sprite from a different object
+			this.changeSelectedObject(obj);
+		}else {
+			selectedSprite = spriteIndex;
+		}
+	},
+	updateSelectedButtons: function() {
+		// Updates the current selected sprite and object button canvases
+		this.objectCanvases[selectedObject].draw();
+		this.spriteCanvases[selectedSprite].draw();
+	},
+	changeSelectedObject: function(objIndex){ 
+
+		// Saves 
+		if (this.isCopying){
+			this.copyObject = selectedObject;
+		}
+
+		selectedObject = objIndex;
+		selectedSprite = Object.keys(sprites[selectedObject])[0];
+
+		this.objectCanvases[selectedObject].draw();
+		this.changeSpriteButtons();
 	}
 })
 

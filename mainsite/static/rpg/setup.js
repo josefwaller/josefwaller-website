@@ -59,7 +59,7 @@ function setup () {
 	}
 
 	// Sets up art canvas
-	art = Art(size);
+	art = Art({size: size});
 
 	// Sets up changing screens
 	$("#level-editor-btn").click({i:0}, changeScreen)
@@ -75,8 +75,8 @@ function setup () {
 
 	// Sets mouse position when it moves
 	$(document).mousemove(function(event) {
-		mouse.pos.x = event.pageX,
-		mouse.pos.y = event.pageY
+		mouse.pos.x = event.pageX;
+		mouse.pos.y = event.pageY;
 	})
 
 	// Sets mouse values in current situation
