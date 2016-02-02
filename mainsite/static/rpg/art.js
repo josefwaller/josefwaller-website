@@ -1,6 +1,18 @@
 var selectedColor = 0;
 var selectedObject = "player";
-var selectedSprite = "runOne";
+var selectedSprite = "runDownOne";
+
+// The animation to display
+var selectedAnimation = 0;
+// Sprite in animation to show
+var selectedAnimationSprite = 0;
+
+var animations = [
+	["runSideOne", "runSideTwo"],
+	["runUpOne", "runUpTwo"],
+	["runDownOne", "runDownTwo"],
+	["attackDown", "runDownOne"]
+];
 
 
 var Art = Class({
@@ -9,10 +21,6 @@ var Art = Class({
 
 	w: 600,
 	h: null,
-
-	red: 0,
-	blue: 0,
-	green: 0,
 
 	offsetX: 0,
 	offsetY: 0,
@@ -41,6 +49,7 @@ var Art = Class({
 		w: 0,
 		h: 0
 	},
+	animationInterval: null,
 
 	copyButton: null,
 
@@ -64,9 +73,12 @@ var Art = Class({
 		this.offsetX = this.w * (1/10)
 		this.offsetY = this.h * (1/20)
 		this.pixelSize = (this.h - 2 * this.offsetY) / this.size;
+		
+		// The x coord of everything beside the canvas
+		x = this.offsetX + this.pixelSize * this.size + 30;
 
 		this.colorBar = new ColorBar({
-			x: this.offsetX + this.pixelSize * this.size + 30, 
+			x: x, 
 			y: this.offsetY, 
 			w: 200, 
 			h: 20,
@@ -74,7 +86,7 @@ var Art = Class({
 		});
 
 		this.saturationBar = new ColorBar({
-			x: this.offsetX + this.pixelSize * this.size + 30, 
+			x: x, 
 			y: this.offsetY + 30, 
 			w: 200, 
 			h: 20,
@@ -82,7 +94,7 @@ var Art = Class({
 		});
 
 		this.brightnessBar = new ColorBar({
-			x: this.offsetX + this.pixelSize * this.size + 30,
+			x: x,
 			y: this.offsetY + 60,
 			w: 200,
 			h: 20,
@@ -90,16 +102,38 @@ var Art = Class({
 		});
 
 		this.copyButton = new Button({
-			x: this.offsetX + this.pixelSize * this.size + 30,
+			x: x,
 			y: this.offsetY + 90,
 			w: 200,
-			h: 150,
-			text: null,
-			color: "#000000",
+			h: (this.h - (this.offsetY + 90)) / 2 - 20,
+			text: "Copy Sprite",
+			textColor: "#ffffff",
+			textY: null,
+			font: "'Press Start 2P'",
+			fontSize: 15,
+			color: "#aaaaaa",
+			hoverColor: "#cccccc",
 			onClick: function(){
 				art.isCopying = !art.isCopying;
 			}
 		});
+
+		this.animationDisplay.x = x,
+		this.animationDisplay.y = this.copyButton.y + this.copyButton.h + 10;
+		this.animationDisplay.w = 200;
+		this.animationDisplay.h = this.copyButton.h;
+
+		// Sets the offset and pixel size for the animation display
+		if (this.animationDisplay.w > this.animationDisplay.h){
+			this.animationDisplay.pixelSize = this.animationDisplay.h / this.size;
+			this.animationDisplay.offsetX = (this.animationDisplay.w - this.animationDisplay.h) / 2;
+			this.animationDisplay.offsetY = 0;
+
+		}else {
+			this.animationDisplay.pixelSize = this.animationDisplay.w / this.size;
+			this.animationDisplay.offsetY = (this.animationDisplay.h - this.animationDisplay.w) / 2;
+			this.animationDisplay.offsetX = 0;
+		}
 
 		text = "Cancel"
 		this.ctx.font = "20px Arial"
@@ -111,7 +145,9 @@ var Art = Class({
 			h: 20,
 			color: null,
 			text: text,
-			font: "20px Arial",
+			textY: null,
+			font: "'Arial'",
+			fontSize: 20,
 			textColor: "#ffffff",
 			onClick: function() {
 				art.isClickingCancel = true;
@@ -183,6 +219,8 @@ var Art = Class({
 			this.objectCanvases[i].draw();
 
 		}
+
+		this.animationInterval = window.setInterval(this.updateSpriteAnimations, 1000/5);
 	},
 	update: function() {
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width
@@ -356,6 +394,29 @@ var Art = Class({
 			}
 		}
 
+
+		animationSprite = animations[selectedAnimation][selectedAnimationSprite];
+
+		// Draws animation display
+
+		sprite = sprites[selectedObject][animationSprite];
+
+		for (x = 0; x < sprite.length; x++){
+			for (y = 0; y < sprite[x].length; y++){
+
+				if (sprite[x][y] !== null){
+
+					ctx.fillStyle = colors[sprite[x][y]].hex;
+					ctx.fillRect(
+						art.animationDisplay.x + art.animationDisplay.offsetX + art.animationDisplay.pixelSize * x,
+						art.animationDisplay.y + art.animationDisplay.offsetY + art.animationDisplay.pixelSize * y,
+						art.animationDisplay.pixelSize,
+						art.animationDisplay.pixelSize
+					);
+				}
+
+			}
+		}
 		// Draws bars/buttons
 		this.colorBar.draw(ctx);
 
@@ -366,7 +427,7 @@ var Art = Class({
 		white = {r: 255, g: 255, b: 255}
 		this.brightnessBar.draw(ctx, [black, colors[selectedColor], white]);
 
-		this.copyButton.draw(ctx);
+		this.copyButton.draw(ctx, this.mouseX, this.mouseY);
 
 		if (this.isCopying){
 
@@ -384,7 +445,7 @@ var Art = Class({
 			x = (this.w - ctx.measureText(text).width) / 2;
 			ctx.fillText(text, x, this.h / 3);
 
-			this.copyCancelButton.draw(ctx);
+			this.copyCancelButton.draw(ctx, this.mouseX, this.mouseY);
 		}
 	},
 	selectColor: function(colorIndex) {
@@ -462,6 +523,18 @@ var Art = Class({
 			this.changeSelectedObject(obj);
 		}else {
 			selectedSprite = spriteIndex;
+
+			selectedAnimationSprite = 0;
+			// Find the animation to display
+			for (i = 0; i < animations.length; i++){
+
+				if ($.inArray(selectedSprite, animations[i]) !== -1){
+					console.log(selectedSprite)
+					selectedAnimation = i;
+					break;
+				}
+			}
+
 		}
 	},
 	updateSelectedButtons: function() {
@@ -469,7 +542,7 @@ var Art = Class({
 		this.objectCanvases[selectedObject].draw();
 		this.spriteCanvases[selectedSprite].draw();
 	},
-	changeSelectedObject: function(objIndex){ 
+	changeSelectedObject: function(objIndex) { 
 
 		// Saves 
 		if (this.isCopying){
@@ -481,6 +554,18 @@ var Art = Class({
 
 		this.objectCanvases[selectedObject].draw();
 		this.changeSpriteButtons();
+	},
+	updateSpriteAnimations: function() {
+
+		// Changes the sprite to draw in the animation display
+
+		selectedAnimationSprite += 1;
+
+		if (selectedAnimationSprite >= animations[selectedAnimation].length){
+
+			selectedAnimationSprite = 0;
+
+		}
 	}
 })
 

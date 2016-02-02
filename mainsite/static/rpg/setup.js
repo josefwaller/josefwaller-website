@@ -30,13 +30,17 @@ function setup () {
 	
 	sprites = {
 		player: {
-			runOne: [],
-			runTwo: []
+			runDownOne: [],
+			runDownTwo: [],
+			runSideOne: [],
+			runSideTwo: [],
+			runUpOne: [],
+			runUpTwo: []
 		},
 		enemy_one: {
-			runOne: [],
-			runTwo: [],
-			attack: []
+			runDownOne: [],
+			runDownTwo: [],
+			attackDown: []
 		}
 	}
 
@@ -87,13 +91,16 @@ function setup () {
 	$(document).mouseup(function(event){
 		mouse.down = false;
 	})
-
+	changeScreen(null, 1);
 	window.setInterval(update, 1000/60)
 
 }
 
-function changeScreen(event) {
-	i = event.data.i;
+function changeScreen(event, i) {
+
+	if (event !== null){
+		i = event.data.i;
+	}
 	screens.levelEditor.hide();
 	screens.art.hide();
 	screens.music.hide();

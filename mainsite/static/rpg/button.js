@@ -16,13 +16,27 @@ var Button = new Class({
 
 		if (p.color !== null){
 			this.color = p.color;
+			this.hoverColor = p.hoverColor;
 		}else {
 			this.color = null;
 		}
 		if (p.text){
 			this.text = p.text;
-			this.font = p.font;
 			this.textColor = p.textColor;
+			this.font = p.font;
+			this.textY = p.textY;
+
+			if (p.textY === null){
+
+				this.textY = this.y + this.h / 2;
+			}
+
+			if (p.fontSize !== null){
+				this.font = p.fontSize + "px " + this.font;
+				// 20px 'Press Start 2P' for example
+
+				this.textY += p.fontSize / 2;
+			}
 		}
 
 		this.onClick = p.onClick;
@@ -38,10 +52,18 @@ var Button = new Class({
 
 	},
 
-	draw: function(ctx) {
+	draw: function(ctx, mouseX, mouseY) {
 
 		if (this.color !== null){
-			ctx.fillStyle = this.color;
+
+			color = this.color;
+			if (this.x <= mouseX && this.x + this.w > mouseX){
+				if (this.y <= mouseY && this.y + this.h > mouseY){
+
+					color = this.hoverColor;
+				}
+			}
+			ctx.fillStyle = color;
 			ctx.fillRect(this.x, this.y, this.w, this.h);
 		}
 
@@ -49,7 +71,7 @@ var Button = new Class({
 			ctx.fillStyle = this.textColor;
 			ctx.font = this.font;
 			x = this.x + (this.w - ctx.measureText(this.text).width) / 2;
-			y = this.y + 20;
+			y = this.textY;
 
 			ctx.fillText(this.text, x, y);
 		}

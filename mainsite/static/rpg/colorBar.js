@@ -17,7 +17,7 @@ var ColorBar = Class({
 		this.h = p.h;
 
 		this.crosshairX = this.x;
-		this.crosshairY = this.y;
+		this.crosshairY = this.y + this.h / 2;
 
 		this.img = p.img;
 
