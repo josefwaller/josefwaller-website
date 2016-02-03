@@ -52,6 +52,7 @@ var Art = Class({
 	animationInterval: null,
 
 	copyButton: null,
+	mirrorButton: null,
 
 	isErasing: false,
 	isCopying: false,
@@ -105,7 +106,7 @@ var Art = Class({
 			x: x,
 			y: this.offsetY + 90,
 			w: 200,
-			h: (this.h - (this.offsetY + 90)) / 2 - 20,
+			h: (this.h - (this.offsetY + 90)) / 3 - 20,
 			text: "Copy Sprite",
 			textColor: "#ffffff",
 			textY: null,
@@ -118,10 +119,29 @@ var Art = Class({
 			}
 		});
 
+		this.mirrorButton = new Button({
+			x: x,
+			y: this.copyButton.y + this.copyButton.h + 10,
+			w: 200,
+			h: this.copyButton.h,
+			text: "Mirror",
+			textColor: "#ffffff",
+			textY: null,
+			font: "'Press Start 2P'",
+			fontSize: 15,
+			color: "#33ccff",
+			hoverColor: "#66ccff",
+			onClick: function() {
+				console.log("mirronr")
+			}
+		})
+
+		console.log(this.mirrorButton);
+
 		this.animationDisplay.x = x,
-		this.animationDisplay.y = this.copyButton.y + this.copyButton.h + 10;
+		this.animationDisplay.y = this.mirrorButton.y + this.mirrorButton.h + 10;
 		this.animationDisplay.w = 200;
-		this.animationDisplay.h = this.copyButton.h;
+		this.animationDisplay.h = this.mirrorButton.h;
 
 		// Sets the offset and pixel size for the animation display
 		if (this.animationDisplay.w > this.animationDisplay.h){
@@ -428,6 +448,7 @@ var Art = Class({
 		this.brightnessBar.draw(ctx, [black, colors[selectedColor], white]);
 
 		this.copyButton.draw(ctx, this.mouseX, this.mouseY);
+		this.mirrorButton.draw(ctx, this.mouseX, this.mouseY);
 
 		if (this.isCopying){
 

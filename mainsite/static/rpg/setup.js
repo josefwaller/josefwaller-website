@@ -45,7 +45,7 @@ function setup () {
 	}
 
 	// Fills the empty arrays
-	size = 10
+	size = 16
 	for (s in sprites){
 
 		for (index in sprites[s]){
