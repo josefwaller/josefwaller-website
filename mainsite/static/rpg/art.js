@@ -60,6 +60,11 @@ var Art = Class({
 
 	copyObject: null,
 
+	underlayingSprite: {
+		object: "player",
+		sprite: "runDownOne"
+	},
+
 	init: function(p) {
 
 		this.canvas = $("#art-canvas");
@@ -375,6 +380,33 @@ var Art = Class({
 				this.size * this.pixelSize, 
 				1);
 
+		}
+
+		if (this.underlayingSprite.object !== null){
+			// Draws underlaying Sprite
+			ctx.globalAlpha = 0.5;
+
+			sprite = sprites[this.underlayingSprite.object][this.underlayingSprite.sprite];
+			for (var x = 0; x < this.size; x++){
+				for (var y = 0; y < this.size; y++){
+					if (sprite[x][y] !== null){
+						color = colors[sprite[x][y]];
+
+						ctx.fillStyle = color.hex;
+
+						ctx.fillRect(
+							this.offsetX + this.pixelSize * x,
+							this.offsetY + this.pixelSize * y,
+							this.pixelSize,
+							this.pixelSize
+						);
+
+					}
+				}
+
+			}
+
+			ctx.globalAlpha = 1;
 		}
 
 		//draws current sprite
