@@ -475,10 +475,12 @@ var Art = Class({
 	},
 	selectColor: function(colorIndex) {
 
+		$($("#color-btns").children()[selectedColor]).removeAttr("selected");
 		this.isErasing = false;
 
 		// Selects a color and sets the crosshairs appropriatly
 		selectedColor = colorIndex;
+		$($("#color-btns").children()[selectedColor]).attr("selected", "true");
 
 		this.colorBar.setCrosshairs(colors[selectedColor].hue);
 		this.saturationBar.setCrosshairs(colors[selectedColor].sat / 255);
@@ -497,6 +499,7 @@ var Art = Class({
 		// Resets all of the sprite buttons
 
 		this.spriteCanvases = {};
+
 		// Sets all the canvases in the sprite buttons
 		spriteButtonGroup = $("#art-sprites-btns");
 		spriteButtonGroup.html("");
@@ -521,6 +524,11 @@ var Art = Class({
 			// Creats manager
 			this.spriteCanvases[i] = spriteCanvas({canvas: canvas, object: selectedObject, sprite: i});
 			this.spriteCanvases[i].draw();
+		}
+
+		// sets the first as selected
+		if (!this.isCopying){
+			this.changeSprite(Object.keys(sprites[selectedObject])[0]);
 		}
 	},
 	changeSprite: function(spriteIndex) {
@@ -547,7 +555,13 @@ var Art = Class({
 			// Switches back to selected object if the user copied a sprite from a different object
 			this.changeSelectedObject(obj);
 		}else {
+			// Unselectes the current button
+			$("#" + selectedSprite).removeAttr("selected");
+
 			selectedSprite = spriteIndex;
+
+			// Selects the new button
+			$("#" + selectedSprite).attr("selected", "true");
 
 			selectedAnimationSprite = 0;
 			// Find the animation to display
@@ -560,12 +574,24 @@ var Art = Class({
 				}
 			}
 
+
+
 		}
 	},
 	updateSelectedButtons: function() {
 		// Updates the current selected sprite and object button canvases
 		this.objectCanvases[selectedObject].draw();
 		this.spriteCanvases[selectedSprite].draw();
+	},
+	updateAllButtons: function() {
+		// Updates all the button canvases
+		// When a color is changed, something that affects all sprites
+		for (i in this.objectCanvases){
+			this.objectCanvases[i].draw();
+		}
+		for (i in this.spriteCanvases){
+			this.spriteCanvases[i].draw();
+		}
 	},
 	changeSelectedObject: function(objIndex) { 
 
@@ -574,8 +600,10 @@ var Art = Class({
 			this.copyObject = selectedObject;
 		}
 
+		$("#" + selectedObject).removeAttr("selected");
 		selectedObject = objIndex;
 		selectedSprite = Object.keys(sprites[selectedObject])[0];
+		$("#" + selectedObject).attr("selected", "true");
 
 		this.objectCanvases[selectedObject].draw();
 		this.changeSpriteButtons();
@@ -701,5 +729,5 @@ function changeButtonColor() {
 		art.spriteCanvases[i].draw();
 	}
 
-	art.objectCanvases[selectedObject].draw();
+	art.updateAllButtons();
 }
