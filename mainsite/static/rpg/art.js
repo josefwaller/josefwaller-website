@@ -132,11 +132,9 @@ var Art = Class({
 			color: "#33ccff",
 			hoverColor: "#66ccff",
 			onClick: function() {
-				console.log("mirronr")
+				art.mirrorSprite();
 			}
 		})
-
-		console.log(this.mirrorButton);
 
 		this.animationDisplay.x = x,
 		this.animationDisplay.y = this.mirrorButton.y + this.mirrorButton.h + 10;
@@ -209,6 +207,7 @@ var Art = Class({
 		eraserDiv.css("color", "#ffffff");
 		colorButtons.append(eraserDiv);
 
+		// Adds the sprite buttons
 		this.changeSpriteButtons();
 
 		// Creates the object button groups
@@ -240,7 +239,11 @@ var Art = Class({
 
 		}
 
+		// Sets the animation display to update 
 		this.animationInterval = window.setInterval(this.updateSpriteAnimations, 1000/5);
+
+		// Sets the selected sprite
+		this.changeSprite(selectedSprite);
 	},
 	update: function() {
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width
@@ -255,6 +258,7 @@ var Art = Class({
 		this.brightnessBar.checkForSelection(this.mouseX, this.mouseY);
 
 		this.copyButton.checkForClick(this.mouseX, this.mouseY);
+		this.mirrorButton.checkForClick(this.mouseX, this.mouseY);
 
 		if (this.isCopying){
 			this.copyCancelButton.checkForClick(this.mouseX, this.mouseY);
@@ -550,7 +554,7 @@ var Art = Class({
 			for (i = 0; i < animations.length; i++){
 
 				if ($.inArray(selectedSprite, animations[i]) !== -1){
-					console.log(selectedSprite)
+
 					selectedAnimation = i;
 					break;
 				}
@@ -587,6 +591,28 @@ var Art = Class({
 			selectedAnimationSprite = 0;
 
 		}
+	},
+	mirrorSprite: function() {
+
+		// Gets the sprite and makes a new array that will be the cloned copy
+		sprite = sprites[selectedObject][selectedSprite];
+		spriteCopy = [];
+
+		// Cycles though and gets the clone
+		for (x = 0; x < sprite.length; x++){
+
+			spriteCopy[x] = sprite[sprite.length - 1 -x].slice();
+
+		}
+
+		// Cycles through and copies the mirrored sprite into the sprite
+		// Needs to pass by value, not by reference
+		for (x = 0; x < sprite.length; x++){
+			sprites[selectedObject][selectedSprite][x] = spriteCopy[x].slice();
+		}
+
+		// Updates the buttons
+		this.updateSelectedButtons();
 	}
 })
 
