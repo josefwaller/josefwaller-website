@@ -204,9 +204,9 @@ var Art = Class({
 		}
 
 		// Creates the eraser button
-		eraserDiv = $("<a class='btn btn-lg'>Eraser</a>");
+		eraserDiv = $("<a class='btn btn-lg' id='eraser'>Eraser</a>");
 		eraserDiv.click(function(event) {
-			art.isErasing = true;
+			art.selectColor("Eraser");
 		})
 		eraserDiv.css("background-color", "#66ccff");
 		eraserDiv.css("color", "#ffffff");
@@ -247,6 +247,9 @@ var Art = Class({
 		// Sets the animation display to update 
 		this.animationInterval = window.setInterval(this.updateSpriteAnimations, 1000/5);
 
+		// Selects the first object
+		this.changeSelectedObject(selectedObject);
+
 		// Sets the selected sprite
 		this.changeSprite(selectedSprite);
 	},
@@ -281,46 +284,50 @@ var Art = Class({
 	},
 	onMouseHold: function() {
 
-		// Used so that the user cannot draw on the canvas while changing color
-		var changingColor = false;
+		// Cannot change the color of the eraser
+		if (!this.isErasing){
 
-		this.colorBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage) {
+			// Used so that the user cannot draw on the canvas while changing color
+			var changingColor = false;
 
-			red = getColorValue(7, 3, percentage);
-			blue = getColorValue(1, 5, percentage);
-			green = getColorValue(4, 9, percentage);
+			this.colorBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage) {
 
-			colors[selectedColor].r = red;
-			colors[selectedColor].g = green;
-			colors[selectedColor].b = blue;
+				red = getColorValue(7, 3, percentage);
+				blue = getColorValue(1, 5, percentage);
+				green = getColorValue(4, 9, percentage);
 
-			colors[selectedColor].hue = percentage;
+				colors[selectedColor].r = red;
+				colors[selectedColor].g = green;
+				colors[selectedColor].b = blue;
 
-			changeButtonColor();
+				colors[selectedColor].hue = percentage;
 
-			changingColor = true;
-		});
+				changeButtonColor();
 
-		this.saturationBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage){
+				changingColor = true;
+			});
 
-			saturation = percentage * 255;
+			this.saturationBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage){
 
-			colors[selectedColor].sat = saturation;
+				saturation = percentage * 255;
 
-			changeButtonColor();
+				colors[selectedColor].sat = saturation;
 
-			changingColor = true;
+				changeButtonColor();
 
-		});
+				changingColor = true;
 
-		this.brightnessBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage){
-			// Sets the proper brightness
-			colors[selectedColor].bright = 255 * percentage;
+			});
 
-			changeButtonColor();
+			this.brightnessBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage){
+				// Sets the proper brightness
+				colors[selectedColor].bright = 255 * percentage;
 
-			changingColor = true;
-		})
+				changeButtonColor();
+
+				changingColor = true;
+			})
+		}
 
 		// Checks if the mouse is on the canvas
 		if (!changingColor && !this.isCopying){
@@ -508,15 +515,20 @@ var Art = Class({
 	selectColor: function(colorIndex) {
 
 		$($("#color-btns").children()[selectedColor]).removeAttr("selected");
-		this.isErasing = false;
+		if (colorIndex == "Eraser"){
+			this.isErasing = true;
+			$("#eraser").attr("selected", "true");
+		}else{
+			this.isErasing = false;
 
-		// Selects a color and sets the crosshairs appropriatly
-		selectedColor = colorIndex;
-		$($("#color-btns").children()[selectedColor]).attr("selected", "true");
+			// Selects a color and sets the crosshairs appropriatly
+			selectedColor = colorIndex;
+			$($("#color-btns").children()[selectedColor]).attr("selected", "true");
 
-		this.colorBar.setCrosshairs(colors[selectedColor].hue);
-		this.saturationBar.setCrosshairs(colors[selectedColor].sat / 255);
-		this.brightnessBar.setCrosshairs(colors[selectedColor].bright / 255);
+			this.colorBar.setCrosshairs(colors[selectedColor].hue);
+			this.saturationBar.setCrosshairs(colors[selectedColor].sat / 255);
+			this.brightnessBar.setCrosshairs(colors[selectedColor].bright / 255);
+		}
 	},
 	getSelectedPixel: function() {
 
@@ -569,6 +581,7 @@ var Art = Class({
 		if (this.isCopying){
 
 			obj = selectedObject;
+			sprite = selectedSprite;
 
 			// Checks if it is in the same object
 			if (this.copyObject !== null){
@@ -586,6 +599,7 @@ var Art = Class({
 
 			// Switches back to selected object if the user copied a sprite from a different object
 			this.changeSelectedObject(obj);
+			this.changeSprite(sprite);
 		}else {
 			// Unselectes the current button
 			$("#" + selectedSprite).removeAttr("selected");
