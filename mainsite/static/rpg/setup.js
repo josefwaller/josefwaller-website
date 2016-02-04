@@ -16,6 +16,7 @@ var colors = [
 
 var currentScreen;
 var art;
+var music;
 
 var mouse = {
 	pos : {
@@ -64,6 +65,7 @@ function setup () {
 
 	// Sets up art canvas
 	art = Art({size: size});
+	music = Music();
 
 	// Sets up changing screens
 	$("#level-editor-btn").click({i:0}, changeScreen)
@@ -91,7 +93,7 @@ function setup () {
 	$(document).mouseup(function(event){
 		mouse.down = false;
 	})
-	changeScreen(null, 1);
+	changeScreen(null, 2);
 	window.setInterval(update, 1000/60)
 
 }
@@ -116,19 +118,29 @@ function changeScreen(event, i) {
 			screens.music.show();
 			break;
 	}
+
+	currentScreen = i;
 }
 
 function update() {
-	art.update();
+	managers = [
+		null,
+		art,
+		music
+	];
+
+	x = managers[currentScreen];
+
+	x.update();
 
 	if (mouse.down){
-		art.onMouseHold();
+		x.onMouseHold();
 	}else {
-		art.onMouseUp();
+		x.onMouseUp();
 	}
 
 	if (mouse.click){
-		art.onClick();
+		x.onClick();
 
 		mouse.click = false;
 	}
