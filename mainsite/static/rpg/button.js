@@ -23,6 +23,7 @@ var Button = new Class({
 		if (p.text){
 			this.text = p.text;
 			this.textColor = p.textColor;
+			this.hoverTextColor = p.hoverTextColor;
 			this.font = p.font;
 			this.textY = p.textY;
 
@@ -68,6 +69,13 @@ var Button = new Class({
 		}
 
 		if (this.text){
+			color = this.textColor;
+			if (this.x <= mouseX && this.x + this.w > mouseX){
+				if (this.y <= mouseY && this.y + this.h > mouseY){
+
+					color = this.hoverColor;
+				}
+			}
 			ctx.fillStyle = this.textColor;
 			ctx.font = this.font;
 			x = this.x + (this.w - ctx.measureText(this.text).width) / 2;

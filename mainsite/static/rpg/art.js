@@ -186,6 +186,10 @@ var Art = Class({
 			// Creates button for the color
 			div = $("<a class='btn btn-lg'></a>");
 			colorButtons.append(div);
+
+			// Selected div to show when selected
+			selectedDiv = $("<div class='selected-div'></div>");
+			div.append(selectedDiv);
 			
 			// Sets the text color so it is visible
 			if (colors[i].bright < 128){
@@ -473,8 +477,8 @@ var Art = Class({
 					ctx.fillRect(
 						art.animationDisplay.x + art.animationDisplay.offsetX + art.animationDisplay.pixelSize * x,
 						art.animationDisplay.y + art.animationDisplay.offsetY + art.animationDisplay.pixelSize * y,
-						art.animationDisplay.pixelSize,
-						art.animationDisplay.pixelSize
+						art.animationDisplay.pixelSize + 1,
+						art.animationDisplay.pixelSize + 1
 					);
 				}
 
@@ -514,7 +518,11 @@ var Art = Class({
 	},
 	selectColor: function(colorIndex) {
 
-		$($("#color-btns").children()[selectedColor]).removeAttr("selected");
+		if (this.isErasing){
+			$("#eraser").removeAttr("selected");
+		}else {
+			$($("#color-btns").children()[selectedColor]).removeAttr("selected");
+		}
 		if (colorIndex == "Eraser"){
 			this.isErasing = true;
 			$("#eraser").attr("selected", "true");
