@@ -198,8 +198,8 @@ var Art = Class({
 				div.css("color", "#000000");
 			}
 
-			div.css("background-color", colors[i].hex)
-			div.html(colors[i].hex)
+			div.css("background-color", colors[i].hex);
+			div.append(colors[i].hex);
 			div.click({colorIndex: i}, function(event){
 
 				art.selectColor(event.data.colorIndex);
@@ -256,6 +256,9 @@ var Art = Class({
 
 		// Sets the selected sprite
 		this.changeSprite(selectedSprite);
+
+		// Selects the color
+		this.selectColor(0);
 	},
 	update: function() {
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width

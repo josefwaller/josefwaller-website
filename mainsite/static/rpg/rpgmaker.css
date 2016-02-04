@@ -8,13 +8,10 @@
 	margin-top: 0px;
 	border: 0px;
 }
-.btn[selected] .selected-div
+.btn[selected=selected]
 {
-	display: block;
-	width: 100%;
-	height: 100%;
-	background-color: #ffffff;
-	opacity: 0.5;
+	border: 4px solid rgba(255, 255, 255, 0.5);
+	box-sizing: border-box;
 }
 h1
 {
@@ -24,10 +21,6 @@ canvas
 {
 	margin-top: 0px;
 	margin-bottom: 0px
-}
-#color-btns
-{
-	margin-top: -5px;
 }
 .btn > canvas
 {
