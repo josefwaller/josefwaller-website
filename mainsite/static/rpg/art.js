@@ -14,6 +14,17 @@ var animations = [
 	["attackDown", "runDownOne"]
 ];
 
+var hoverSprites =	{
+
+	player: {},
+	enemyOne: {
+		attackDown: {
+			object: "enemyOne",
+			sprite: "runDownOne"
+		}
+	}
+
+}
 
 var Art = Class({
 	canvas: null,
@@ -59,11 +70,6 @@ var Art = Class({
 	isClickingCancel: false,
 
 	copyObject: null,
-
-	underlayingSprite: {
-		object: "player",
-		sprite: "runDownOne"
-	},
 
 	init: function(p) {
 
@@ -396,28 +402,32 @@ var Art = Class({
 
 		}
 
-		if (this.underlayingSprite.object !== null){
-			// Draws underlaying Sprite
-			ctx.globalAlpha = 0.5;
+		if (selectedObject in hoverSprites){
+			if (selectedSprite in hoverSprites[selectedObject]){
+				// Draws underlaying Sprite
+				ctx.globalAlpha = 0.5;
+				s = hoverSprites[selectedObject][selectedSprite];
 
-			sprite = sprites[this.underlayingSprite.object][this.underlayingSprite.sprite];
-			for (var x = 0; x < this.size; x++){
-				for (var y = 0; y < this.size; y++){
-					if (sprite[x][y] !== null){
-						color = colors[sprite[x][y]];
+				sprite = sprites[s.object][s.sprite];
 
-						ctx.fillStyle = color.hex;
+				for (var x = 0; x < this.size; x++){
+					for (var y = 0; y < this.size; y++){
+						if (sprite[x][y] !== null){
+							color = colors[sprite[x][y]];
 
-						ctx.fillRect(
-							this.offsetX + this.pixelSize * x,
-							this.offsetY + this.pixelSize * y,
-							this.pixelSize,
-							this.pixelSize
-						);
+							ctx.fillStyle = color.hex;
 
+							ctx.fillRect(
+								this.offsetX + this.pixelSize * x,
+								this.offsetY + this.pixelSize * y,
+								this.pixelSize,
+								this.pixelSize
+							);
+
+						}
 					}
-				}
 
+				}
 			}
 
 			ctx.globalAlpha = 1;

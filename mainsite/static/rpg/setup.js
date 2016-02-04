@@ -37,7 +37,7 @@ function setup () {
 			runUpOne: [],
 			runUpTwo: []
 		},
-		enemy_one: {
+		enemyOne: {
 			runDownOne: [],
 			runDownTwo: [],
 			attackDown: []
