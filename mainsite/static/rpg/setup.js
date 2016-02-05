@@ -65,7 +65,9 @@ function setup () {
 
 	// Sets up art canvas
 	art = Art({size: size});
-	music = Music();
+	music = Music({
+
+	});
 
 	// Sets up changing screens
 	$("#level-editor-btn").click({i:0}, changeScreen)
@@ -129,18 +131,16 @@ function update() {
 		music
 	];
 
-	x = managers[currentScreen];
-
-	x.update();
+	managers[currentScreen].update();
 
 	if (mouse.down){
-		x.onMouseHold();
+		managers[currentScreen].onMouseHold();
 	}else {
-		x.onMouseUp();
+		managers[currentScreen].onMouseUp();
 	}
 
 	if (mouse.click){
-		x.onClick();
+		managers[currentScreen].onClick();
 
 		mouse.click = false;
 	}
