@@ -82,12 +82,12 @@ var Art = Class({
 		this.canvas[0].height = this.h;
 
 		this.size = p.size
-		this.offsetX = this.w * (1/10)
-		this.offsetY = this.h * (1/20)
-		this.pixelSize = (this.h - 2 * this.offsetY) / this.size;
+		this.offsetX = Math.round(this.w * (1/10));
+		this.offsetY = Math.round(this.h * (1/20));
+		this.pixelSize = Math.round((this.h - 2 * this.offsetY) / this.size);
 		
 		// The x coord of everything beside the canvas
-		x = this.offsetX + this.pixelSize * this.size + 30;
+		x = Math.round(this.offsetX + this.pixelSize * this.size + 30);
 
 		this.colorBar = new ColorBar({
 			x: x, 
@@ -123,8 +123,8 @@ var Art = Class({
 			textY: null,
 			font: "'Press Start 2P'",
 			fontSize: 15,
-			color: "#aaaaaa",
-			hoverColor: "#cccccc",
+			color: "#000000",
+			hoverColor: "#333333",
 			onClick: function(){
 				art.isCopying = !art.isCopying;
 			}
@@ -140,26 +140,26 @@ var Art = Class({
 			textY: null,
 			font: "'Press Start 2P'",
 			fontSize: 15,
-			color: "#33ccff",
-			hoverColor: "#66ccff",
+			color: "#000000",
+			hoverColor: "#333333",
 			onClick: function() {
 				art.mirrorSprite();
 			}
 		})
 
 		this.animationDisplay.x = x,
-		this.animationDisplay.y = this.mirrorButton.y + this.mirrorButton.h + 10;
+		this.animationDisplay.y = Math.round(this.mirrorButton.y + this.mirrorButton.h + 10);
 		this.animationDisplay.w = 200;
-		this.animationDisplay.h = this.mirrorButton.h;
+		this.animationDisplay.h = Math.round(this.mirrorButton.h);
 
 		// Sets the offset and pixel size for the animation display
 		if (this.animationDisplay.w > this.animationDisplay.h){
-			this.animationDisplay.pixelSize = this.animationDisplay.h / this.size;
-			this.animationDisplay.offsetX = (this.animationDisplay.w - this.animationDisplay.h) / 2;
+			this.animationDisplay.pixelSize = Math.round(this.animationDisplay.h / this.size);
+			this.animationDisplay.offsetX = Math.round((this.animationDisplay.w - this.animationDisplay.h) / 2);
 			this.animationDisplay.offsetY = 0;
 
 		}else {
-			this.animationDisplay.pixelSize = this.animationDisplay.w / this.size;
+			this.animationDisplay.pixelSize = Math.round(this.animationDisplay.w / this.size);
 			this.animationDisplay.offsetY = (this.animationDisplay.h - this.animationDisplay.w) / 2;
 			this.animationDisplay.offsetX = 0;
 		}
@@ -177,7 +177,7 @@ var Art = Class({
 			textY: null,
 			font: "'Arial'",
 			fontSize: 20,
-			textColor: "#ffffff",
+			textColor: "#000000",
 			onClick: function() {
 				art.isClickingCancel = true;
 			}
@@ -368,23 +368,13 @@ var Art = Class({
 		ctx = this.ctx;
 
 		// Draws background
-		ctx.fillStyle = "#404040";
+		ctx.fillStyle = "#ffffff";
 		ctx.fillRect(0, 0, this.w, this.h);
-
-		// Draws white background
-
-		ctx.fillStyle = "#bcd5da";
-		ctx.fillRect(
-			this.offsetX, 
-			this.offsetY, 
-			this.size * this.pixelSize, 
-			this.size * this.pixelSize
-		);
 
 		// Draws grid
 		for (i = 0; i <= this.size; i++){
 
-			ctx.fillStyle = "#1e1e1e";
+			ctx.fillStyle = "#000000";
 
 			// Draws x line
 			ctx.fillRect(
@@ -479,7 +469,7 @@ var Art = Class({
 
 		// Draws animation display
 
-		sprite = sprites[selectedObject][animationSprite];
+		sprite = sprites[selectedObject][animationSprite];s
 
 		for (x = 0; x < sprite.length; x++){
 			for (y = 0; y < sprite[x].length; y++){
@@ -488,10 +478,10 @@ var Art = Class({
 
 					ctx.fillStyle = colors[sprite[x][y]].hex;
 					ctx.fillRect(
-						art.animationDisplay.x + art.animationDisplay.offsetX + art.animationDisplay.pixelSize * x,
-						art.animationDisplay.y + art.animationDisplay.offsetY + art.animationDisplay.pixelSize * y,
-						art.animationDisplay.pixelSize + 1,
-						art.animationDisplay.pixelSize + 1
+						Math.round(art.animationDisplay.x + art.animationDisplay.offsetX + art.animationDisplay.pixelSize * x),
+						Math.round(art.animationDisplay.y + art.animationDisplay.offsetY + art.animationDisplay.pixelSize * y),
+						Math.round(art.animationDisplay.pixelSize + 1),
+						Math.round(art.animationDisplay.pixelSize + 1)
 					);
 				}
 
@@ -514,12 +504,12 @@ var Art = Class({
 
 			// Draws transparent white layer
 			ctx.globalAlpha = 0.5;
-			ctx.fillStyle = "#cccccc";
+			ctx.fillStyle = "#ffffff";
 			ctx.fillRect(0, 0, this.w, this.h);
 			ctx.globalAlpha = 1;
 
 			// Draws text
-			ctx.fillStyle = "#ffffff";
+			ctx.fillStyle = "#000000";
 			ctx.font = "30px Arial";
 			text = "Choose a sprite to copy";
 

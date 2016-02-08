@@ -4,7 +4,7 @@ var background;
 var screens;
 
 var colors = [
-	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:0, g:0, b:0, sat:100, bright:100, hue:0.1, hex:"#000000"},
 	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
 	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
 	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
@@ -24,6 +24,7 @@ var mouse = {
 		y:0
 	},
 	click: false,
+	middleClick: false,
 	hold: false
 }
 
@@ -89,8 +90,16 @@ function setup () {
 
 	// Sets mouse values in current situation
 	$(document).mousedown(function(event){
-		mouse.down = true;
-		mouse.click = true;
+		switch (event.which){
+			case 1:
+				mouse.down = true;
+				mouse.click = true;
+				break;
+
+			case 2:
+				mouse.middleClick = true;
+				break;
+		}
 	})
 	$(document).mouseup(function(event){
 		mouse.down = false;
@@ -143,6 +152,10 @@ function update() {
 		managers[currentScreen].onClick();
 
 		mouse.click = false;
+	}else if (mouse.middleClick){
+		managers[currentScreen].onMiddleClick();
+
+		this.mouse.middleClick = false;
 	}
 }
 

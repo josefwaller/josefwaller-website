@@ -1,10 +1,10 @@
 var musicTracks = {
-	trackOne: [],
-	trackTwo: [],
-	trackThree: []
+	layerOne: [],
+	layerTwo: [],
+	layerThree: []
 };
 
-var selectedTrack = "trackOne";
+var selectedLayer = "layerOne";
 
 var Music = Class({
 
@@ -20,7 +20,7 @@ var Music = Class({
 	topNoteGrid: null,
 	botNoteGrid: null,
 
-	activeNoteGrid: "top",
+	scrollBar: null,
 
 	init: function(p) {
 
@@ -40,9 +40,9 @@ var Music = Class({
 		this.noteHeight = 100 / this.notesDown;
 
 		this.topNoteGrid = NoteGrid({
-			x: 0,
+			x: 10,
 			y: 10,
-			w: this.w,
+			w: this.w - 20,
 			h: 100,
 			notesAcross: this.notesAcross / 2,
 			notesDown: this.notesDown,
@@ -55,9 +55,9 @@ var Music = Class({
 		});
 
 		this.botNoteGrid = NoteGrid({
-			x: 0,
+			x: 10,
 			y: 120,
-			w: this.w,
+			w: this.w - 20,
 			h: 100,
 			notesAcross: this.notesAcross / 2,
 			notesDown: this.notesDown,
@@ -79,14 +79,25 @@ var Music = Class({
 			}
 		}
 
+		// Sets the buttons to change the selected layer
+		btnIds = ["l1-btn", "l2-btn", "l3-btn"];
+		layers = ["layerOne", "layerTwo", "layerThree"];
+
+		for (var i = 0; i < btnIds.length; i++){
+			l = layers[i];
+
+			$("#" + btnIds[i]).click({layer: l}, function(event) {
+				selectedLayer = event.data.layer;
+			})
+		}
+
 		this.draw();
-
 	},
-
 	changeBars: function(i) {
 
 		switch(i) {
 			case 0:
+			
 				this.botNoteGrid.barPosition = 0;
 				this.botNoteGrid.isActive = true;
 				this.topNoteGrid.isActive = false;
@@ -98,9 +109,7 @@ var Music = Class({
 				this.topNoteGrid.isActive = true;
 				break;
 		}
-		
 	},
-
 	update: function() {
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width;
 		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.canvas[0].height;
@@ -115,20 +124,29 @@ var Music = Class({
 		this.botNoteGrid.onClick(this.mouseX, this.mouseY);
 	},
 	onMouseHold: function() {
-
 	},
 	onMouseUp: function() {
+	},
+	onMiddleClick: function() {
+		if (this.topNoteGrid.checkForBarMovement(this.mouseX, this.mouseY)){
 
+			this.botNoteGrid.barPosition = 0;
+			this.botNoteGrid.isActive = false;
+
+		}else if (this.botNoteGrid.checkForBarMovement(this.mouseX, this.mouseY)){
+
+			this.topNoteGrid.barPosition = 0;
+			this.topNoteGrid.isActive = false;
+		}
 	},
 	draw: function(p) {
 
 		ctx = this.ctx;
 
-		ctx.fillStyle = "#000000";
+		ctx.fillStyle = "#ffffff";
 		ctx.fillRect(0, 0, this.w, this.h);
 
 		this.topNoteGrid.draw(ctx, this.mouseX, this.mouseY);
 		this.botNoteGrid.draw(ctx, this.mouseX, this.mouseY);
-
 	}
 })
