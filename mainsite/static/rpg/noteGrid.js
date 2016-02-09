@@ -86,7 +86,7 @@ var NoteGrid = Class({
 
 		if (this.isActive){
 
-			this.barPosition += this.musicSpeed * (new Date().getTime() - this.lastTime);
+			this.barPosition += barSpeed * (new Date().getTime() - this.lastTime);
 
 			// Checks if the bar has passed the edge of the grid
 			if (this.barPosition > this.w){

@@ -12,6 +12,8 @@ var volumes = {
 
 var selectedLayer = "layerOne";
 
+var barSpeed = 0.1;
+
 var Music = Class({
 
 	canvas: null,
@@ -26,7 +28,7 @@ var Music = Class({
 	topNoteGrid: null,
 	botNoteGrid: null,
 
-	scrollBar: null,
+	volumeScrollBar: null,
 
 	init: function(p) {
 
@@ -97,12 +99,20 @@ var Music = Class({
 			})
 		}
 
-		this.scrollBar = new ScrollBar({
+		this.volumeScrollBar = new ScrollBar({
 			x: 10,
 			y: 250,
 			w: 100,
 			h: 20,
 			text: "Volume"
+		});
+
+		this.speedScrollBar = new ScrollBar({
+			x: 120,
+			y: 250,
+			w: 100,
+			h: 20,
+			text: "Speed"
 		});
 
 		this.draw();
@@ -137,13 +147,24 @@ var Music = Class({
 		this.topNoteGrid.onClick(this.mouseX, this.mouseY);
 		this.botNoteGrid.onClick(this.mouseX, this.mouseY);
 
-		this.scrollBar.onClick(this.mouseX, this.mouseY);
+		this.volumeScrollBar.onClick(this.mouseX, this.mouseY);
+		this.speedScrollBar.onClick(this.mouseX, this.mouseY);
 	},
 	onMouseHold: function() {
-		this.scrollBar.onMouseHold(this.mouseX, this.mouseY);
+		if (this.volumeScrollBar.onMouseHold(this.mouseX, this.mouseY)){
+			volumes[selectedLayer] = this.volumeScrollBar.value;
+		}
+
+		if (this.speedScrollBar.onMouseHold(this.mouseX, this.mouseY)){
+			if (this.speedScrollBar.value === 0){
+				this.speedScrollBar.value = 0.001;
+			}
+			barSpeed = this.speedScrollBar.value / 5;
+		}
+
 	},
 	onMouseUp: function() {
-		this.scrollBar.isSelected = false;
+		this.volumeScrollBar.isSelected = false;
 	},
 	onMiddleClick: function() {
 		if (this.topNoteGrid.checkForBarMovement(this.mouseX, this.mouseY)){
@@ -169,11 +190,12 @@ var Music = Class({
 		this.topNoteGrid.draw(ctx, this.mouseX, this.mouseY);
 		this.botNoteGrid.draw(ctx, this.mouseX, this.mouseY);
 
-		this.scrollBar.draw(ctx);
+		this.volumeScrollBar.draw(ctx);
+		this.speedScrollBar.draw(ctx);
 	},
 
 	changeLayer: function(layer){
 		selectedLayer = layer;
-		this.scrollBar.value = volumes[selectedLayer];
+		this.volumeScrollBar.value = volumes[selectedLayer];
 	}
 })

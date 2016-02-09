@@ -49,8 +49,10 @@ var ScrollBar = new Class({
 				value = 1;
 			}
 			this.value = value;
-			volumes[selectedLayer] = this.value;
+			return this.value;
 		}
+
+		return false;
 	},
 
 	draw: function(ctx) {
