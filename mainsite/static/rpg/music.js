@@ -91,6 +91,8 @@ var Music = Class({
 			})
 		}
 
+		this.scrollBar = 
+
 		this.draw();
 	},
 	changeBars: function(i) {
@@ -132,11 +134,13 @@ var Music = Class({
 
 			this.botNoteGrid.barPosition = 0;
 			this.botNoteGrid.isActive = false;
+			this.botNoteGrid.stopNotes();
 
 		}else if (this.botNoteGrid.checkForBarMovement(this.mouseX, this.mouseY)){
 
 			this.topNoteGrid.barPosition = 0;
 			this.topNoteGrid.isActive = false;
+			this.topNoteGrid.stopNotes();
 		}
 	},
 	draw: function(p) {
