@@ -27,3 +27,16 @@ canvas
 	height: 40px;
 	width: 40px;
 }
+
+#l1-btn
+{
+	background-color: #66ff66;
+}
+#l2-btn
+{
+	background-color: #ff9933;
+}
+#l3-btn
+{
+	background-color: #ff66cc;
+}

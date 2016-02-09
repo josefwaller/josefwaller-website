@@ -4,6 +4,12 @@ var musicTracks = {
 	layerThree: []
 };
 
+var volumes = {
+	layerOne: 1,
+	layerTwo: 1,
+	layerThree: 1
+};
+
 var selectedLayer = "layerOne";
 
 var Music = Class({
@@ -87,11 +93,17 @@ var Music = Class({
 			l = layers[i];
 
 			$("#" + btnIds[i]).click({layer: l}, function(event) {
-				selectedLayer = event.data.layer;
+				music.changeLayer(event.data.layer);
 			})
 		}
 
-		this.scrollBar = 
+		this.scrollBar = new ScrollBar({
+			x: 10,
+			y: 250,
+			w: 100,
+			h: 20,
+			text: "Volume"
+		});
 
 		this.draw();
 	},
@@ -124,10 +136,14 @@ var Music = Class({
 	onClick: function() {
 		this.topNoteGrid.onClick(this.mouseX, this.mouseY);
 		this.botNoteGrid.onClick(this.mouseX, this.mouseY);
+
+		this.scrollBar.onClick(this.mouseX, this.mouseY);
 	},
 	onMouseHold: function() {
+		this.scrollBar.onMouseHold(this.mouseX, this.mouseY);
 	},
 	onMouseUp: function() {
+		this.scrollBar.isSelected = false;
 	},
 	onMiddleClick: function() {
 		if (this.topNoteGrid.checkForBarMovement(this.mouseX, this.mouseY)){
@@ -152,5 +168,12 @@ var Music = Class({
 
 		this.topNoteGrid.draw(ctx, this.mouseX, this.mouseY);
 		this.botNoteGrid.draw(ctx, this.mouseX, this.mouseY);
+
+		this.scrollBar.draw(ctx);
+	},
+
+	changeLayer: function(layer){
+		selectedLayer = layer;
+		this.scrollBar.value = volumes[selectedLayer];
 	}
 })

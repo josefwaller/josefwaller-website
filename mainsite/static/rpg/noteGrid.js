@@ -80,8 +80,6 @@ var NoteGrid = Class({
 			layerTwo: 1,
 			layerThree: 2
 		};
-
-		console.log(this.lastNote)
 	},
 
 	update: function(){
