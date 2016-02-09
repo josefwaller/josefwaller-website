@@ -274,14 +274,14 @@ var Art = Class({
 	},
 	onClick: function() {
 		// Checks if the bars are selected
-		this.colorBar.checkForSelection(this.mouseX, this.mouseY);
-		this.saturationBar.checkForSelection(this.mouseX, this.mouseY);
-		this.brightnessBar.checkForSelection(this.mouseX, this.mouseY);
+		if (!this.isCopying){
+			this.colorBar.checkForSelection(this.mouseX, this.mouseY);
+			this.saturationBar.checkForSelection(this.mouseX, this.mouseY);
+			this.brightnessBar.checkForSelection(this.mouseX, this.mouseY);
 
-		this.copyButton.checkForClick(this.mouseX, this.mouseY);
-		this.mirrorButton.checkForClick(this.mouseX, this.mouseY);
-
-		if (this.isCopying){
+			this.copyButton.checkForClick(this.mouseX, this.mouseY);
+			this.mirrorButton.checkForClick(this.mouseX, this.mouseY);
+		}else {
 			this.copyCancelButton.checkForClick(this.mouseX, this.mouseY);
 		}
 	},
@@ -448,19 +448,22 @@ var Art = Class({
 		}
 
 		// Checks if the mouse is on the grid
-		if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + (this.size * this.pixelSize)){
-			if (this.mouseY > this.offsetY && this.mouseY < this.offsetY + (this.size * this.pixelSize)){
-				// Draws highlighted pixel
+		if (!this.isCopying){
+			
+			if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + (this.size * this.pixelSize)){
+				if (this.mouseY > this.offsetY && this.mouseY < this.offsetY + (this.size * this.pixelSize)){
+					// Draws highlighted pixel
 
-				pixel = this.getSelectedPixel();
+					pixel = this.getSelectedPixel();
 
-				// Draws the highlighted pixel
-				ctx.fillStyle = "#ffffff"
-				ctx.fillRect(
-					this.offsetX + pixel[0] * this.pixelSize,
-					this.offsetY + pixel[1] * this.pixelSize,
-					this.pixelSize + 1,
-					this.pixelSize + 1);
+					// Draws the highlighted pixel
+					ctx.fillStyle = "#ffffff"
+					ctx.fillRect(
+						this.offsetX + pixel[0] * this.pixelSize,
+						this.offsetY + pixel[1] * this.pixelSize,
+						this.pixelSize + 1,
+						this.pixelSize + 1);
+				}
 			}
 		}
 
