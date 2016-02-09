@@ -197,5 +197,23 @@ var Music = Class({
 	changeLayer: function(layer){
 		selectedLayer = layer;
 		this.volumeScrollBar.value = volumes[selectedLayer];
+		
+		// Sets selected
+		$("#l1-btn").removeAttr("selected");
+		$("#l2-btn").removeAttr("selected");
+		$("#l3-btn").removeAttr("selected");
+
+		switch (layer){
+			case "layerOne":
+				$("#l1-btn").attr("selected", "true");
+				break;
+			case "layerTwo":
+				$("#l2-btn").attr("selected", "true");
+				break;
+			case "layerThree":
+				$("#l3-btn").attr("selected", "true");
+				break;
+
+		}
 	}
 })
