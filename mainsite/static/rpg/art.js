@@ -11,7 +11,9 @@ var animations = [
 	["runSideOne", "runSideTwo"],
 	["runUpOne", "runUpTwo"],
 	["runDownOne", "runDownTwo"],
-	["attackDown", "runDownOne"]
+	["attackDown", "runDownOne"],
+	["stand"],
+	["dialog"]
 ];
 
 var hoverSprites =	{
@@ -74,8 +76,10 @@ var Art = Class({
 	isCopying: false,
 	isClickingCancel: false,
 
-	// Used when the user copies a sprite from a different object
+	// Used when the user copies a sprite
+	// The object ot copy to
 	copyObject: null,
+	copySprite: null,
 
 	init: function(p) {
 
@@ -142,7 +146,10 @@ var Art = Class({
 			hoverColor: "#333333",
 			onClick: function(){
 				art.isCopying = !art.isCopying;
+
+				// Saves the selected object and sprite so that they will be copied into
 				art.copyObject = selectedObject;
+				art.copySprite = selectedSprite;
 			}
 		});
 
@@ -501,11 +508,7 @@ var Art = Class({
 
 		// Draws animation display
 
-		if (this.isCopying){
-			sprite = sprites[this.copyObject][animationSprite];
-		}else {
-			sprite = sprites[selectedObject][animationSprite];
-		}
+		sprite = sprites[selectedObject][animationSprite];
 
 		for (x = 0; x < sprite.length; x++){
 			for (y = 0; y < sprite[x].length; y++){
@@ -520,7 +523,6 @@ var Art = Class({
 						Math.round(art.animationDisplay.pixelSize + 1)
 					);
 				}
-
 			}
 		}
 		// Draws bars/buttons
@@ -623,38 +625,35 @@ var Art = Class({
 		}
 	},
 	changeSprite: function(spriteIndex) {
+
 		// Changes the sprite or copies it
 
 		if (this.isCopying){
 
-			obj = selectedObject;
-			sprite = selectedSprite;
+			// The previous object was saved as copyObject and copySprite
+			// The sprite just selected is selectedObject and spriteIndex
 
-			// Checks if it is in the same object
-			if (this.copyObject !== null){
-				obj = this.copyObject;
-				this.copyObject = null;
-			}
 
 			// Loops through and copys the sprite
-			for (x = 0; x < sprites[obj][selectedSprite].length; x++){
-				for (y = 0; y < sprites[obj][selectedSprite][x].length; y++){
-					sprites[obj][selectedSprite][x][y] = sprites[selectedObject][spriteIndex][x][y];
+			for (x = 0; x < sprites[selectedObject][spriteIndex].length; x++){
+				for (y = 0; y < sprites[selectedObject][spriteIndex][x].length; y++){
+					sprites[this.copyObject][this.copySprite][x][y] = sprites[selectedObject][spriteIndex][x][y];
 				}
 			}
 			art.isCopying = false;
 
 			// Switches back to selected object if the user copied a sprite from a different object
-			this.changeSelectedObject(obj);
-			this.changeSprite(sprite);
+			this.changeSelectedObject(this.copyObject);
+			this.changeSprite(this.copySprite);
+
 		}else {
 			// Unselectes the current button
-			$("#" + selectedSprite).removeAttr("selected");
+			$("#" + selectedObject + "-" + selectedSprite).removeAttr("selected");
 
 			selectedSprite = spriteIndex;
 
 			// Selects the new button
-			$("#" + selectedSprite).attr("selected", "true");
+			$("#" + selectedObject + "-" + selectedSprite).attr("selected", "true");
 
 			selectedAnimationSprite = 0;
 			// Find the animation to display
@@ -688,15 +687,25 @@ var Art = Class({
 	},
 	changeSelectedObject: function(objIndex) { 
 
-		// Saves 
-		if (this.isCopying){
-			this.copyObject = selectedObject;
-		}
-
+		// Changes the selected button
 		$("#" + selectedObject).removeAttr("selected");
+
+		// Changes the selected Object
 		selectedObject = objIndex;
+
+		// Sets the selected sprite
 		selectedSprite = Object.keys(sprites[selectedObject])[0];
 		$("#" + selectedObject).attr("selected", "true");
+
+		// Changes the animation display sprites
+
+		for (var i = 0; i < animations.length; i++){
+			if ($.inArray(selectedSprite, animations[i]) !== -1){
+				selectedAnimation = i;
+				break;
+			}
+		}
+		this.updateSpriteAnimations();
 
 		this.objectCanvases[selectedObject].draw();
 		this.changeSpriteButtons();
