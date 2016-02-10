@@ -33,55 +33,68 @@ var Art = Class({
 	w: 600,
 	h: null,
 
+	// The offset to draw the canvas
 	offsetX: 0,
 	offsetY: 0,
 
+	// The number of pixels wide and high
 	size: 0,
+	// The size of a pixel the player can draw
 	pixelSize: 0,
 
+	// Mouse position
 	mouseX: 0,
 	mouseY: 0,
 
-	barX: 0,
-	barY: 0,
-	barW: 0,
-	barH: 0,
-
+	// the different bars
 	colorBar: null,
 	saturationBar: null,
 	brightnessBar: null,
 
+	// The canvases inside the buttons that show the image
 	spriteCanvases: {},
 	objectCanvases: {},
 
+	// the animation display coordinates
 	animationDisplay: {
 		x: 0,
 		y: 0,
 		w: 0,
 		h: 0
 	},
+	// The interval between switching sprites
 	animationInterval: null,
 
+	// The buttons
 	copyButton: null,
 	mirrorButton: null,
 
+	// Status variables
 	isErasing: false,
 	isCopying: false,
 	isClickingCancel: false,
 
+	// Used when the user copies a sprite from a different object
 	copyObject: null,
 
 	init: function(p) {
 
+		// Gets canvas and ctx
 		this.canvas = $("#art-canvas");
 		this.ctx = this.canvas[0].getContext("2d");
 
+		// Sets height
 		this.h = (this.canvas.height() / this.canvas.width()) * this.w
 
+		// Sets inner dimension
 		this.canvas[0].width = this.w;
 		this.canvas[0].height = this.h;
 
+		// Sets the size
 		this.size = p.size
+
+		// Sets offsets and pixelSize
+		// Rounded so the canvas doesn't have to render anti-aliasing and is faster
 		this.offsetX = Math.round(this.w * (1/10));
 		this.offsetY = Math.round(this.h * (1/20));
 		this.pixelSize = Math.round((this.h - 2 * this.offsetY) / this.size);
@@ -89,6 +102,7 @@ var Art = Class({
 		// The x coord of everything beside the canvas
 		x = Math.round(this.offsetX + this.pixelSize * this.size + 30);
 
+		// Creates the bars
 		this.colorBar = new ColorBar({
 			x: x, 
 			y: this.offsetY, 
@@ -113,6 +127,7 @@ var Art = Class({
 			img: null
 		});
 
+		// Creats the buttons
 		this.copyButton = new Button({
 			x: x,
 			y: this.offsetY + 90,
@@ -127,6 +142,7 @@ var Art = Class({
 			hoverColor: "#333333",
 			onClick: function(){
 				art.isCopying = !art.isCopying;
+				art.copyObject = selectedObject;
 			}
 		});
 
@@ -147,6 +163,7 @@ var Art = Class({
 			}
 		})
 
+		// Sets the animation display coordinates
 		this.animationDisplay.x = x,
 		this.animationDisplay.y = Math.round(this.mirrorButton.y + this.mirrorButton.h + 10);
 		this.animationDisplay.w = 200;
@@ -164,6 +181,7 @@ var Art = Class({
 			this.animationDisplay.offsetX = 0;
 		}
 
+		// Creates the cancel button when copying
 		text = "Cancel"
 		this.ctx.font = "20px Arial"
 
@@ -204,12 +222,13 @@ var Art = Class({
 				div.css("color", "#000000");
 			}
 
+			// Sets teh background color
 			div.css("background-color", colors[i].hex);
 			div.append(colors[i].hex);
+
 			div.click({colorIndex: i}, function(event){
 
 				art.selectColor(event.data.colorIndex);
-
 			})
 		}
 
@@ -249,7 +268,7 @@ var Art = Class({
 			spriteName = Object.keys(sprites[i])[0];
 
 			// Creats manager
-			this.objectCanvases[i] = spriteCanvas({canvas: canvas, object: i, sprite: spriteName});
+			this.objectCanvases[i] = SpriteCanvas({canvas: canvas, object: i, sprite: spriteName});
 			this.objectCanvases[i].draw();
 
 		}
@@ -267,12 +286,15 @@ var Art = Class({
 		this.selectColor(0);
 	},
 	update: function() {
+		// Sets mouse position
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width;
 		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.canvas[0].height;
 
+		// draws
 		this.draw();
 	},
 	onClick: function() {
+
 		// Checks if the bars are selected
 		if (!this.isCopying){
 			this.colorBar.checkForSelection(this.mouseX, this.mouseY);
@@ -281,15 +303,18 @@ var Art = Class({
 
 			this.copyButton.checkForClick(this.mouseX, this.mouseY);
 			this.mirrorButton.checkForClick(this.mouseX, this.mouseY);
+
 		}else {
 			this.copyCancelButton.checkForClick(this.mouseX, this.mouseY);
 		}
 	},
 	onMouseUp: function() {
+		// Deselects all the bars
 		this.colorBar.isSelected = false;
 		this.saturationBar.isSelected = false;
 		this.brightnessBar.isSelected = false;
 
+		// Cancels
 		if (this.isClickingCancel){
 			this.isCopying = false;
 			this.isClickingCancel = false;
@@ -303,18 +328,22 @@ var Art = Class({
 			// Used so that the user cannot draw on the canvas while changing color
 			var changingColor = false;
 
+			// Changes color hue
 			this.colorBar.onHold(ctx, this.mouseX, this.mouseY, function(percentage) {
 
+				// gets rgb values
 				red = getColorValue(7, 3, percentage);
 				blue = getColorValue(1, 5, percentage);
 				green = getColorValue(4, 9, percentage);
 
+				// sets rgb
 				colors[selectedColor].r = red;
 				colors[selectedColor].g = green;
 				colors[selectedColor].b = blue;
 
 				colors[selectedColor].hue = percentage;
 
+				//changes the color
 				changeButtonColor();
 
 				changingColor = true;
@@ -472,7 +501,11 @@ var Art = Class({
 
 		// Draws animation display
 
-		sprite = sprites[selectedObject][animationSprite];s
+		if (this.isCopying){
+			sprite = sprites[this.copyObject][animationSprite];
+		}else {
+			sprite = sprites[selectedObject][animationSprite];
+		}
 
 		for (x = 0; x < sprite.length; x++){
 			for (y = 0; y < sprite[x].length; y++){
@@ -564,7 +597,7 @@ var Art = Class({
 		for (i in sprites[selectedObject]){
 
 			// Creates button
-			button = $("<a class='btn btn-lg' id='" + i + "'></a>");
+			button = $("<a class='btn btn-lg' id='" + selectedObject + "-" + i + "'></a>");
 			button.click({sprite: i}, function(event) {
 
 				sprite = event.data.sprite;
@@ -572,7 +605,7 @@ var Art = Class({
 
 			})
 			// Creates canvas
-			canvas = $("<canvas id='" + i + "-canvas'></canvas>");
+			canvas = $("<canvas id='" + selectedObject + "-" + i + "-canvas'></canvas>");
 
 			spriteButtonGroup.append(button);
 
@@ -580,7 +613,7 @@ var Art = Class({
 			button.append("<br>" + i);
 
 			// Creats manager
-			this.spriteCanvases[i] = spriteCanvas({canvas: canvas, object: selectedObject, sprite: i});
+			this.spriteCanvases[i] = SpriteCanvas({canvas: canvas, object: selectedObject, sprite: i});
 			this.spriteCanvases[i].draw();
 		}
 

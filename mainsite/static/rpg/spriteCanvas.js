@@ -1,4 +1,4 @@
-var spriteCanvas = Class({
+var SpriteCanvas = Class({
 
 	canvas: null,
 	ctx: null,

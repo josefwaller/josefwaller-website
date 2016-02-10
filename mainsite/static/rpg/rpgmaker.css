@@ -40,3 +40,41 @@ canvas
 {
 	background-color: #ff66cc;
 }
+
+.dialog-line
+{
+	height: 80px;
+	color: black;
+	text-align: center;
+	vertical-align: middle;
+	overflow: none;
+}
+.dialog-line-portrait
+{
+	width: 60px;
+	text-align: center;
+	padding: 5px;
+	float: left;
+}
+.dialog-line-input-container
+{
+	float: right;
+	width:  calc(100% - 60px);
+	padding: 10px;
+	vertical-align: middle;
+	height: 100%;
+	display: inline-flex;
+}
+
+.dialog-line-input
+{
+	margin: auto 5px;
+	width: 100%;
+	height: 60%;
+}
+.dialog-line-portrait > canvas
+{
+	height: 50px;
+	width: 50px;
+	background-color: blue;
+}

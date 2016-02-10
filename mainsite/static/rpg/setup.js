@@ -15,8 +15,10 @@ var colors = [
 ]
 
 var currentScreen;
+
 var art;
 var music;
+var dialog;
 
 var mouse = {
 	pos : {
@@ -37,12 +39,36 @@ function setup () {
 			runSideOne: [],
 			runSideTwo: [],
 			runUpOne: [],
-			runUpTwo: []
+			runUpTwo: [],
+			dialog: [],
 		},
 		enemyOne: {
 			runDownOne: [],
 			runDownTwo: [],
-			attackDown: []
+			runSideOne: [],
+			runSideTwo: [],
+			runUpOne: [],
+			runUpTwo: []
+		},
+		enemyTwo: {
+			runDownOne: [],
+			runDownTwo: [],
+			runSideOne: [],
+			runSideTwo: [],
+			runUpOne: [],
+			runUpTwo: []
+		},
+		npcOne: {
+			stand: [],
+			dialog: []
+		},
+		npcTwo: {
+			stand: [],
+			dialog: []
+		},
+		npcThree: {
+			stand: [],
+			dialog: []
 		}
 	}
 
@@ -66,20 +92,23 @@ function setup () {
 
 	// Sets up art canvas
 	art = Art({size: size});
-	music = Music({
-
-	});
+	// sets up music canvas
+	music = Music({});
+	// sets up dialog
+	dialog = Dialog({});
 
 	// Sets up changing screens
 	$("#level-editor-btn").click({i:0}, changeScreen)
 	$("#art-btn").click({i:1}, changeScreen)
 	$("#music-btn").click({i:2}, changeScreen)
+	$("#dialog-btn").click({i:3}, changeScreen)
 
 	// Sets screens
 	screens = {
 		levelEditor: $("#level-editor"),
 		art: $("#art"),
-		music: $("#music")
+		music: $("#music"),
+		dialog: $("#dialog")
 	}
 
 	// Sets mouse position when it moves
@@ -128,6 +157,9 @@ function changeScreen(event, i) {
 		case 2:
 			screens.music.show();
 			break;
+		case 3:
+			screens.dialog.show();
+			break;
 	}
 
 	currentScreen = i;
@@ -137,7 +169,8 @@ function update() {
 	managers = [
 		null,
 		art,
-		music
+		music,
+		dialog
 	];
 
 	managers[currentScreen].update();

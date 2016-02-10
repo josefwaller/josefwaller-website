@@ -99,18 +99,20 @@ var Music = Class({
 			})
 		}
 
+		scrollBarWidth =(this.w / 2) - 20;
+
 		this.volumeScrollBar = new ScrollBar({
 			x: 10,
 			y: 250,
-			w: 100,
+			w: scrollBarWidth,
 			h: 20,
 			text: "Volume"
 		});
 
 		this.speedScrollBar = new ScrollBar({
-			x: 120,
+			x: 10 + scrollBarWidth + 20,
 			y: 250,
-			w: 100,
+			w: scrollBarWidth,
 			h: 20,
 			text: "Speed"
 		});
@@ -165,6 +167,7 @@ var Music = Class({
 	},
 	onMouseUp: function() {
 		this.volumeScrollBar.isSelected = false;
+		this.speedScrollBar.isSelected = false;
 	},
 	onMiddleClick: function() {
 		if (this.topNoteGrid.checkForBarMovement(this.mouseX, this.mouseY)){
