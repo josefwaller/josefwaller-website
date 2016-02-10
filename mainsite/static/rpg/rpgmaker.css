@@ -90,3 +90,14 @@ canvas
 	font-family: "Press Start 2P";
 	padding: 5px;
 }
+.dialog-remove-button
+{
+	width: 100%;
+	background-color: #ff6666;
+	border: 0px;
+	border-radius: 0px;
+
+	color: #ffffff;
+	font-family: "Press Start 2P";
+	padding: 5px;
+}

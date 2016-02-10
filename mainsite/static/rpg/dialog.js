@@ -13,13 +13,20 @@ var Dialog = Class({
 
 	init: function(p){
 
-		this.parentDiv = $("#dialog");
+		this.parentDiv = $("#dialog-container");
 
 		numOfDialogs = 3;
 
 		// Dialogs switch between player and npc[selectedDialog]
 		while(dialogs.length < numOfDialogs){
 			dialogs.push([]);
+		}
+
+		// Sets all the buttons to switch between dialogs
+		for (var i = 0; i < 3; i++){
+			$("#dialog-" + (i + 1)).click({i: i}, function(event) {
+				dialog.selectDialog(event.data.i);
+			})
 		}
 
 		this.updateDialogs();
@@ -108,10 +115,41 @@ var Dialog = Class({
 		button.text("Add a line");
 
 		this.parentDiv.append(button);
+
+		// Adds the remove dialog button
+		button = $("<button class='dialog-remove-button'></button>");
+		button.click(function(){
+			dialog.removeDialog();
+		});
+		button.text("Remove a line");
+
+		this.parentDiv.append(button);
 	},
 	addDialog: function() {
 		dialogs[selectedDialog].push("");
 		this.updateDialogs();
+	},
+	removeDialog: function() {
+		dialogs[selectedDialog].pop();
+		this.updateDialogs();
+	},
+
+	selectDialog: function(index) {
+
+		selectedDialog = index;
+		dialog.updateDialogs();
+
+		// Sets selected button
+		for (var i = 0; i < 3; i++){
+
+			var div = $("#dialog-" + (i + 1));
+
+			if (i == index){
+				div.attr("selected", "true");
+			}else {
+				div.removeAttr("selected");
+			}
+		}
 	},
 
 	// Filler functions
