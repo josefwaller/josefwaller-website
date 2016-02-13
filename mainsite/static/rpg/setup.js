@@ -19,6 +19,7 @@ var currentScreen;
 var art;
 var music;
 var dialog;
+var levelEditor;
 
 var mouse = {
 	pos : {
@@ -69,6 +70,11 @@ function setup () {
 		npcThree: {
 			stand: [],
 			dialog: []
+		},
+		backgrounds: {
+			one: [],
+			two: [],
+			three: []
 		}
 	}
 
@@ -96,6 +102,8 @@ function setup () {
 	music = Music({});
 	// sets up dialog
 	dialog = Dialog({});
+	// sets up level editor
+	levelEditor = LevelEditor({});
 
 	// Sets up changing screens
 	$("#level-editor-btn").click({i:0}, changeScreen)
@@ -140,34 +148,45 @@ function setup () {
 
 function changeScreen(event, i) {
 
+	// Checks if it was a button click
 	if (event !== null){
 		i = event.data.i;
 	}
+
+	// Hides all the screens
 	screens.levelEditor.hide();
 	screens.art.hide();
 	screens.music.hide();
+	screens.dialog.hide();
+
+	// Chooses the appropriate screen
 
 	switch(i){
+
 		case 0:
 			screens.levelEditor.show();
 			break;
+
 		case 1:
 			screens.art.show();
 			break;
+
 		case 2:
 			screens.music.show();
 			break;
+
 		case 3:
 			screens.dialog.show();
 			break;
 	}
 
+	// Records the current screen
 	currentScreen = i;
 }
 
 function update() {
 	managers = [
-		null,
+		levelEditor,
 		art,
 		music,
 		dialog

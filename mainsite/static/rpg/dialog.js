@@ -29,6 +29,7 @@ var Dialog = Class({
 			})
 		}
 
+		// Updates the dialog div
 		this.updateDialogs();
 
 	},

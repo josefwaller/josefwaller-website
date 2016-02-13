@@ -14,6 +14,7 @@
 		<script src="{% static 'rpg/art.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/music.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/dialog.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/levelEditor.js' %}" type="text/javascript"></script>
 
 		<script src="{% static 'rpg/colorBar.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/spriteCanvas.js' %}" type="text/javascript"></script>
@@ -48,14 +49,8 @@
 				<div class="col-md-10 col-centered" id="level-editor">
 					<canvas id="level-canvas" moz-opaque></canvas>
 					<div class="btn-group btn-group-justified level-editor-btn-group">
-						<a class="btn btn-md">ASDF</a>
-						<a class="btn btn-md">ASDF</a>
-						<a class="btn btn-md">ASDF</a>
-						<a class="btn btn-md">ASDF</a>
-						<a class="btn btn-md">ASDF</a>
-						<a class="btn btn-md">ASDF</a>
-						<a class="btn btn-md">ASDF</a>
-						<a class="btn btn-md">ASDF</a>
+						<a class="btn btn-md" id="newArea">Add an Area</a>
+						<a class="btn btn-md" id="killArea">Remove An Area</a>
 					</div>
 					<div class="btn-group btn-group-justified level-editor-btn-group">
 						<a class="btn btn-md">ASDF</a>
@@ -69,7 +64,7 @@
 					</div>
 				</div>
 				<div class="col-md-10 col-centered" id="art">
-					<canvas id="art-canvas"></canvas>
+					<canvas id="art-canvas" moz-opaque></canvas>
 					<img id="gradiant" style="display:none" src="{% static 'images/rpgmaker/gradient.jpg' %}">
 					<!-- the different objects to choose to edit -->
 					<div class="btn-group btn-group-justified" id="art-objects-btns" role="group">
@@ -90,7 +85,7 @@
 					</div>
 				</div>
 				<div class="col-md-10 col-centered" id="music">
-					<canvas id="music-canvas"></canvas>
+					<canvas id="music-canvas" moz-opaque></canvas>
 					<div class="btn-group btn-group-justified">
 						<a class="btn btn-lg" id="l1-btn" selected="selected">Layer 1</a>
 						<a class="btn btn-lg" id="l2-btn">Layer 2</a>
