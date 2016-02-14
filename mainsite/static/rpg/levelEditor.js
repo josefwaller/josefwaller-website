@@ -81,11 +81,11 @@ var LevelEditor = Class({
 		ctx = this.ctx;
 
 		for (var x = 0; x < level.length; x++){
-			console.log(level[x].length);
+			
 			for (var y = 0; y < level[x].length; y++){
 				if (level[x][y] === null){
 					if (this.addingArea){
-						ctx.fillStyle = 
+						ctx.fillStyle = "#aaaaaa"
 					}
 					ctx.fillStyle = "#000000";
 					ctx.fillRect(

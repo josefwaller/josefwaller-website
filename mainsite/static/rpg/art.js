@@ -48,6 +48,8 @@ var Art = Class({
 	mouseX: 0,
 	mouseY: 0,
 
+	backgroundColor: "#ffffff",
+
 	// the different bars
 	colorBar: null,
 	saturationBar: null,
@@ -65,7 +67,8 @@ var Art = Class({
 		h: 0
 	},
 	// The interval between switching sprites
-	animationInterval: null,
+	animationInterval: 1000 / 5,
+	lastAnimTime: 0,
 
 	// The buttons
 	copyButton: null,
@@ -80,6 +83,10 @@ var Art = Class({
 	// The object ot copy to
 	copyObject: null,
 	copySprite: null,
+
+	// The x coordinate between the area rendered by the canvas area and the bars and buttons
+	// Future Josef, this is important, it divides the screen to minimize required rendering
+	splitX: null,
 
 	init: function(p) {
 
@@ -281,7 +288,7 @@ var Art = Class({
 		}
 
 		// Sets the animation display to update 
-		this.animationInterval = window.setInterval(this.updateSpriteAnimations, 1000/5);
+		this.lastAnimTime = new Date().getTime();
 
 		// Selects the first object
 		this.changeSelectedObject(selectedObject);
@@ -291,14 +298,30 @@ var Art = Class({
 
 		// Selects the color
 		this.selectColor(0);
+
+		//initially draws all quadrants
+		this.drawCanvasArea();
+		this.drawAnimation();
+		this.drawSide();
+
+		this.splitX = this.offsetX + this.size * this.pixelSize + 15;
 	},
 	update: function() {
 		// Sets mouse position
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width;
 		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.canvas[0].height;
 
-		// draws
-		this.draw();
+		if (this.mouseX <  this.offsetX + this.size * this.pixelSize + 15){
+			this.drawCanvasArea();
+		}else {
+			this.drawSide();
+		}
+
+		if (new Date().getTime() - this.lastAnimTime > this.animationInterval){
+			this.updateSpriteAnimations();
+			this.drawAnimation();
+			this.lastAnimTime = new Date().getTime();
+		}
 	},
 	onClick: function() {
 
@@ -398,14 +421,14 @@ var Art = Class({
 			}
 		}
 	},
-	draw: function() {
+	drawCanvasArea: function() {
 
 		// Gets ctx for reference
 		ctx = this.ctx;
 
 		// Draws background
-		ctx.fillStyle = "#ffffff";
-		ctx.fillRect(0, 0, this.w, this.h);
+		ctx.fillStyle = this.backgroundColor;
+		ctx.fillRect(0, 0, this.splitX, this.h);
 
 		// Draws grid
 		for (i = 0; i <= this.size; i++){
@@ -502,29 +525,15 @@ var Art = Class({
 				}
 			}
 		}
-
-
-		animationSprite = animations[selectedAnimation][selectedAnimationSprite];
-
-		// Draws animation display
-
-		sprite = sprites[selectedObject][animationSprite];
-
-		for (x = 0; x < sprite.length; x++){
-			for (y = 0; y < sprite[x].length; y++){
-
-				if (sprite[x][y] !== null){
-
-					ctx.fillStyle = colors[sprite[x][y]].hex;
-					ctx.fillRect(
-						Math.round(art.animationDisplay.x + art.animationDisplay.offsetX + art.animationDisplay.pixelSize * x),
-						Math.round(art.animationDisplay.y + art.animationDisplay.offsetY + art.animationDisplay.pixelSize * y),
-						Math.round(art.animationDisplay.pixelSize + 1),
-						Math.round(art.animationDisplay.pixelSize + 1)
-					);
-				}
-			}
-		}
+	},
+	drawSide: function() {
+		ctx = this.ctx;
+		ctx.fillStyle = this.backgroundColor;
+		ctx.fillRect(
+			this.splitX,
+			0,
+			this.w - this.splitX,
+			this.animationDisplay.y);
 		// Draws bars/buttons
 		this.colorBar.draw(ctx);
 
@@ -555,6 +564,39 @@ var Art = Class({
 			ctx.fillText(text, x, this.h / 3);
 
 			this.copyCancelButton.draw(ctx, this.mouseX, this.mouseY);
+		}
+	},
+	drawAnimation: function() {
+
+		ctx = this.ctx;
+
+		ctx.fillStyle = this.backgroundColor;
+		ctx.fillRect(
+			this.splitX,
+			this.animationDisplay.y,
+			this.w - this.splitX,
+			this.h - this.animationDisplay.y);
+
+		animationSprite = animations[selectedAnimation][selectedAnimationSprite];
+
+		// Draws animation display
+
+		sprite = sprites[selectedObject][animationSprite];
+
+		for (x = 0; x < sprite.length; x++){
+			for (y = 0; y < sprite[x].length; y++){
+
+				if (sprite[x][y] !== null){
+
+					ctx.fillStyle = colors[sprite[x][y]].hex;
+					ctx.fillRect(
+						Math.round(art.animationDisplay.x + art.animationDisplay.offsetX + art.animationDisplay.pixelSize * x),
+						Math.round(art.animationDisplay.y + art.animationDisplay.offsetY + art.animationDisplay.pixelSize * y),
+						Math.round(art.animationDisplay.pixelSize + 1),
+						Math.round(art.animationDisplay.pixelSize + 1)
+					);
+				}
+			}
 		}
 	},
 	selectColor: function(colorIndex) {
@@ -721,6 +763,8 @@ var Art = Class({
 			selectedAnimationSprite = 0;
 
 		}
+
+		this.drawAnimation();
 	},
 	mirrorSprite: function() {
 

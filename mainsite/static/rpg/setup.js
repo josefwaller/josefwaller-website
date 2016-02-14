@@ -4,14 +4,14 @@ var background;
 var screens;
 
 var colors = [
-	{r:0, g:0, b:0, sat:100, bright:100, hue:0.1, hex:"#000000"},
-	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
-	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
-	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
-	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
-	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
-	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
-	{r:0, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"}
+	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"}
 ]
 
 var currentScreen;
