@@ -13,7 +13,12 @@ var animations = [
 	["runDownOne", "runDownTwo"],
 	["attackDown", "runDownOne"],
 	["stand"],
-	["dialog"]
+	["dialog"],
+
+	// Background
+	["one"],
+	["two"],
+	["three"],
 ];
 
 var hoverSprites =	{
@@ -34,6 +39,8 @@ var Art = Class({
 
 	w: 600,
 	h: null,
+
+	unit: 0,
 
 	// The offset to draw the canvas
 	offsetX: 0,
@@ -84,6 +91,8 @@ var Art = Class({
 	copyObject: null,
 	copySprite: null,
 
+	ct: null,
+
 	// The x coordinate between the area rendered by the canvas area and the bars and buttons
 	// Future Josef, this is important, it divides the screen to minimize required rendering
 	splitX: null,
@@ -92,14 +101,16 @@ var Art = Class({
 
 		// Gets canvas and ctx
 		this.canvas = $("#art-canvas");
-		this.ctx = this.canvas[0].getContext("2d");
+
+		this.ct = CanvasTools({canvas: $("#art-canvas"), w: 600});
 
 		// Sets height
-		this.h = (this.canvas.height() / this.canvas.width()) * this.w
+		this.w = 600;
+		this.h = this.canvas.height() / this.canvas.width() * this.w;
 
 		// Sets inner dimension
-		this.canvas[0].width = this.w;
-		this.canvas[0].height = this.h;
+		this.canvas[0].width = this.canvas.width();
+		this.canvas[0].height = this.canvas.height();
 
 		// Sets the size
 		this.size = p.size
@@ -147,9 +158,9 @@ var Art = Class({
 			text: "Copy Sprite",
 			textColor: "#ffffff",
 			textY: null,
-			font: "'Press Start 2P'",
+			font: "Raleway",
 			fontSize: 15,
-			color: "#000000",
+			color: "#3399ff",
 			hoverColor: "#333333",
 			onClick: function(){
 				art.isCopying = !art.isCopying;
@@ -168,9 +179,9 @@ var Art = Class({
 			text: "Mirror",
 			textColor: "#ffffff",
 			textY: null,
-			font: "'Press Start 2P'",
+			font: "Raleway",
 			fontSize: 15,
-			color: "#000000",
+			color: "#3399ff",
 			hoverColor: "#333333",
 			onClick: function() {
 				art.mirrorSprite();
@@ -197,17 +208,16 @@ var Art = Class({
 
 		// Creates the cancel button when copying
 		text = "Cancel"
-		this.ctx.font = "20px Arial"
 
 		this.copyCancelButton = new Button({
-			x: (this.w - this.ctx.measureText(text).width) / 2,
+			x: 5,//(this.w - this.ctx.measureText(text).width) / 2,
 			y: this.h / 2,
-			w: this.ctx.measureText(text).width,
+			w: 5,//this.ctx.measureText(text).width,
 			h: 20,
 			color: null,
 			text: text,
 			textY: null,
-			font: "'Arial'",
+			font: "'Raleway'",
 			fontSize: 20,
 			textColor: "#000000",
 			onClick: function() {
@@ -276,7 +286,7 @@ var Art = Class({
 			objectButtonGroup.append(button);
 
 			button.append(canvas);
-			button.append("<br>" + i);
+			button.append("<br>" + this.getNameFromCamel(i));
 
 			// Gets the first sprite
 			spriteName = Object.keys(sprites[i])[0];
@@ -308,12 +318,12 @@ var Art = Class({
 	},
 	update: function() {
 		// Sets mouse position
-		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width;
-		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.canvas[0].height;
+		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.w;
+		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.h;
 
 		if (this.mouseX <  this.offsetX + this.size * this.pixelSize + 15){
 			this.drawCanvasArea();
-		}else {
+		} else {
 			this.drawSide();
 		}
 
@@ -406,6 +416,7 @@ var Art = Class({
 			if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + this.size * this.pixelSize){
 				if (this.mouseY > this.offsetY && this.mouseY < this.offsetY + this.size * this.pixelSize){
 
+					// adds a pixel
 					pixel = this.getSelectedPixel();
 					sprite = sprites[selectedObject][selectedSprite];
 
@@ -419,31 +430,33 @@ var Art = Class({
 
 				}
 			}
+		}else if (changingColor){
+			// Draws the image with new colors
+			this.drawCanvasArea();
 		}
 	},
 	drawCanvasArea: function() {
 
-		// Gets ctx for reference
-		ctx = this.ctx;
+		ct = this.ct;
 
 		// Draws background
-		ctx.fillStyle = this.backgroundColor;
-		ctx.fillRect(0, 0, this.splitX, this.h);
+		ct.fillStyle = this.backgroundColor;
+		ct.fillRect(0, 0, this.splitX, this.h);
 
-		// Draws grid
+		// // Draws grid
 		for (i = 0; i <= this.size; i++){
 
-			ctx.fillStyle = "#000000";
+			ct.fillStyle = "#000000";
 
 			// Draws x line
-			ctx.fillRect(
+			ct.fillRect(
 				this.offsetX + this.pixelSize * i, 
 				this.offsetY, 
 				1, 
 				this.size * this.pixelSize);
 
 			// Draws y line
-			ctx.fillRect(
+			ct.fillRect(
 				this.offsetX, 
 				this.offsetY + this.pixelSize * i, 
 				this.size * this.pixelSize, 
@@ -454,7 +467,7 @@ var Art = Class({
 		if (selectedObject in hoverSprites){
 			if (selectedSprite in hoverSprites[selectedObject]){
 				// Draws underlaying Sprite
-				ctx.globalAlpha = 0.5;
+				ct.globalAlpha = 0.5;
 				s = hoverSprites[selectedObject][selectedSprite];
 
 				sprite = sprites[s.object][s.sprite];
@@ -464,13 +477,13 @@ var Art = Class({
 						if (sprite[x][y] !== null){
 							color = colors[sprite[x][y]];
 
-							ctx.fillStyle = color.hex;
+							ct.fillStyle = color.hex;
 
-							ctx.fillRect(
+							ct.fillRect(
 								this.offsetX + this.pixelSize * x,
 								this.offsetY + this.pixelSize * y,
-								this.pixelSize,
-								this.pixelSize
+								this.pixelSize + 1,
+								this.pixelSize + 1
 							);
 
 						}
@@ -479,10 +492,10 @@ var Art = Class({
 				}
 			}
 
-			ctx.globalAlpha = 1;
+			ct.globalAlpha = 1;
 		}
 
-		//draws current sprite
+		// draws current sprite
 
 		for (x = 0; x < this.size; x++){
 			for (y = 0; y < this.size; y++){
@@ -493,12 +506,12 @@ var Art = Class({
 					color = colors[sprites[selectedObject][selectedSprite][x][y]];
 
 					// Draws the pixel
-					ctx.fillStyle = color.hex;
-					ctx.fillRect(
+					ct.fillStyle = color.hex;
+					ct.fillRect(
 						this.offsetX + this.pixelSize * x,
 						this.offsetY + this.pixelSize * y,
-						this.pixelSize,
-						this.pixelSize
+						this.pixelSize + 1,
+						this.pixelSize + 1
 					);
 
 				}
@@ -506,7 +519,7 @@ var Art = Class({
 			}
 		}
 
-		// Checks if the mouse is on the grid
+		// // Checks if the mouse is on the grid
 		if (!this.isCopying){
 			
 			if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + (this.size * this.pixelSize)){
@@ -516,8 +529,8 @@ var Art = Class({
 					pixel = this.getSelectedPixel();
 
 					// Draws the highlighted pixel
-					ctx.fillStyle = "#ffffff"
-					ctx.fillRect(
+					ct.fillStyle = "#ffffff"
+					ct.fillRect(
 						this.offsetX + pixel[0] * this.pixelSize,
 						this.offsetY + pixel[1] * this.pixelSize,
 						this.pixelSize + 1,
@@ -527,51 +540,51 @@ var Art = Class({
 		}
 	},
 	drawSide: function() {
-		ctx = this.ctx;
-		ctx.fillStyle = this.backgroundColor;
-		ctx.fillRect(
+		ct = this.ct;
+		ct.fillStyle = this.backgroundColor;
+		ct.fillRect(
 			this.splitX,
 			0,
 			this.w - this.splitX,
 			this.animationDisplay.y);
-		// Draws bars/buttons
-		this.colorBar.draw(ctx);
+		// // Draws bars/buttons
+		this.colorBar.draw(ct);
 
 		brightness = colors[selectedColor].bright;
-		this.saturationBar.draw(ctx, [{r:brightness, g:brightness, b:brightness}, colors[selectedColor]])
+		this.saturationBar.draw(ct, [{r:brightness, g:brightness, b:brightness}, colors[selectedColor]])
 
 		black = {r: 0, g: 0, b:0};
 		white = {r: 255, g: 255, b: 255}
-		this.brightnessBar.draw(ctx, [black, colors[selectedColor], white]);
+		this.brightnessBar.draw(ct, [black, colors[selectedColor], white]);
 
-		this.copyButton.draw(ctx, this.mouseX, this.mouseY);
-		this.mirrorButton.draw(ctx, this.mouseX, this.mouseY);
+		this.copyButton.draw(ct, this.mouseX, this.mouseY);
+		this.mirrorButton.draw(ct, this.mouseX, this.mouseY);
 
 		if (this.isCopying){
 
 			// Draws transparent white layer
-			ctx.globalAlpha = 0.5;
-			ctx.fillStyle = "#ffffff";
-			ctx.fillRect(0, 0, this.w, this.h);
-			ctx.globalAlpha = 1;
+			ct.globalAlpha = 0.5;
+			ct.fillStyle = "#ffffff";
+			ct.fillRect(0, 0, this.w, this.h);
+			ct.globalAlpha = 1;
 
 			// Draws text
-			ctx.fillStyle = "#000000";
-			ctx.font = "30px Arial";
+			ct.fillStyle = "#000000";
+			ct.setFont(30, "Arial");
 			text = "Choose a sprite to copy";
 
-			x = (this.w - ctx.measureText(text).width) / 2;
-			ctx.fillText(text, x, this.h / 3);
+			x = (this.w - ctx.measureText(text, "30px Arial").width) / 2;
+			ct.fillText(text, x, this.h / 3);
 
-			this.copyCancelButton.draw(ctx, this.mouseX, this.mouseY);
+			this.copyCancelButton.draw(ct, this.mouseX, this.mouseY);
 		}
 	},
 	drawAnimation: function() {
 
-		ctx = this.ctx;
+		ct = this.ct;
 
-		ctx.fillStyle = this.backgroundColor;
-		ctx.fillRect(
+		ct.fillStyle = this.backgroundColor;
+		ct.fillRect(
 			this.splitX,
 			this.animationDisplay.y,
 			this.w - this.splitX,
@@ -588,12 +601,12 @@ var Art = Class({
 
 				if (sprite[x][y] !== null){
 
-					ctx.fillStyle = colors[sprite[x][y]].hex;
-					ctx.fillRect(
-						Math.round(art.animationDisplay.x + art.animationDisplay.offsetX + art.animationDisplay.pixelSize * x),
-						Math.round(art.animationDisplay.y + art.animationDisplay.offsetY + art.animationDisplay.pixelSize * y),
-						Math.round(art.animationDisplay.pixelSize + 1),
-						Math.round(art.animationDisplay.pixelSize + 1)
+					ct.fillStyle = colors[sprite[x][y]].hex;
+					ct.fillRect(
+						this.animationDisplay.x + this.animationDisplay.offsetX + this.animationDisplay.pixelSize * x,
+						this.animationDisplay.y + this.animationDisplay.offsetY + this.animationDisplay.pixelSize * y,
+						this.animationDisplay.pixelSize + 1,
+						this.animationDisplay.pixelSize + 1
 					);
 				}
 			}
@@ -629,6 +642,30 @@ var Art = Class({
 
 		return [pixelX, pixelY];
 	},
+	getNameFromCamel: function(name){
+
+		// Capitalizes the first letter
+		name = name.charAt(0).toUpperCase() + name.slice(1);
+
+		alphabet = "abcdefghijklmnopqrstuvwxyz";
+		
+		// Cycles through and checks if it shoudl insert a space
+		for (var n = 1; n < name.length; n++){
+
+			// Check if it is uppercase
+			if (name.charAt(n).toUpperCase() === name.charAt(n) && alphabet.contains(name.charAt(n).toLowerCase())){
+				// Gets the first part (starts at zero)
+				firstPart = name.slice(0, n - name.length);
+				// Gets the second part
+				secondPart = name.slice(n);
+				// adds them
+				name = firstPart + " " + secondPart;
+				// Adds one to n, since a space was created
+				n++;
+			}
+		}
+		return name;
+	},
 	changeSpriteButtons: function() {
 
 		// Resets all of the sprite buttons
@@ -654,7 +691,11 @@ var Art = Class({
 			spriteButtonGroup.append(button);
 
 			button.append(canvas);
-			button.append("<br>" + i);
+
+			// Gets the name from camelHumps
+			var name = this.getNameFromCamel(i);
+
+			button.append("<br>" + name);
 
 			// Creats manager
 			this.spriteCanvases[i] = SpriteCanvas({canvas: canvas, object: selectedObject, sprite: i});
@@ -712,21 +753,6 @@ var Art = Class({
 
 		}
 	},
-	updateSelectedButtons: function() {
-		// Updates the current selected sprite and object button canvases
-		this.objectCanvases[selectedObject].draw();
-		this.spriteCanvases[selectedSprite].draw();
-	},
-	updateAllButtons: function() {
-		// Updates all the button canvases
-		// When a color is changed, something that affects all sprites
-		for (i in this.objectCanvases){
-			this.objectCanvases[i].draw();
-		}
-		for (i in this.spriteCanvases){
-			this.spriteCanvases[i].draw();
-		}
-	},
 	changeSelectedObject: function(objIndex) { 
 
 		// Changes the selected button
@@ -752,6 +778,21 @@ var Art = Class({
 		this.objectCanvases[selectedObject].draw();
 		this.changeSpriteButtons();
 	},
+	updateSelectedButtons: function() {
+		// Updates the current selected sprite and object button canvases
+		this.objectCanvases[selectedObject].draw();
+		this.spriteCanvases[selectedSprite].draw();
+	},
+	updateAllButtons: function() {
+		// Updates all the button canvases
+		// When a color is changed, something that affects all sprites
+		for (i in this.objectCanvases){
+			this.objectCanvases[i].draw();
+		}
+		for (i in this.spriteCanvases){
+			this.spriteCanvases[i].draw();
+		}
+	},
 	updateSpriteAnimations: function() {
 
 		// Changes the sprite to draw in the animation display
@@ -763,8 +804,6 @@ var Art = Class({
 			selectedAnimationSprite = 0;
 
 		}
-
-		this.drawAnimation();
 	},
 	mirrorSprite: function() {
 
@@ -784,6 +823,9 @@ var Art = Class({
 		for (x = 0; x < sprite.length; x++){
 			sprites[selectedObject][selectedSprite][x] = spriteCopy[x].slice();
 		}
+
+		// draws
+		this.drawCanvasArea();
 
 		// Updates the buttons
 		this.updateSelectedButtons();

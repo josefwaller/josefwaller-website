@@ -53,7 +53,7 @@ var ColorBar = Class({
 				hexColor = "#" + toHex(color.red) + toHex(color.green) + toHex(color.blue);
 
 				ctx.fillStyle = hexColor;
-				ctx.fillRect(this.x + i, this.y, 1, this.h);
+				ctx.fillRect(this.x + i, this.y, this.w - i, this.h);
 			}
 		}
 

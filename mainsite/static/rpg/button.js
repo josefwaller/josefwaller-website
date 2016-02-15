@@ -8,6 +8,9 @@ var Button = new Class({
 
 	onClick: null,
 
+	font: null,
+	fontSize: 0,
+
 	init: function(p) {
 		this.x = p.x;
 		this.y = p.y;
@@ -33,8 +36,7 @@ var Button = new Class({
 			}
 
 			if (p.fontSize !== null){
-				this.font = p.fontSize + "px " + this.font;
-				// 20px 'Press Start 2P' for example
+				this.fontSize = p.fontSize;
 
 				this.textY += p.fontSize / 2;
 			}
@@ -77,10 +79,9 @@ var Button = new Class({
 				}
 			}
 			ctx.fillStyle = this.textColor;
-			ctx.font = this.font;
-			x = this.x + (this.w - ctx.measureText(this.text).width) / 2;
+			ctx.setFont(this.fontSize, this.font);
+			x = this.x + (this.w - ctx.measureText(this.text, this.fontSize + "px " + this.font).width) / 2;
 			y = this.textY;
-
 			ctx.fillText(this.text, x, y);
 		}
 	}

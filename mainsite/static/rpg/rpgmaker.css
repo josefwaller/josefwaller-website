@@ -1,9 +1,9 @@
 .btn
 {
-	font-family: 'Press Start 2P', cursive;
-	font-size: 10px;
+	font-family: 'Raleway', cursive;
+	font-size: 15px;
 	color: #ffffff;
-	background-color: #c60d0d;
+	background-color: #3399ff;
 	border-radius: 0px;
 	margin-top: 0px;
 	border: 0px;
@@ -20,7 +20,8 @@ h1
 canvas
 {
 	margin-top: 0px;
-	margin-bottom: 0px
+	margin-bottom: 0px;
+	height: 500px;
 }
 .btn > canvas
 {

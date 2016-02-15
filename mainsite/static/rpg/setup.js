@@ -141,7 +141,7 @@ function setup () {
 	$(document).mouseup(function(event){
 		mouse.down = false;
 	})
-	changeScreen(null, 2);
+	changeScreen(null, 1);
 	window.setInterval(update, 1000/60)
 
 }
@@ -211,4 +211,4 @@ function update() {
 	}
 }
 
-$(document.body).ready(setup)
+$(document.body).ready(setup);
