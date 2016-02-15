@@ -653,7 +653,7 @@ var Art = Class({
 		for (var n = 1; n < name.length; n++){
 
 			// Check if it is uppercase
-			if (name.charAt(n).toUpperCase() === name.charAt(n) && alphabet.contains(name.charAt(n).toLowerCase())){
+			if (name.charAt(n).toUpperCase() === name.charAt(n) && alphabet.indexOf(name.charAt(n).toLowerCase()) !== -1){
 				// Gets the first part (starts at zero)
 				firstPart = name.slice(0, n - name.length);
 				// Gets the second part
