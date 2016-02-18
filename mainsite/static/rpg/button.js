@@ -78,8 +78,11 @@ var Button = new Class({
 					color = this.hoverColor;
 				}
 			}
+
+			// Draws text
 			ctx.fillStyle = this.textColor;
 			ctx.setFont(this.fontSize, this.font);
+
 			x = this.x + (this.w - ctx.measureText(this.text, this.fontSize + "px " + this.font).width) / 2;
 			y = this.textY;
 			ctx.fillText(this.text, x, y);

@@ -102,16 +102,11 @@ var Art = Class({
 		// Gets canvas and ctx
 		this.canvas = $("#art-canvas");
 
-		this.ct = CanvasTools({canvas: $("#art-canvas"), w: 600});
+		// Sets width/height
+		this.w = 700;
+		this.h = 416;
 
-		// Sets height
-		this.w = 600;
-		this.h = this.canvas.height() / this.canvas.width() * this.w;
-
-		// Sets inner dimension
-		this.canvas[0].width = this.canvas.width();
-		this.canvas[0].height = this.canvas.height();
-
+		this.ct = CTXPro({canvas: $("#art-canvas"), w: this.w, h: this.h});
 		// Sets the size
 		this.size = p.size
 
@@ -309,12 +304,12 @@ var Art = Class({
 		// Selects the color
 		this.selectColor(0);
 
+		this.splitX = this.offsetX + this.size * this.pixelSize + 15;
+
 		//initially draws all quadrants
 		this.drawCanvasArea();
 		this.drawAnimation();
 		this.drawSide();
-
-		this.splitX = this.offsetX + this.size * this.pixelSize + 15;
 	},
 	update: function() {
 		// Sets mouse position
@@ -540,6 +535,7 @@ var Art = Class({
 		}
 	},
 	drawSide: function() {
+
 		ct = this.ct;
 		ct.fillStyle = this.backgroundColor;
 		ct.fillRect(
@@ -633,6 +629,9 @@ var Art = Class({
 			this.saturationBar.setCrosshairs(colors[selectedColor].sat / 255);
 			this.brightnessBar.setCrosshairs(colors[selectedColor].bright / 255);
 		}
+
+		this.drawSide();
+		this.drawCanvasArea();
 	},
 	getSelectedPixel: function() {
 
