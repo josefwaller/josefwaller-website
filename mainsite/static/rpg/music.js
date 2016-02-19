@@ -33,12 +33,11 @@ var Music = Class({
 	init: function(p) {
 
 		this.canvas = $("#music-canvas");
-		this.ctx = this.canvas[0].getContext("2d");
 
-		this.h = (this.canvas.height() / this.canvas.width()) * this.w
+		this.w = 600;
+		this.h = 316
 
-		this.canvas[0].width = this.w;
-		this.canvas[0].height = this.h;
+		this.ctx = CTXPro({canvas: this.canvas, w: this.w, h: this.h});
 
 		// 8 notes per bar times 8 bars
 		this.notesAcross = 8 * 8;
@@ -103,7 +102,7 @@ var Music = Class({
 
 		this.volumeScrollBar = new ScrollBar({
 			x: 10,
-			y: 250,
+			y: 270,
 			w: scrollBarWidth,
 			h: 20,
 			text: "Volume"
@@ -111,7 +110,7 @@ var Music = Class({
 
 		this.speedScrollBar = new ScrollBar({
 			x: 10 + scrollBarWidth + 20,
-			y: 250,
+			y: 270,
 			w: scrollBarWidth,
 			h: 20,
 			text: "Speed"
@@ -137,8 +136,8 @@ var Music = Class({
 		}
 	},
 	update: function() {
-		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.canvas[0].width;
-		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.canvas[0].height;
+		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.w;
+		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.h;
 
 		this.topNoteGrid.update();
 		this.botNoteGrid.update();
@@ -153,6 +152,7 @@ var Music = Class({
 		this.speedScrollBar.onClick(this.mouseX, this.mouseY);
 	},
 	onMouseHold: function() {
+		
 		if (this.volumeScrollBar.onMouseHold(this.mouseX, this.mouseY)){
 			volumes[selectedLayer] = this.volumeScrollBar.value;
 		}

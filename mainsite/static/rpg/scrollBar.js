@@ -7,7 +7,7 @@ var ScrollBar = new Class({
 
 	text: 0,
 
-	value: 0.5,
+	value: 0.1,
 	radius: 10,
 
 	isSelected: false,
@@ -39,16 +39,28 @@ var ScrollBar = new Class({
 	},
 
 	onMouseHold: function(mouseX, mouseY){
-		if (this.isSelected){
-			x = mouseX - this.x;
-			value = x / this.w;
 
-			if (value < 0){
-				value = 0;
-			}else if (value > 1){
-				value = 1;
+		// Gets the value 
+		if (this.isSelected){
+
+			// gets the pecantage to set as value
+			x = mouseX - this.x;
+
+			// Checks if the mouse is too far left
+			if (x < 0){
+				this.value = 0;
+
+			}else {
+				console.log(x);
+				value = x / this.w;
+
+				if (value < 0){
+					value = 0;
+				}else if (value > 1){
+					value = 1;
+				}
+				this.value = value;
 			}
-			this.value = value;
 			return this.value;
 		}
 
@@ -58,8 +70,12 @@ var ScrollBar = new Class({
 	draw: function(ctx) {
 
 		// Draws text
-		ctx.font = "10px 'Press Start 2P'";
-		ctx.fillText(this.text, this.x + (this.w - ctx.measureText(this.text).width) / 2, this.y);
+		ctx.setFont(16, "Raleway");
+
+		ctx.fillText(
+			this.text, 
+			this.x + (this.w - ctx.measureText(this.text, "16px Raleway").width) / 2,
+			this.y - 7);
 
 		// Draws line
 		ctx.fillStyle = "#000000";
@@ -73,9 +89,9 @@ var ScrollBar = new Class({
 		circleY = this.y + this.h / 2;
 
 		// Draws circle
-		ctx.beginPath();
-		ctx.arc(circleX, circleY, this.radius, 0, 2 * Math.PI);
-		ctx.fill();
+		// ctx.beginPath();
+		ctx.fillArc(circleX, circleY, this.radius, 0, 2 * Math.PI);
+		// ctx.fill();
 
 	}
 })
