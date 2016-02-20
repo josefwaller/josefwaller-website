@@ -35,6 +35,37 @@ var CTXPro = Class({
 			Math.round(h * this.unit));
 	},
 	drawRoundedRect: function(x, y, w, h, r){
+
+		// Draws two base rects
+		this.ctx.fillStyle = this.fillStyle;
+		this.ctx.fillRect(
+			x + r,
+			y,
+			w - 2 * r,
+			h);
+		this.ctx.fillRect(
+			x,
+			y + r,
+			w,
+			h - 2 * r);
+
+		// draws corners
+		this.ctx.beginPath();
+		this.ctx.arc(x + r, y + r, r, 0, 2 * Math.PI);
+		this.ctx.fill();
+
+		this.ctx.beginPath();
+		this.ctx.arc(x + w - r, y + r, r, 0, 2 * Math.PI);
+		this.ctx.fill();
+
+		this.ctx.beginPath();
+		this.ctx.arc(x + w - r, y + h - r, r, 0, 2 * Math.PI);
+		this.ctx.fill();
+
+		this.ctx.beginPath();
+		this.ctx.arc(x + r, y + h - r, r, 0, 2 * Math.PI);
+		this.ctx.fill();
+
 	},
 	drawImage: function(img, x, y, w, h){
 
@@ -54,6 +85,9 @@ var CTXPro = Class({
 		this.ctx.font = this.font;
 	},
 	fillText: function(text, x, y){
+
+
+		this.ctx.textBaseline = "middle";
 
 		this.ctx.fillStyle = this.fillStyle;
 		this.ctx.font = this.font;

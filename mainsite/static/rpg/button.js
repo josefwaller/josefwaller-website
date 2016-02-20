@@ -32,7 +32,7 @@ var Button = new Class({
 
 			if (p.textY === null){
 
-				this.textY = this.y + this.h / 2;
+				this.textY = this.y + (this.h) / 2;
 			}
 
 			if (p.fontSize !== null){
@@ -70,6 +70,7 @@ var Button = new Class({
 			ctx.fillRect(this.x, this.y, this.w, this.h);
 		}
 
+		// Draws text if it has any
 		if (this.text){
 			color = this.textColor;
 			if (this.x <= mouseX && this.x + this.w > mouseX){
@@ -82,9 +83,8 @@ var Button = new Class({
 			// Draws text
 			ctx.fillStyle = this.textColor;
 			ctx.setFont(this.fontSize, this.font);
-
 			x = this.x + (this.w - ctx.measureText(this.text, this.fontSize + "px " + this.font).width) / 2;
-			y = this.textY;
+			y = this.y + this.h / 2;
 			ctx.fillText(this.text, x, y);
 		}
 	}

@@ -30,12 +30,14 @@ var Music = Class({
 
 	volumeScrollBar: null,
 
+	isPaused: false,
+
 	init: function(p) {
 
 		this.canvas = $("#music-canvas");
 
-		this.w = 600;
-		this.h = 316
+		this.w = 700;
+		this.h = 416
 
 		this.ctx = CTXPro({canvas: this.canvas, w: this.w, h: this.h});
 
@@ -98,23 +100,40 @@ var Music = Class({
 			})
 		}
 
-		scrollBarWidth =(this.w / 2) - 20;
+		var paddingWidth = 15;
 
 		this.volumeScrollBar = new ScrollBar({
-			x: 10,
+			x: paddingWidth,
 			y: 270,
-			w: scrollBarWidth,
+			w: this.w / 3 - 2 * paddingWidth,
 			h: 20,
 			text: "Volume"
 		});
 
 		this.speedScrollBar = new ScrollBar({
-			x: 10 + scrollBarWidth + 20,
+			x: this.w / 3 + paddingWidth,
 			y: 270,
-			w: scrollBarWidth,
+			w: this.w / 3 - 2 * paddingWidth,
 			h: 20,
 			text: "Speed"
 		});
+
+		this.pauseButton = new Button({
+			x: this.w * 2/3 + paddingWidth,
+			y: 270,
+			w: this.w / 3 - 2 * paddingWidth,
+			h: 20,
+			text: "Pause",
+			color: btnColors.color,
+			textColor: btnColors.text,
+			hoverColor: btnColors.hover,
+			font: "Raleway",
+			fontSize: 13,
+			textY: null,
+
+			onClick: this.onPauseClick
+		})
+
 
 		this.draw();
 	},
@@ -150,6 +169,8 @@ var Music = Class({
 
 		this.volumeScrollBar.onClick(this.mouseX, this.mouseY);
 		this.speedScrollBar.onClick(this.mouseX, this.mouseY);
+
+		this.pauseButton.checkForClick(this.mouseX, this.mouseY)
 	},
 	onMouseHold: function() {
 		
@@ -163,7 +184,6 @@ var Music = Class({
 			}
 			barSpeed = this.speedScrollBar.value / 5;
 		}
-
 	},
 	onMouseUp: function() {
 		this.volumeScrollBar.isSelected = false;
@@ -195,8 +215,12 @@ var Music = Class({
 
 		this.volumeScrollBar.draw(ctx);
 		this.speedScrollBar.draw(ctx);
-	},
 
+		this.pauseButton.draw(ctx, this.mouseX, this.mouseY);
+	},
+	onPauseClick: function(){
+		console.log("ASDF");
+	},
 	changeLayer: function(layer){
 		selectedLayer = layer;
 		this.volumeScrollBar.value = volumes[selectedLayer];

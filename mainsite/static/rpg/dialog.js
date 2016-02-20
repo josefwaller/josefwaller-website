@@ -29,6 +29,26 @@ var Dialog = Class({
 			})
 		}
 
+		var buttonCont = $("#dialog-btn-group");
+
+		// Adds the 'Add a dialog' button
+		button = $("<a class='btn btn-lg'></a>");
+		button.click(function(){
+			dialog.addDialog();
+		});
+		button.text("Add a line");
+
+		$("#dialog-btn-group").append(button);
+
+		// Adds the remove dialog button
+		button = $("<a class='btn btn-lg'></a>");
+		button.click(function(){
+			dialog.removeDialog();
+		});
+		button.text("Remove a line");
+
+		$("#dialog-btn-group").append(button);
+
 		// Updates the dialog div
 		this.updateDialogs();
 
@@ -107,24 +127,6 @@ var Dialog = Class({
 
 			this.canvasManagers[i].draw();
 		}
-
-		// Adds the 'Add a dialog' button
-		button = $("<button class='dialog-add-button'></button>");
-		button.click(function(){
-			dialog.addDialog();
-		});
-		button.text("Add a line");
-
-		this.parentDiv.append(button);
-
-		// Adds the remove dialog button
-		button = $("<button class='dialog-remove-button'></button>");
-		button.click(function(){
-			dialog.removeDialog();
-		});
-		button.text("Remove a line");
-
-		this.parentDiv.append(button);
 	},
 	addDialog: function() {
 		dialogs[selectedDialog].push("");

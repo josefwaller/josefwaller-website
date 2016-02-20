@@ -151,12 +151,12 @@ var Art = Class({
 			w: 200,
 			h: (this.h - (this.offsetY + 90)) / 3 - 20,
 			text: "Copy Sprite",
-			textColor: "#ffffff",
+			textColor: btnColors.text,
 			textY: null,
 			font: "Raleway",
 			fontSize: 15,
-			color: "#3399ff",
-			hoverColor: "#333333",
+			color: btnColors.color,
+			hoverColor: btnColors.hover,
 			onClick: function(){
 				art.isCopying = !art.isCopying;
 
@@ -172,12 +172,12 @@ var Art = Class({
 			w: 200,
 			h: this.copyButton.h,
 			text: "Mirror",
-			textColor: "#ffffff",
+			textColor: btnColors.text,
 			textY: null,
 			font: "Raleway",
 			fontSize: 15,
-			color: "#3399ff",
-			hoverColor: "#333333",
+			color: btnColors.color,
+			hoverColor: btnColors.hover,
 			onClick: function() {
 				art.mirrorSprite();
 			}
@@ -205,7 +205,7 @@ var Art = Class({
 		text = "Cancel"
 
 		this.copyCancelButton = new Button({
-			x: 5,//(this.w - this.ctx.measureText(text).width) / 2,
+			x: (this.w - this.ct.measureText(text).width) / 2,
 			y: this.h / 2,
 			w: 5,//this.ctx.measureText(text).width,
 			h: 20,

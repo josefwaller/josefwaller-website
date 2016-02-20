@@ -72,13 +72,14 @@ var ScrollBar = new Class({
 		// Draws text
 		ctx.setFont(16, "Raleway");
 
+		ctx.fillStyle = "#3399ff";
+
 		ctx.fillText(
 			this.text, 
 			this.x + (this.w - ctx.measureText(this.text, "16px Raleway").width) / 2,
 			this.y - 7);
 
 		// Draws line
-		ctx.fillStyle = "#000000";
 		ctx.fillRect(
 			this.x,
 			Math.round(this.y + this.h / 2),

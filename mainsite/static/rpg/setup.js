@@ -3,8 +3,14 @@ var background;
 
 var screens;
 
+var btnColors = {
+	color: "#3399ff",
+	text:"#ffffff",
+	hover: "#4da6ff"
+}
+
 var colors = [
-	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
+	{r:255, g:0, b:0, sat:0, bright:0, hue:0, hex:"#000000"},
 	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
 	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
 	{r:255, g:0, b:0, sat:100, bright:100, hue:0, hex:"#000000"},
