@@ -81,6 +81,9 @@ var Art = Class({
 	copyButton: null,
 	mirrorButton: null,
 
+	// Alert box for copying
+	copyAlertBox: null,
+
 	// Status variables
 	isErasing: false,
 	isCopying: false,
@@ -204,21 +207,7 @@ var Art = Class({
 		// Creates the cancel button when copying
 		text = "Cancel"
 
-		this.copyCancelButton = new Button({
-			x: (this.w - this.ct.measureText(text).width) / 2,
-			y: this.h / 2,
-			w: 5,//this.ctx.measureText(text).width,
-			h: 20,
-			color: null,
-			text: text,
-			textY: null,
-			font: "'Raleway'",
-			fontSize: 20,
-			textColor: "#000000",
-			onClick: function() {
-				art.isClickingCancel = true;
-			}
-		})
+		this.copyAlertBox = AlertBox({});
 
 		// Sets the button's colors
 		colorButtons = $("#color-btns");
@@ -340,7 +329,7 @@ var Art = Class({
 			this.mirrorButton.checkForClick(this.mouseX, this.mouseY);
 
 		}else {
-			this.copyCancelButton.checkForClick(this.mouseX, this.mouseY);
+			
 		}
 	},
 	onMouseUp: function() {
@@ -555,25 +544,6 @@ var Art = Class({
 
 		this.copyButton.draw(ct, this.mouseX, this.mouseY);
 		this.mirrorButton.draw(ct, this.mouseX, this.mouseY);
-
-		if (this.isCopying){
-
-			// Draws transparent white layer
-			ct.globalAlpha = 0.5;
-			ct.fillStyle = "#ffffff";
-			ct.fillRect(0, 0, this.w, this.h);
-			ct.globalAlpha = 1;
-
-			// Draws text
-			ct.fillStyle = "#000000";
-			ct.setFont(30, "Arial");
-			text = "Choose a sprite to copy";
-
-			x = (this.w - ctx.measureText(text, "30px Arial").width) / 2;
-			ct.fillText(text, x, this.h / 3);
-
-			this.copyCancelButton.draw(ct, this.mouseX, this.mouseY);
-		}
 	},
 	drawAnimation: function() {
 

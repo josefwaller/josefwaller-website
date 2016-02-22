@@ -8,7 +8,7 @@ var ScrollBar = new Class({
 	text: 0,
 
 	value: 0.1,
-	radius: 10,
+	radius: 7,
 
 	isSelected: false,
 
@@ -25,7 +25,7 @@ var ScrollBar = new Class({
 	onClick: function(mouseX, mouseY){
 
 		x = this.x + this.value * this.w;
-		y = this.y + this.h / 2;
+		y = this.y + this.h ;
 
 		distanceX = Math.abs(x - mouseX);
 		distanceY = Math.abs(y - mouseY);
@@ -69,24 +69,24 @@ var ScrollBar = new Class({
 	draw: function(ctx) {
 
 		// Draws text
-		ctx.setFont(16, "Raleway");
+		ctx.setFont(11, "Raleway");
 
 		ctx.fillStyle = "#3399ff";
 
 		ctx.fillText(
 			this.text, 
-			this.x + (this.w - ctx.measureText(this.text, "16px Raleway").width) / 2,
-			this.y - 7);
+			this.x + (this.w - ctx.measureText(this.text, "11px Raleway").width) / 2,
+			this.y + 8);
 
 		// Draws line
 		ctx.fillRect(
 			this.x,
-			Math.round(this.y + this.h / 2),
+			this.y + this.h,
 			this.w,
-			2);
+			1);
 
 		circleX = this.x + (this.value * this.w);
-		circleY = this.y + this.h / 2;
+		circleY = this.y + this.h;
 
 		// Draws circle
 		// ctx.beginPath();

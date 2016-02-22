@@ -1,3 +1,6 @@
+// Whether or not a button is hovering
+var hover = false;
+
 var Button = new Class({
 	x: 0,
 	y: 0,
@@ -60,7 +63,9 @@ var Button = new Class({
 		if (this.color !== null){
 
 			color = this.color;
-			$(document.body).css("cursor", "initial");
+
+			// Changes the mouse pointer to click
+
 			if (this.x <= mouseX && this.x + this.w > mouseX){
 				if (this.y <= mouseY && this.y + this.h > mouseY){
 
@@ -68,6 +73,8 @@ var Button = new Class({
 					$(document.body).css("cursor", "pointer");
 				}
 			}
+
+			// Fills the initial rect  
 			ctx.fillStyle = color;
 			ctx.fillRect(this.x, this.y, this.w, this.h);
 		}

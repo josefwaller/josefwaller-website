@@ -198,6 +198,9 @@ function update() {
 		dialog
 	];
 
+	// Resets the pointer
+	$(document.body).css("cursor", "initial");
+
 	managers[currentScreen].update();
 
 	if (mouse.down){

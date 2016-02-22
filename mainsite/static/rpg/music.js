@@ -7,7 +7,8 @@ var musicTracks = {
 var volumes = {
 	layerOne: 1,
 	layerTwo: 1,
-	layerThree: 1
+	layerThree: 1,
+	master: 1
 };
 
 var selectedLayer = "layerOne";
@@ -29,6 +30,10 @@ var Music = Class({
 	botNoteGrid: null,
 
 	volumeScrollBar: null,
+	masterScrollBar: null,
+
+	pauseButton: null,
+	clearLayerButton: null,
 
 	isPaused: false,
 
@@ -100,27 +105,29 @@ var Music = Class({
 			})
 		}
 
+		// Top layer of settings
 		var paddingWidth = 15;
+		var y = 270;
 
 		this.volumeScrollBar = new ScrollBar({
 			x: paddingWidth,
-			y: 270,
+			y: y,
 			w: this.w / 3 - 2 * paddingWidth,
-			h: 20,
+			h: 30,
 			text: "Volume"
 		});
 
 		this.speedScrollBar = new ScrollBar({
 			x: this.w / 3 + paddingWidth,
-			y: 270,
+			y: y,
 			w: this.w / 3 - 2 * paddingWidth,
-			h: 20,
+			h: 30,
 			text: "Speed"
 		});
 
 		this.pauseButton = new Button({
 			x: this.w * 2/3 + paddingWidth,
-			y: 270 - 5,
+			y: y,
 			w: this.w / 3 - 2 * paddingWidth,
 			h: 30,
 			text: "Stop",
@@ -132,6 +139,31 @@ var Music = Class({
 			textY: null,
 
 			onClick: function(){music.onPauseClick()}
+		})
+
+		// Bottom layer
+		this.masterScrollBar = new ScrollBar({
+
+			x: paddingWidth,
+			y: y + 30 + paddingWidth,
+			w: this.w / 2 - 2 * paddingWidth,
+			h: 30,
+			text: "Master Volume"
+		})
+
+		this.clearLayerButton = new Button({
+			x: this.w * 1/2 + paddingWidth,
+			y: y + 30 + paddingWidth,
+			w: this.w / 2 - 2 * paddingWidth,
+			h: 30,
+			text: "Clear Layer",
+			color: btnColors.color,
+			textColor: btnColors.text,
+			hoverColor: btnColors.hover,
+			font: "Raleway",
+			fontSize: 11,
+			textY: null,
+			onClick: function(){music.clearLayer()}
 		})
 
 
@@ -169,8 +201,10 @@ var Music = Class({
 
 		this.volumeScrollBar.onClick(this.mouseX, this.mouseY);
 		this.speedScrollBar.onClick(this.mouseX, this.mouseY);
+		this.masterScrollBar.onClick(this.mouseX, this.mouseY);
 
-		this.pauseButton.checkForClick(this.mouseX, this.mouseY)
+		this.pauseButton.checkForClick(this.mouseX, this.mouseY);
+		this.clearLayerButton.checkForClick(this.mouseX, this.mouseY);
 	},
 	onMouseHold: function() {
 		
@@ -183,6 +217,11 @@ var Music = Class({
 				this.speedScrollBar.value = 0.001;
 			}
 			barSpeed = this.speedScrollBar.value / 5;
+		}
+
+		if (this.masterScrollBar.onMouseHold(this.mouseX, this.mouseY)){
+
+			volumes.master = this.masterScrollBar.value;
 		}
 	},
 	onMouseUp: function() {
@@ -216,7 +255,10 @@ var Music = Class({
 		this.volumeScrollBar.draw(ctx);
 		this.speedScrollBar.draw(ctx);
 
+		this.masterScrollBar.draw(ctx);
+
 		this.pauseButton.draw(ctx, this.mouseX, this.mouseY);
+		this.clearLayerButton.draw(ctx, this.mouseX, this.mouseY);
 	},
 	onPauseClick: function(){
 
@@ -252,6 +294,12 @@ var Music = Class({
 				$("#l3-btn").attr("selected", "true");
 				break;
 
+		}
+	},
+	clearLayer: function(){
+	
+		for (var i = 0; i < this.notesAcross; i++){
+			musicTracks[selectedLayer][i] = null;
 		}
 	}
 })

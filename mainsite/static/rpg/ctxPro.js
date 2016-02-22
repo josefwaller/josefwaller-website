@@ -97,7 +97,7 @@ var CTXPro = Class({
 			Math.round(y * this.unit));
 	},
 	fillArc: function(x, y, r, sA, eA){
-
+		
 		this.ctx.fillStyle = this.fillStyle;
 		this.ctx.beginPath();
 		this.ctx.arc(
