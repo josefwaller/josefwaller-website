@@ -6,7 +6,8 @@ var screens;
 var btnColors = {
 	color: "#3399ff",
 	text:"#ffffff",
-	hover: "#4da6ff"
+	hover: "#4da6ff",
+	dark: "#0066cc"
 }
 
 var colors = [

@@ -14,36 +14,27 @@ var Button = new Class({
 	font: null,
 	fontSize: 0,
 
+	param: null,
+
 	init: function(p) {
 		this.x = p.x;
 		this.y = p.y;
 		this.w = p.w;
 		this.h = p.h;
 
-		if (p.color !== null){
-			this.color = p.color;
-			this.hoverColor = p.hoverColor;
-		}else {
-			this.color = null;
+		this.color = btnColors.color;
+		this.hoverColor = btnColors.hover;
+
+		this.text = p.text;
+		this.textColor = btnColors.text;
+
+		if (p.param !== null){
+			this.param = p.param;
 		}
-		if (p.text){
-			this.text = p.text;
-			this.textColor = p.textColor;
-			this.hoverTextColor = p.hoverTextColor;
-			this.font = p.font;
-			this.textY = p.textY;
 
-			if (p.textY === null){
+		this.font = "Raleway";
 
-				this.textY = this.y + (this.h) / 2;
-			}
-
-			if (p.fontSize !== null){
-				this.fontSize = p.fontSize;
-
-				this.textY += p.fontSize / 2;
-			}
-		}
+		this.fontSize = 11;
 
 		this.onClick = p.onClick;
 	},
@@ -51,8 +42,17 @@ var Button = new Class({
 	checkForClick: function(mouseX, mouseY){
 
 		if (this.x <= mouseX && this.x + this.w > mouseX){
+
 			if (this.y <= mouseY && this.y + this.h > mouseY){
-				this.onClick();
+
+				if (this.param !== null){
+
+					this.onClick(this.param);
+
+				}else {
+					
+					this.onClick();
+				}
 			}
 		}
 

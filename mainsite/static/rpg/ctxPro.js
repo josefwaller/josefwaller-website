@@ -34,37 +34,29 @@ var CTXPro = Class({
 			Math.round(w * this.unit), 
 			Math.round(h * this.unit));
 	},
-	drawRoundedRect: function(x, y, w, h, r){
+	fillRoundedRect: function(x, y, w, h, r){
 
 		// Draws two base rects
 		this.ctx.fillStyle = this.fillStyle;
-		this.ctx.fillRect(
+		this.fillRect(
 			x + r,
 			y,
 			w - 2 * r,
 			h);
-		this.ctx.fillRect(
+		this.fillRect(
 			x,
 			y + r,
 			w,
 			h - 2 * r);
 
 		// draws corners
-		this.ctx.beginPath();
-		this.ctx.arc(x + r, y + r, r, 0, 2 * Math.PI);
-		this.ctx.fill();
+		this.fillArc(x + r, y + r, r, 0, 2 * Math.PI);
 
-		this.ctx.beginPath();
-		this.ctx.arc(x + w - r, y + r, r, 0, 2 * Math.PI);
-		this.ctx.fill();
+		this.fillArc(x + w - r - 1, y + r, r, 0, 2 * Math.PI);
 
-		this.ctx.beginPath();
-		this.ctx.arc(x + w - r, y + h - r, r, 0, 2 * Math.PI);
-		this.ctx.fill();
+		this.fillArc(x + w - r - 1, y + h - r - 1, r, 0, 2 * Math.PI);
 
-		this.ctx.beginPath();
-		this.ctx.arc(x + r, y + h - r, r, 0, 2 * Math.PI);
-		this.ctx.fill();
+		this.fillArc(x + r, y + h - r - 1, r, 0, 2 * Math.PI);
 
 	},
 	drawImage: function(img, x, y, w, h){
@@ -77,8 +69,13 @@ var CTXPro = Class({
 			Math.round(h * this.unit));
 	},
 	measureText: function(text, font){
-		this.ctx.font = font;
+		if (font !== null){
+			this.ctx.font = font;
+		}
 		return this.ctx.measureText(text);
+	},
+	getFontString: function(size, font){
+		return size + "px " + font;
 	},
 	setFont: function(size, font){
 		this.font = Math.round(size * this.unit) + "px " + font;
@@ -97,7 +94,7 @@ var CTXPro = Class({
 			Math.round(y * this.unit));
 	},
 	fillArc: function(x, y, r, sA, eA){
-		
+
 		this.ctx.fillStyle = this.fillStyle;
 		this.ctx.beginPath();
 		this.ctx.arc(

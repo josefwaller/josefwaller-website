@@ -161,11 +161,12 @@ var Art = Class({
 			color: btnColors.color,
 			hoverColor: btnColors.hover,
 			onClick: function(){
-				art.isCopying = !art.isCopying;
+				art.isCopying = true;
 
 				// Saves the selected object and sprite so that they will be copied into
 				art.copyObject = selectedObject;
 				art.copySprite = selectedSprite;
+				art.copyAlertBox.activate();
 			}
 		});
 
@@ -207,7 +208,15 @@ var Art = Class({
 		// Creates the cancel button when copying
 		text = "Cancel"
 
-		this.copyAlertBox = AlertBox({});
+		this.copyAlertBox = AlertBox({
+			x: (this.w - 500) / 2,
+			y: (this.h - 300) / 2,
+			w: 500,
+			h: 100,
+			title: "Copy",
+			text:"Choose a sprite to copy below."
+		});
+
 
 		// Sets the button's colors
 		colorButtons = $("#color-btns");
@@ -305,16 +314,39 @@ var Art = Class({
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.w;
 		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.h;
 
-		if (this.mouseX <  this.offsetX + this.size * this.pixelSize + 15){
-			this.drawCanvasArea();
-		} else {
-			this.drawSide();
-		}
+		if (!this.isCopying){
 
-		if (new Date().getTime() - this.lastAnimTime > this.animationInterval){
-			this.updateSpriteAnimations();
+			if (this.mouseX <  this.offsetX + this.size * this.pixelSize + 15){
+				this.drawCanvasArea();
+			} else {
+				this.drawSide();
+			}
+
+			if (new Date().getTime() - this.lastAnimTime > this.animationInterval){
+				this.updateSpriteAnimations();
+				this.drawAnimation();
+				this.lastAnimTime = new Date().getTime();
+			}
+		}else {
+
+			this.drawCanvasArea();
+			this.drawSide();
 			this.drawAnimation();
-			this.lastAnimTime = new Date().getTime();
+			this.copyAlertBox.draw(this.ct, this.mouseX, this.mouseY);
+
+			// checks if it is still copying
+			if (!this.copyAlertBox.isActive && !(this.copyAlertBox.isActivating || this.copyAlertBox.isDA)){
+				this.isCopying = false;
+
+				// Switches back to selected object if the user copied a sprite from a different object
+				this.changeSelectedObject(this.copyObject);
+				this.changeSprite(this.copySprite);
+
+				this.drawCanvasArea();
+				this.drawSide();
+				this.drawAnimation();
+			}
+
 		}
 	},
 	onClick: function() {
@@ -329,8 +361,8 @@ var Art = Class({
 			this.mirrorButton.checkForClick(this.mouseX, this.mouseY);
 
 		}else {
-			
 		}
+		this.copyAlertBox.onClick(this.mouseX, this.mouseY);
 	},
 	onMouseUp: function() {
 		// Deselects all the bars
@@ -532,8 +564,8 @@ var Art = Class({
 			0,
 			this.w - this.splitX,
 			this.animationDisplay.y);
-		// // Draws bars/buttons
-		this.colorBar.draw(ct);
+		// Draws bars/buttons
+		// this.colorBar.draw(ct);
 
 		brightness = colors[selectedColor].bright;
 		this.saturationBar.draw(ct, [{r:brightness, g:brightness, b:brightness}, colors[selectedColor]])
@@ -692,11 +724,15 @@ var Art = Class({
 					sprites[this.copyObject][this.copySprite][x][y] = sprites[selectedObject][spriteIndex][x][y];
 				}
 			}
-			art.isCopying = false;
 
-			// Switches back to selected object if the user copied a sprite from a different object
-			this.changeSelectedObject(this.copyObject);
-			this.changeSprite(this.copySprite);
+
+			// resets the alert box
+			// Note when this is done, it will set copying to false
+			this.copyAlertBox.deActivate();
+			// this.isCopying = false;
+			// this.drawCanvasArea();
+			// this.drawSide();
+			// this.drawAnimation();
 
 		}else {
 			// Unselectes the current button
