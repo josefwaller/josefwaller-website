@@ -60,10 +60,12 @@ var Button = new Class({
 		if (this.color !== null){
 
 			color = this.color;
+			$(document.body).css("cursor", "initial");
 			if (this.x <= mouseX && this.x + this.w > mouseX){
 				if (this.y <= mouseY && this.y + this.h > mouseY){
 
 					color = this.hoverColor;
+					$(document.body).css("cursor", "pointer");
 				}
 			}
 			ctx.fillStyle = color;

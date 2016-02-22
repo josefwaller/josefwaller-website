@@ -51,7 +51,6 @@ var ScrollBar = new Class({
 				this.value = 0;
 
 			}else {
-				console.log(x);
 				value = x / this.w;
 
 				if (value < 0){

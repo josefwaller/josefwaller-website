@@ -120,18 +120,18 @@ var Music = Class({
 
 		this.pauseButton = new Button({
 			x: this.w * 2/3 + paddingWidth,
-			y: 270,
+			y: 270 - 5,
 			w: this.w / 3 - 2 * paddingWidth,
-			h: 20,
-			text: "Pause",
+			h: 30,
+			text: "Stop",
 			color: btnColors.color,
 			textColor: btnColors.text,
 			hoverColor: btnColors.hover,
 			font: "Raleway",
-			fontSize: 13,
+			fontSize: 11,
 			textY: null,
 
-			onClick: this.onPauseClick
+			onClick: function(){music.onPauseClick()}
 		})
 
 
@@ -219,7 +219,18 @@ var Music = Class({
 		this.pauseButton.draw(ctx, this.mouseX, this.mouseY);
 	},
 	onPauseClick: function(){
-		console.log("ASDF");
+
+		if (this.isPaused){
+			this.topNoteGrid.isActive = true;
+			this.topNoteGrid.barPosition = 0;
+			this.isPaused = false;
+			this.pauseButton.text = "Stop";
+		}else {
+			this.topNoteGrid.isActive = false;
+			this.botNoteGrid.isActive = false;
+			this.isPaused = true;
+			this.pauseButton.text = "Start";
+		}
 	},
 	changeLayer: function(layer){
 		selectedLayer = layer;

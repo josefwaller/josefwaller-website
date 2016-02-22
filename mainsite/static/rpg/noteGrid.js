@@ -223,10 +223,10 @@ var NoteGrid = Class({
 				if (musicTracks[layer][x + this.startNote] !== null){
 
 					ctx.fillRect(
-						Math.round(this.x + this.noteWidth * x),
-						Math.round(this.y + this.noteHeight * (musicTracks[layer][x + this.startNote])),
-						Math.round(this.noteWidth),
-						Math.round(this.noteHeight));
+						this.x + this.noteWidth * x,
+						this.y + this.noteHeight * (musicTracks[layer][x + this.startNote]),
+						this.noteWidth,
+						this.noteHeight);
 
 				}
 
