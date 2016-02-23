@@ -96,7 +96,7 @@ var AlertBox = Class({
 				this.y + (this.h - (this.h * percentage)) / 2,
 				this.w * percentage,
 				this.h * percentage,
-				5);
+				5 * percentage);
 
 			if (percentage >= 1){
 				this.isActivating = false;

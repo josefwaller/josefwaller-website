@@ -565,7 +565,7 @@ var Art = Class({
 			this.w - this.splitX,
 			this.animationDisplay.y);
 		// Draws bars/buttons
-		// this.colorBar.draw(ct);
+		this.colorBar.draw(ct);
 
 		brightness = colors[selectedColor].bright;
 		this.saturationBar.draw(ct, [{r:brightness, g:brightness, b:brightness}, colors[selectedColor]])

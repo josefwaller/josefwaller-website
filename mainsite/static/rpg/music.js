@@ -1,9 +1,11 @@
+// The different tracks of music
 var musicTracks = {
 	layerOne: [],
 	layerTwo: [],
 	layerThree: []
 };
 
+// The volumes for each track
 var volumes = {
 	layerOne: 1,
 	layerTwo: 1,
@@ -11,8 +13,10 @@ var volumes = {
 	master: 1
 };
 
+// The current layer
 var selectedLayer = "layerOne";
 
+// The speed to play the music
 var barSpeed = 0.1;
 
 var Music = Class({
@@ -34,6 +38,8 @@ var Music = Class({
 
 	pauseButton: null,
 	clearLayerButton: null,
+
+	clearWarningBox: null,
 
 	isPaused: false,
 
@@ -165,7 +171,6 @@ var Music = Class({
 			textY: null,
 			onClick: function(){music.clearLayer()}
 		})
-
 
 		this.draw();
 	},
