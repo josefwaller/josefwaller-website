@@ -335,7 +335,7 @@ var Art = Class({
 			this.copyAlertBox.draw(this.ct, this.mouseX, this.mouseY);
 
 			// checks if it is still copying
-			if (!this.copyAlertBox.isActive && !(this.copyAlertBox.isActivating || this.copyAlertBox.isDA)){
+			if (!this.copyAlertBox.isActive && !(this.copyAlertBox.isActivating || this.copyAlertBox.isDeactivating)){
 				this.isCopying = false;
 
 				// Switches back to selected object if the user copied a sprite from a different object

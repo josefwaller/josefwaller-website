@@ -7,6 +7,9 @@ var AlertBox = Class({
 	w: 0,
 	h: 0,
 
+	// Radius
+	r: 10,
+
 	text: "",
 
 	color: null,
@@ -14,9 +17,12 @@ var AlertBox = Class({
 
 	fontSize: null,
 
+	// Plays the zooming in effect
 	isActivating: false,
+	// Is zoomed in, just draw
 	isActive: false,
-	isDA: false,
+	// should zoom out
+	isDeactivating: false,
 
 	activateTime: 0,
 	activateDuration: 500,
@@ -65,7 +71,7 @@ var AlertBox = Class({
 				this.y,
 				this.w,
 				this.h,
-				10);
+				this.r);
 			// Draws title
 			ctx.setFont(this.fontSize, "Raleway");
 			ctx.fillStyle = this.textColor;
@@ -96,28 +102,29 @@ var AlertBox = Class({
 				this.y + (this.h - (this.h * percentage)) / 2,
 				this.w * percentage,
 				this.h * percentage,
-				5 * percentage);
+				this.r * percentage);
 
 			if (percentage >= 1){
 				this.isActivating = false;
 				this.isActive = true;
 			}
 
-		}else if (this.isDA){
+		}else if (this.isDeactivating){
 
 			var percentage = (new Date().getTime() - this.activateTime) / this.activateDuration;
 
 
-			ctx.fillRoundedRect(
-				this.x + (this.w * percentage) / 2,
-				this.y + (this.h * percentage) / 2,
-				this.w - this.w * percentage,
-				this.h - this.h * percentage,
-				5 - 5 * percentage);
-
 			if (percentage >= 1){
-				this.isDA = false;
+				this.isDeactivating = false;
 				this.isActive = false;
+			}else {
+
+				ctx.fillRoundedRect(
+					this.x + (this.w * percentage) / 2,
+					this.y + (this.h * percentage) / 2,
+					this.w - this.w * percentage,
+					this.h - this.h * percentage,
+					this.r - this.r * percentage);
 			}
 		}
 
@@ -125,8 +132,6 @@ var AlertBox = Class({
 
 	onClick: function(mX, mY){
 		this.closeButton.checkForClick(mX, mY);
-
-		console.log(this.isDA);
 	},
 
 	activate: function(){
@@ -138,7 +143,7 @@ var AlertBox = Class({
 
 	deActivate: function(){
 		this.activateTime = new Date().getTime();
-		this.isDA = true;
+		this.isDeactivating = true;
 		this.isActive = false;
 		this.isActivating = false;
 	}

@@ -118,7 +118,7 @@ var NoteGrid = Class({
 
 				if (note !== null){
 					// Plays the new note
-					this.notes[layer][note][0].volume = volumes[layer];
+					this.notes[layer][note][0].volume = volumes[layer] * volumes.master;
 					this.notes[layer][note][0].play();
 
 				}

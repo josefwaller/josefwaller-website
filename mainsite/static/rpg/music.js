@@ -232,6 +232,7 @@ var Music = Class({
 	onMouseUp: function() {
 		this.volumeScrollBar.isSelected = false;
 		this.speedScrollBar.isSelected = false;
+		this.masterScrollBar.isSelected = false;
 	},
 	onMiddleClick: function() {
 		if (this.topNoteGrid.checkForBarMovement(this.mouseX, this.mouseY)){
@@ -275,6 +276,9 @@ var Music = Class({
 		}else {
 			this.topNoteGrid.isActive = false;
 			this.botNoteGrid.isActive = false;
+			// Stops playing music
+			this.topNoteGrid.stopNotes();
+			this.botNoteGrid.stopNotes();
 			this.isPaused = true;
 			this.pauseButton.text = "Start";
 		}
