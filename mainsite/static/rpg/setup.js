@@ -148,7 +148,7 @@ function setup () {
 	$(document).mouseup(function(event){
 		mouse.down = false;
 	})
-	changeScreen(null, 1);
+	changeScreen(null, 0);
 	window.setInterval(update, 1000/60)
 
 }
