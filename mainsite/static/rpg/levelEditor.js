@@ -11,6 +11,7 @@ var LevelEditor = Class({
 	areaSize: null,
 	offsetX: 0,
 	offsetY: 0,
+	gridBorder: 2,
 
 	addingArea: false,
 
@@ -93,7 +94,7 @@ var LevelEditor = Class({
 	onClick: function(){
 
 		if (!this.isZooming && !this.isUnzooming){
-			
+
 			if (!this.isFocused){
 
 				// checks that the mouse is in the grid
@@ -179,19 +180,37 @@ var LevelEditor = Class({
 					}
 					ctx.fillStyle = "#000000";
 					ctx.fillRect(
-						this.offsetX + 5 + x * this.areaSize * this.zoomMulti + this.scaleMulti.x,
-						this.offsetY + 5 + y * this.areaSize * this.zoomMulti + this.scaleMulti.y,
-						this.areaSize * this.zoomMulti - 10,
-						this.areaSize * this.zoomMulti - 10);
+						this.offsetX + this.gridBorder / 2 + x * this.areaSize * this.zoomMulti + this.scaleMulti.x,
+						this.offsetY + this.gridBorder / 2 + y * this.areaSize * this.zoomMulti + this.scaleMulti.y,
+						this.areaSize * this.zoomMulti - this.gridBorder,
+						this.areaSize * this.zoomMulti - this.gridBorder);
 				}
 			}
 		}
-
-		// Draws adding area overlay
 	},
-	drawArea: function(){
+	drawArea: function(area, x, y, w, h){
 
+		if (area !== null){
+
+			// Draws the background sprite 
+			var s = sprites.background.one;
+			var pixelSize = this.w / size;
+
+			for (var i = 0; i < area.length; i++){
+
+				if (s !== null){
+					ctx.fillStyle = colors[s];
+					ctx.fillRect(x, y, w, h);
+				}
+
+			}
+
+
+		}
 	},
+	drawSprite: function(x, y, w, h){
+
+	}
 	focusArea: function(x, y){
 
 		this.isZooming = true;
