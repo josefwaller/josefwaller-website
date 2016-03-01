@@ -6,7 +6,7 @@ var LevelEditor = Class({
 	ctx: null,
 
 	w: 600,
-	h: 0,
+	h: 317,
 
 	areaSize: null,
 	offsetX: 0,
@@ -36,12 +36,7 @@ var LevelEditor = Class({
 	init: function(p) {
 
 		this.canvas = $("#level-canvas");
-		this.ctx = this.canvas[0].getContext("2d");
-
-		this.h = (this.canvas.height() / this.canvas.width()) * this.w;
-
-		this.canvas[0].width = this.w;
-		this.canvas[0].height = this.h;
+		this.ctx = CTXPro({canvas: this.canvas, h: this.h, w: this.w});
 
 		// Creates level with nothing
 		for (var x = 0; x < 3; x++){
@@ -58,15 +53,21 @@ var LevelEditor = Class({
 		// Creates example segment
 		segment = [];
 
-		for (var oX = 0; oX < 10; oX++){
+		for (var oX = 0; oX < 5; oX++){
 			while (segment.length <= oX){
 				segment.push([]);
 			}
-			for (var oY = 0; oY < 10; oY++){
+			for (var oY = 0; oY < 5; oY++){
 				while (segment[oX].length <= oY){
 					segment[oX].push(null);
 				}
 			}
+		}
+
+		level[0][1] = segment.slice();
+		level[0][1][3][3] = {
+			sprite: sprites.player.runDownOne,
+			name: player
 		}
 
 		if (this.h > this.w){
@@ -174,43 +175,69 @@ var LevelEditor = Class({
 		for (var x = 0; x < level.length; x++){
 			
 			for (var y = 0; y < level[x].length; y++){
-				if (level[x][y] === null){
-					if (this.addingArea){
-						ctx.fillStyle = "#aaaaaa"
-					}
-					ctx.fillStyle = "#000000";
-					ctx.fillRect(
-						this.offsetX + this.gridBorder / 2 + x * this.areaSize * this.zoomMulti + this.scaleMulti.x,
-						this.offsetY + this.gridBorder / 2 + y * this.areaSize * this.zoomMulti + this.scaleMulti.y,
-						this.areaSize * this.zoomMulti - this.gridBorder,
-						this.areaSize * this.zoomMulti - this.gridBorder);
+				if (level[x][y] !== null){
+					this.drawArea(
+						level[x][y],
+						this.offsetX + x * this.areaSize * this.zoomMulti + this.scaleMulti.x,
+						this.offsetY + y * this.areaSize * this.zoomMulti + this.scaleMulti.y,
+						this.areaSize * this.zoomMulti);
+				}else {
+					this.ctx.fillStyle = btnColors.color;
+					this.ctx.fillRect(
+					this.offsetX + x * this.areaSize * this.zoomMulti + this.scaleMulti.x + this.gridBorder / 2,
+					this.offsetY + y * this.areaSize * this.zoomMulti + this.scaleMulti.y + this.gridBorder / 2,
+					this.areaSize * this.zoomMulti - this.gridBorder,
+					this.areaSize * this.zoomMulti - this.gridBorder);
 				}
 			}
 		}
 	},
-	drawArea: function(area, x, y, w, h){
+	drawArea: function(area, offX, offY, maxSize){
 
-		if (area !== null){
+		// Draws the background sprite 
+		this.drawSprite(sprites.backgrounds.one, offX, offY, maxSize);
 
-			// Draws the background sprite 
-			var s = sprites.background.one;
-			var pixelSize = this.w / size;
+		elementSize = maxSize / 5;
 
-			for (var i = 0; i < area.length; i++){
+		// Cycles through and draws all relevent sprites
+		for (var x = 0; x < area.length; x++){
+			for (var y = 0; y < area.length; y++){
 
-				if (s !== null){
-					ctx.fillStyle = colors[s];
-					ctx.fillRect(x, y, w, h);
+				if (area[x][y] !== null){
+
+					this.drawSprite(
+						area[x][y].sprite,
+						offX + x * elementSize,
+						offY + y * elementSize,
+						elementSize);
+
 				}
 
 			}
+		}
 
+	},
+	drawSprite: function(sprite, offX, offY, s){
 
+		var pixelSize = s / size;
+
+		for (var x = 0; x < sprite.length; x++){
+
+			for (var y = 0; y < sprite[x].length; y++){
+
+				if (sprite[x][y] !== null){
+
+					this.ctx.fillStyle = colors[sprite[x][y]].hex;
+					this.ctx.fillRect(
+						offX + pixelSize * x, 
+						offY + pixelSize * y, 
+						pixelSize + 1, 
+						pixelSize + 1
+						);
+				}
+			}
 		}
 	},
-	drawSprite: function(x, y, w, h){
-
-	}
 	focusArea: function(x, y){
 
 		this.isZooming = true;
