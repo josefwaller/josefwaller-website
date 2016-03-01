@@ -29,10 +29,10 @@ var CTXPro = Class({
 
 		this.ctx.fillStyle = this.fillStyle;
 		this.ctx.fillRect(
-			Math.round(x * this.unit), 
-			Math.round(y * this.unit), 
-			Math.round(w * this.unit), 
-			Math.round(h * this.unit));
+			Math.ceil(x * this.unit), 
+			Math.ceil(y * this.unit), 
+			Math.ceil(w * this.unit), 
+			Math.ceil(h * this.unit));
 	},
 	fillRoundedRect: function(x, y, w, h, r){
 

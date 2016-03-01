@@ -1,4 +1,6 @@
-level = [];
+var level = [];
+
+var objects;
 
 var LevelEditor = Class({
 
@@ -30,6 +32,8 @@ var LevelEditor = Class({
 		x: 1,
 		y: 1
 	},
+
+	objectCanvases: [],
 
 	isFocused: false,
 	
@@ -64,6 +68,7 @@ var LevelEditor = Class({
 			}
 		}
 
+		// Used for testing
 		level[0][1] = segment.slice();
 		level[0][1][3][3] = {
 			sprite: sprites.player.runDownOne,
@@ -78,6 +83,33 @@ var LevelEditor = Class({
 			this.offsetY = 0;
 			this.offsetX = (this.w - this.h) / 2;
 			this.areaSize = this.h / 3;
+		}
+
+		// Adds buttons
+		objects = [
+			{
+				name: "Player",
+				sprite: sprites.player.runDownOne
+			},
+			{
+				name: "Enemy One",
+				sprite: sprites.enemyOne.runDownOne
+			}
+		];
+
+		var btnGroup = $("#lvl-edtr-obj-btns");
+		btnGroup.html("");
+
+		for (var i = 0; i < objects.length; i++){
+
+			var btn = $("<div class='btn btn-lg'></div>");
+
+			var canvas = $("<canvas></canvas>");
+
+			objectCanvases[i] = new SpriteCanvas({
+				
+			})
+
 		}
 
 		$("#add-area").click(function() {
@@ -115,7 +147,6 @@ var LevelEditor = Class({
 			}
 		}
 	},
-
 	// Draws thel area map
 	drawGrid: function(){
 
@@ -215,7 +246,6 @@ var LevelEditor = Class({
 
 			}
 		}
-
 	},
 	drawSprite: function(sprite, offX, offY, s){
 
@@ -231,8 +261,8 @@ var LevelEditor = Class({
 					this.ctx.fillRect(
 						offX + pixelSize * x, 
 						offY + pixelSize * y, 
-						pixelSize + 1, 
-						pixelSize + 1
+						pixelSize, 
+						pixelSize
 						);
 				}
 			}
@@ -261,6 +291,5 @@ var LevelEditor = Class({
 
 		this.isUnzooming = true;
 		this.zoomTime = new Date().getTime();
-
 	}
 })
