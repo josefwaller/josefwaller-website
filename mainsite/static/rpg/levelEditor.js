@@ -89,14 +89,17 @@ var LevelEditor = Class({
 		objects = [
 			{
 				name: "Player",
-				sprite: sprites.player.runDownOne
+				object: "player",
+				sprite: "runDownOne"
 			},
 			{
 				name: "Enemy One",
-				sprite: sprites.enemyOne.runDownOne
+				object: "enemyOne",
+				sprite: "runDownOne"
 			}
 		];
 
+		// Adds the object canvases
 		var btnGroup = $("#lvl-edtr-obj-btns");
 		btnGroup.html("");
 
@@ -106,9 +109,16 @@ var LevelEditor = Class({
 
 			var canvas = $("<canvas></canvas>");
 
-			objectCanvases[i] = new SpriteCanvas({
-				
-			})
+			this.objectCanvases[i] = new SpriteCanvas({
+				canvas: canvas,
+				object: objects[i].object,
+				sprite: objects[i].sprite
+			});
+
+			btn.append(canvas);
+			btn.append("<br>" + objects[i].name);
+
+			btnGroup.append(btn);
 
 		}
 
@@ -120,6 +130,12 @@ var LevelEditor = Class({
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.w;
 		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.h;
 
+		// Updates sprite canvases
+		for (var i = 0; i < this.objectCanvases.length; i++){
+
+			this.objectCanvases[i].draw();
+
+		}
 		this.drawGrid();
 	},
 	onMouseUp: function(){},
