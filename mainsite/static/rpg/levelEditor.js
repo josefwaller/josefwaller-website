@@ -85,7 +85,7 @@ var LevelEditor = Class({
 			this.areaSize = this.h / 3;
 		}
 
-		// Adds buttons
+
 		objects = [
 			{
 				name: "Player",
@@ -98,6 +98,24 @@ var LevelEditor = Class({
 				sprite: "runDownOne"
 			}
 		];
+
+		$("#add-area").click(function() {
+			levelEditor.addingArea = true;
+		});
+	},
+	update: function(){
+		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.w;
+		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.h;
+
+		// Updates sprite canvases
+		for (var i = 0; i < this.objectCanvases.length; i++){
+
+			this.objectCanvases[i].draw();
+
+		}
+		this.drawGrid();
+	},
+	fillObjectButtons: function(){
 
 		// Adds the object canvases
 		var btnGroup = $("#lvl-edtr-obj-btns");
@@ -121,22 +139,6 @@ var LevelEditor = Class({
 			btnGroup.append(btn);
 
 		}
-
-		$("#add-area").click(function() {
-			levelEditor.addingArea = true;
-		});
-	},
-	update: function(){
-		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.w;
-		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.h;
-
-		// Updates sprite canvases
-		for (var i = 0; i < this.objectCanvases.length; i++){
-
-			this.objectCanvases[i].draw();
-
-		}
-		this.drawGrid();
 	},
 	onMouseUp: function(){},
 	onMouseHold: function(){},
@@ -156,6 +158,7 @@ var LevelEditor = Class({
 
 						this.focusArea(x, y);
 
+						this.fillObjectButtons();
 					}
 				}
 			}else {
