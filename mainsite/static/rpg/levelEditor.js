@@ -387,14 +387,17 @@ var LevelEditor = Class({
 				var pixelX = Math.floor((this.mouseX - offX) / elementSize);
 				var pixelY = Math.floor((this.mouseY - offY) / elementSize);
 
-				if (5 > pixelX > 0 && 5 > pixelY > 0){
+				if (pixelY < 5 && pixelY >= 0){
+					if (pixelX < 5 && pixelX >= 0){
 
-					this.ctx.fillStyle = "#ffffff";
-					this.ctx.fillRect(
-						offX + pixelX * elementSize,
-						offY + pixelY * elementSize,
-						elementSize + 1,
-						elementSize + 1);
+						this.ctx.fillStyle = "#ffffff";
+						this.ctx.fillRect(
+							offX + pixelX * elementSize,
+							offY + pixelY * elementSize,
+							elementSize + 1,
+							elementSize + 1);
+
+					}
 				}
 			}
 		}
