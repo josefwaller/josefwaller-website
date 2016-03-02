@@ -2,6 +2,8 @@ var level = [];
 
 var objects;
 
+var selectedElement = 0;
+
 var LevelEditor = Class({
 
 	canvas: null,
@@ -16,6 +18,11 @@ var LevelEditor = Class({
 	gridBorder: 2,
 
 	addingArea: false,
+
+	focusedArea: {
+		x: 0,
+		y: 0
+	},
 
 	objectSize: null,
 
@@ -32,6 +39,8 @@ var LevelEditor = Class({
 		x: 1,
 		y: 1
 	},
+
+	focusedAreaSize: 0,
 
 	objectCanvases: [],
 
@@ -70,10 +79,7 @@ var LevelEditor = Class({
 
 		// Used for testing
 		level[0][1] = segment.slice();
-		level[0][1][3][3] = {
-			sprite: sprites.player.runDownOne,
-			name: player
-		}
+		level[0][1][3][3] = 0;
 
 		if (this.h > this.w){
 			this.offsetX = 0;
@@ -84,6 +90,8 @@ var LevelEditor = Class({
 			this.offsetX = (this.w - this.h) / 2;
 			this.areaSize = this.h / 3;
 		}
+
+		this.focusedAreaSize = this.h;
 
 
 		objects = [
@@ -99,8 +107,10 @@ var LevelEditor = Class({
 			}
 		];
 
-		$("#add-area").click(function() {
-			levelEditor.addingArea = true;
+		$("#zoom-out").click(function() {
+			if (levelEditor.isFocused){
+				levelEditor.unfocusArea();
+			}
 		});
 	},
 	update: function(){
@@ -136,6 +146,12 @@ var LevelEditor = Class({
 			btn.append(canvas);
 			btn.append("<br>" + objects[i].name);
 
+			btn.click({levelEditor: this, i: i}, function(event){
+
+				event.data.levelEditor.selectElement(event.data.i);
+
+			})
+
 			btnGroup.append(btn);
 
 		}
@@ -162,7 +178,26 @@ var LevelEditor = Class({
 					}
 				}
 			}else {
-				this.unfocusArea();
+
+				// check for element placement
+
+				if (this.mouseX > (this.w - this.focusedAreaSize) / 2){
+					if (this.mouseX < this.w - (this.w - this.focusedAreaSize) / 2){
+						if (this.mouseY > (this.h - this.focusedAreaSize) / 2){
+							if (this.mouseY < this.h - (this.h - this.focusedAreaSize) / 2){
+
+								// gets mouse Coords
+								var x = Math.floor((this.mouseX - (this.w - this.focusedAreaSize) / 2) / this.focusedAreaSize * 5);
+								var y = Math.floor((this.mouseY - (this.h - this.focusedAreaSize) / 2) / this.focusedAreaSize * 5);
+
+								console.log(x, y)
+								console.log(this.focusedArea)
+								level[this.focusedArea.x][this.focusedArea.y][x][y] = selectedElement;
+							}
+						}
+					}
+				}
+
 			}
 		}
 	},
@@ -187,7 +222,7 @@ var LevelEditor = Class({
 
 			}else {
 
-				maxZoom = this.h / (this.areaSize);
+				maxZoom = this.focusedAreaSize / (this.areaSize);
 				minZoom = 1;
 
 				percentage = (new Date().getTime() - this.zoomTime) / duration;
@@ -210,7 +245,7 @@ var LevelEditor = Class({
 
 			}else {
 
-				minZoom = this.h / (this.areaSize);
+				minZoom = this.focusedAreaSize / (this.areaSize);
 				maxZoom = 1;
 
 				percentage = (new Date().getTime() - this.zoomTime) / duration;
@@ -242,6 +277,7 @@ var LevelEditor = Class({
 			}
 		}
 	},
+	// draws a specific area
 	drawArea: function(area, offX, offY, maxSize){
 
 		// Draws the background sprite 
@@ -255,8 +291,10 @@ var LevelEditor = Class({
 
 				if (area[x][y] !== null){
 
+					var obj = objects[area[x][y]];
+
 					this.drawSprite(
-						area[x][y].sprite,
+						sprites[obj.object][obj.sprite],
 						offX + x * elementSize,
 						offY + y * elementSize,
 						elementSize);
@@ -287,24 +325,28 @@ var LevelEditor = Class({
 			}
 		}
 	},
+	selectElement: function(index){
+		selectedElement = index;
+	},
 	focusArea: function(x, y){
 
 		this.isZooming = true;
 		this.zoomTime = new Date().getTime();
-
-		// The width of an area
-		areaWidth = this.h;
 
 		// sets the scales to initially cancel out the offset
 		this.maxScale.x = - this.offsetX;
 		this.maxScale.y = - this.offsetY;
 
 		// Adds scale relative to how many areas on the side of the focused area
-		this.maxScale.x -= areaWidth * x;
-		this.maxScale.y -= areaWidth * y;
+		this.maxScale.x -= this.focusedAreaSize * x;
+		this.maxScale.y -= this.focusedAreaSize * y;
 
 		// Centers the area
-		this.maxScale.x += (this.w - areaWidth) / 2;
+		this.maxScale.x += (this.w - this.focusedAreaSize) / 2;
+
+		// records the focused area
+		this.focusedArea.x = x;
+		this.focusedArea.y = y;
 	},
 	unfocusArea: function(){
 
