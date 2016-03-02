@@ -28,6 +28,8 @@ var Button = new Class({
 		this.text = p.text;
 		this.textColor = btnColors.text;
 
+		console.log(p.param);
+
 		if (p.param !== null){
 			this.param = p.param;
 		}

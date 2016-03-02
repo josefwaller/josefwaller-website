@@ -1,6 +1,6 @@
 var close = false;
 
-var AlertBox = Class({
+var AlertBox = new Class({
 
 	x: 0,
 	y: 0,
@@ -27,14 +27,16 @@ var AlertBox = Class({
 	activateTime: 0,
 	activateDuration: 500,
 
+	buttons: [],
+
 	closeButton: null,
 
 	init: function(p){
 
-		this.x = p.x;
-		this.y = p.y;
-		this.w = p.w;
-		this.h = p.h;
+		this.x = p.w / 6,
+		this.y = p.h / 5,
+		this.w = p.w * (2/3),
+		this.h = p.h / 4,
 
 		this.color = btnColors.dark;
 		this.textColor = "#ffffff";
@@ -43,29 +45,72 @@ var AlertBox = Class({
 		this.title = p.title;
 		this.text = p.text;
 
-		this.closeButton = new Button({
-			x: this.x + (this.w * 3/8),
-			y: this.y + this.h - 40,
-			w: this.w * 1/4,
-			h: 40,
-			text: "Cancel",
-			onClick: function(p){
-				close = true;
-			},
-			param: this
-		});
+		this.buttons = [];
+
+		var btnW = this.w / 4;
+		var btnH = this.h / 4;
+		var btnY = this.y + this.h * 3/4 - 5;
+		if (!p.buttons){
+			// Adds default close button
+			this.buttons.push(this.closeButton = new Button({
+				x: this.x + (this.w * 3/8),
+				y: btnY,
+				w: btnW,
+				h: btnH,
+				text: "Cancel",
+				onClick: function(){
+					close = true;
+				}
+			}));
+		}else {
+
+			var numOfButtons = p.buttons.length + 1;
+
+			var buttonOffsetX = this.x + (this.w - (numOfButtons * btnW)) / 2;
+
+			// Adds default close button
+			this.buttons.push(new Button({
+				x: buttonOffsetX,
+				y: btnY,
+				w: btnW,
+				h: btnH,
+				text: "Cancel",
+				onClick: function(){
+					close = true;
+				}
+			}));
+
+			for (var i = 0; i < p.buttons.length; i++){
+				this.buttons.push(new Button({
+					x: buttonOffsetX + (i + 1) * btnW,
+					y: btnY,
+					h: btnH,
+					w: btnW,
+					text: p.buttons[i].text,
+					param: p.buttons[i].onClick,
+					onClick: function(p){
+						p();
+						close = true;
+					}
+				}));
+			}
+
+		}
 	},
 
 	draw: function(ctx, mX, mY){
 
 		ctx.fillStyle = this.color;
 
+		// checks if it should deactivate
 		if (close){
 			close = false;
 			this.deActivate();
 		}
 
+		// draws itself defaults
 		if (this.isActive){
+
 			ctx.fillRoundedRect(
 				this.x,
 				this.y,
@@ -88,7 +133,9 @@ var AlertBox = Class({
 				this.x + (this.w - ctx.measureText(this.text, ctx.getFontString(this.fontSize / 2, "Raleway")).width) / 2,
 				this.y + this.h / 2);
 
-			this.closeButton.draw(ctx, mX, mY);
+			for (var i = 0; i < this.buttons.length; i++){
+				this.buttons[i].draw(ctx, mX, mY)
+			}
 
 		}else if (this.isActivating){
 
@@ -113,12 +160,13 @@ var AlertBox = Class({
 
 			var percentage = (new Date().getTime() - this.activateTime) / this.activateDuration;
 
-
+			// checks for deactivation
 			if (percentage >= 1){
 				this.isDeactivating = false;
 				this.isActive = false;
 			}else {
 
+				// draws it shrinking
 				ctx.fillRoundedRect(
 					this.x + (this.w * percentage) / 2,
 					this.y + (this.h * percentage) / 2,
@@ -131,7 +179,9 @@ var AlertBox = Class({
 	},
 
 	onClick: function(mX, mY){
-		this.closeButton.checkForClick(mX, mY);
+		for (var i = 0; i < this.buttons.length; i++){
+			this.buttons[i].checkForClick(mX, mY);
+		}
 	},
 
 	activate: function(){

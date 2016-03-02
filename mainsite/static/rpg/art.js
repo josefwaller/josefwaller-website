@@ -208,11 +208,9 @@ var Art = Class({
 		// Creates the cancel button when copying
 		text = "Cancel"
 
-		this.copyAlertBox = AlertBox({
-			x: (this.w - 500) / 2,
-			y: (this.h - 300) / 2,
-			w: 500,
-			h: 100,
+		this.copyAlertBox = new AlertBox({
+			w: this.w,
+			h: this.h,
 			title: "Copy",
 			text:"Choose a sprite to copy below."
 		});

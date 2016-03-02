@@ -4,6 +4,8 @@ var objects;
 
 var selectedElement = 0;
 
+var createArea = false;
+
 var LevelEditor = Class({
 
 	canvas: null,
@@ -39,6 +41,8 @@ var LevelEditor = Class({
 		x: 1,
 		y: 1
 	},
+
+	alertBox: null,
 
 	focusedAreaSize: 0,
 
@@ -77,8 +81,23 @@ var LevelEditor = Class({
 			}
 		}
 
+		this.alertBox = new AlertBox({
+			w: this.w,
+			h: this.h,
+			title: "Test",
+			text: "testing",
+			buttons: [
+				{
+					text: "Create Area",
+					onClick: function(){
+						createArea = true;
+					}
+				}
+			]
+		});
+
 		// Used for testing
-		level[0][1] = segment.slice();
+		level[0][1] = $.extend(true, [], segment);
 		level[0][1][3][3] = 0;
 
 		if (this.h > this.w){
@@ -124,7 +143,14 @@ var LevelEditor = Class({
 			this.objectCanvases[i].draw();
 
 		}
+
+		if (createArea){
+			this.createArea();
+			createArea = false;
+		}
 		this.drawGrid();
+
+		this.alertBox.draw(this.ctx, this.mouseX, this.mouseY);
 	},
 	fillObjectButtons: function(){
 
@@ -161,6 +187,13 @@ var LevelEditor = Class({
 	onMouseHold: function(){},
 	onClick: function(){
 
+		if (this.alertBox.isActive){
+
+			this.alertBox.onClick(this.mouseX, this.mouseY);
+			return;
+
+		}
+
 		if (!this.isZooming && !this.isUnzooming){
 
 			if (!this.isFocused){
@@ -173,9 +206,18 @@ var LevelEditor = Class({
 						var x = Math.floor((this.mouseX - this.offsetX) / this.areaSize);
 						var y = Math.floor((this.mouseY - this.offsetY) / this.areaSize);
 
-						this.focusArea(x, y);
+						if (level[x][y] !== null){
 
-						this.fillObjectButtons();
+							this.focusArea(x, y);
+							this.fillObjectButtons();
+
+						}else {
+							this.alertBox.activate();
+
+							// remembers the area clicks
+							this.focusedArea.x = x;
+							this.focusedArea.y = y;
+						}
 					}
 				}
 			}else {
@@ -201,6 +243,12 @@ var LevelEditor = Class({
 
 			}
 		}
+	},
+	createArea: function(){
+
+		level[this.focusedArea.x][this.focusedArea.y] = segment.slice();
+		this.focusArea(this.focusedArea.x, this.focusedArea.y);
+
 	},
 	// Draws thel area map
 	drawGrid: function(){
@@ -378,6 +426,7 @@ var LevelEditor = Class({
 	focusArea: function(x, y){
 
 		this.isZooming = true;
+		this.isUnzooming = false;
 		this.zoomTime = new Date().getTime();
 
 		// sets the scales to initially cancel out the offset
