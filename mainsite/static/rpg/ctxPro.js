@@ -50,13 +50,17 @@ var CTXPro = Class({
 			h - 2 * r);
 
 		// draws corners
-		this.fillArc(x + r, y + r, r, 0, 2 * Math.PI);
+		// top left
+		this.fillArc(x + r + 1, y + r + 1, r, 0, 2 * Math.PI);
 
-		this.fillArc(x + w - r - 1, y + r, r, 0, 2 * Math.PI);
+		// top right
+		this.fillArc(x + w - r, y + r + 1, r, 0, 2 * Math.PI);
 
-		this.fillArc(x + w - r - 1, y + h - r - 1, r, 0, 2 * Math.PI);
+		// bottom right
+		this.fillArc(x + w - r, y + h - r, r, 0, 2 * Math.PI);
 
-		this.fillArc(x + r, y + h - r - 1, r, 0, 2 * Math.PI);
+		// bottom left
+		this.fillArc(x + r + 1, y + h - r, r, 0, 2 * Math.PI);
 
 	},
 	drawImage: function(img, x, y, w, h){
@@ -98,9 +102,9 @@ var CTXPro = Class({
 		this.ctx.fillStyle = this.fillStyle;
 		this.ctx.beginPath();
 		this.ctx.arc(
-			Math.round(x * this.unit), 
-			Math.round(y * this.unit), 
-			Math.round(r * this.unit), 
+			Math.ceil(x * this.unit), 
+			Math.ceil(y * this.unit), 
+			Math.ceil(r * this.unit), 
 			sA, 
 			eA);
 		this.ctx.fill();
