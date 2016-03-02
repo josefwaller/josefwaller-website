@@ -265,9 +265,9 @@ var LevelEditor = Class({
 					this.drawArea(
 						x,
 						y,
-						this.offsetX + x * this.areaSize * this.zoomMulti + this.scaleMulti.x,
-						this.offsetY + y * this.areaSize * this.zoomMulti + this.scaleMulti.y,
-						this.areaSize * this.zoomMulti);
+						this.offsetX + x * this.areaSize * this.zoomMulti + this.scaleMulti.x + this.gridBorder,
+						this.offsetY + y * this.areaSize * this.zoomMulti + this.scaleMulti.y + this.gridBorder,
+						this.areaSize * this.zoomMulti - 2 * this.gridBorder);
 				}else {
 					this.ctx.fillStyle = btnColors.color;
 					this.ctx.fillRect(
@@ -307,26 +307,46 @@ var LevelEditor = Class({
 				}
 
 			}
+		}
 
-			// draws grid
+		// draws grid
+		if (((this.isFocused && !this.isUnzooming) || this.isZooming)){
+
 			if (this.focusedArea.x == areaX && this.focusedArea.y == areaY){
-				
-				if (((this.isFocused && !this.isUnzooming) || this.isZooming) && x > 0){
 
-					// Draws x line
-					this.ctx.fillStyle = "#000000";
-					this.ctx.fillRect(
-						offX,
-						offY + x * elementSize,
-						maxSize,
-						1);
+				for (var l = 0; l < area.length + 1; l++){
 
-					// Draws y line
+					if (((this.isFocused && !this.isUnzooming) || this.isZooming)){
+
+						// Draws x line
+						this.ctx.fillStyle = "#000000";
+						this.ctx.fillRect(
+							offX,
+							offY + l * elementSize,
+							maxSize,
+							1);
+
+						// Draws y line
+						this.ctx.fillRect(
+							offX + l * elementSize,
+							offY,
+							1,
+							maxSize);
+					}
+				}
+
+				// Draws highlighted pixel
+				var pixelX = Math.floor((this.mouseX - offX) / elementSize);
+				var pixelY = Math.floor((this.mouseY - offY) / elementSize);
+
+				if (5 > pixelX > 0 && 5 > pixelY > 0){
+
+					this.ctx.fillStyle = "#ffffff";
 					this.ctx.fillRect(
-						offX + x * elementSize,
-						offY,
-						1,
-						maxSize);
+						offX + pixelX * elementSize,
+						offY + pixelY * elementSize,
+						elementSize + 1,
+						elementSize + 1);
 				}
 			}
 		}
