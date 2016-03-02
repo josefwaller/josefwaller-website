@@ -107,6 +107,7 @@ var LevelEditor = Class({
 			}
 		];
 
+		// sets the zoom out button to zoom out
 		$("#zoom-out").click(function() {
 			if (levelEditor.isFocused){
 				levelEditor.unfocusArea();
@@ -262,7 +263,8 @@ var LevelEditor = Class({
 			for (var y = 0; y < level[x].length; y++){
 				if (level[x][y] !== null){
 					this.drawArea(
-						level[x][y],
+						x,
+						y,
 						this.offsetX + x * this.areaSize * this.zoomMulti + this.scaleMulti.x,
 						this.offsetY + y * this.areaSize * this.zoomMulti + this.scaleMulti.y,
 						this.areaSize * this.zoomMulti);
@@ -278,7 +280,10 @@ var LevelEditor = Class({
 		}
 	},
 	// draws a specific area
-	drawArea: function(area, offX, offY, maxSize){
+	drawArea: function(areaX, areaY, offX, offY, maxSize){
+
+		// gets the area
+		var area = level[areaX][areaY];
 
 		// Draws the background sprite 
 		this.drawSprite(sprites.backgrounds.one, offX, offY, maxSize);
@@ -301,6 +306,28 @@ var LevelEditor = Class({
 
 				}
 
+			}
+
+			// draws grid
+			if (this.focusedArea.x == areaX && this.focusedArea.y == areaY){
+				
+				if (((this.isFocused && !this.isUnzooming) || this.isZooming) && x > 0){
+
+					// Draws x line
+					this.ctx.fillStyle = "#000000";
+					this.ctx.fillRect(
+						offX,
+						offY + x * elementSize,
+						maxSize,
+						1);
+
+					// Draws y line
+					this.ctx.fillRect(
+						offX + x * elementSize,
+						offY,
+						1,
+						maxSize);
+				}
 			}
 		}
 	},
@@ -347,10 +374,15 @@ var LevelEditor = Class({
 		// records the focused area
 		this.focusedArea.x = x;
 		this.focusedArea.y = y;
+
+		// displays the zoom ut button
+		$("#zoom-out").show();
 	},
 	unfocusArea: function(){
 
 		this.isUnzooming = true;
 		this.zoomTime = new Date().getTime();
+
+		$("#zoom-out").hide();
 	}
 })
