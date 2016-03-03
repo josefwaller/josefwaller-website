@@ -6,6 +6,8 @@ var selectedElement = 0;
 
 var createArea = false;
 
+var changeBackground = false;
+
 var LevelEditor = Class({
 
 	canvas: null,
@@ -47,6 +49,7 @@ var LevelEditor = Class({
 	focusedAreaSize: 0,
 
 	objectCanvases: [],
+	backgroundCanvases: [],
 
 	isFocused: false,
 	
@@ -68,24 +71,31 @@ var LevelEditor = Class({
 		}
 
 		// Creates example segment
-		segment = [];
+		segment = {
+			elements: [],
+			background: "one",
+		}
 
 		for (var oX = 0; oX < 5; oX++){
-			while (segment.length <= oX){
-				segment.push([]);
+			while (segment.elements.length <= oX){
+				segment.elements.push([]);
 			}
 			for (var oY = 0; oY < 5; oY++){
-				while (segment[oX].length <= oY){
-					segment[oX].push(null);
+				while (segment.elements[oX].length <= oY){
+					segment.elements[oX].push(null);
 				}
 			}
 		}
 
+		// Used for testing
+		level[0][1] = $.extend(true, {}, segment);
+		level[0][1].elements[3][3] = 0;
+
 		this.alertBox = new AlertBox({
 			w: this.w,
 			h: this.h,
-			title: "Test",
-			text: "testing",
+			title: "Create Area",
+			text: "Create an area here?",
 			buttons: [
 				{
 					text: "Create Area",
@@ -95,10 +105,6 @@ var LevelEditor = Class({
 				}
 			]
 		});
-
-		// Used for testing
-		level[0][1] = $.extend(true, [], segment);
-		level[0][1][3][3] = 0;
 
 		if (this.h > this.w){
 			this.offsetX = 0;
@@ -132,6 +138,37 @@ var LevelEditor = Class({
 				levelEditor.unfocusArea();
 			}
 		});
+
+		// sets background buttons
+		$("#lvl-edtr-b-group").html("");
+
+		for (var i = 1; i < 4; i++){
+
+			var backgroundBtn = $("<a class='btn btn-lg' id='lvl-edtr-b" + i + "'></a>");
+
+			var canvas = $("<canvas></canvas>");
+
+			var backgroundNum = Object.keys(sprites.backgrounds)[i - 1];
+
+			this.backgroundCanvases[i - 1] = new SpriteCanvas({
+				object: "backgrounds",
+				sprite: backgroundNum,
+				canvas: canvas
+			});
+
+			// sets it to change background
+			backgroundBtn.click({i: backgroundNum}, function(event) {
+
+				changeBackground = event.data.i;
+
+			})
+
+			backgroundBtn.append(canvas);
+			backgroundBtn.append("Background " + backgroundNum);
+
+			$("#lvl-edtr-b-group").append(backgroundBtn);
+
+		}
 	},
 	update: function(){
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.w;
@@ -144,10 +181,21 @@ var LevelEditor = Class({
 
 		}
 
+		for (var i = 0; i < this.backgroundCanvases.length; i++){
+
+			this.backgroundCanvases[i].draw();
+		}
+
 		if (createArea){
 			this.createArea();
 			createArea = false;
 		}
+
+		if (changeBackground !== false){
+			this.changeBackground(changeBackground);
+			changeBackground = false;
+		}
+
 		this.drawGrid();
 
 		this.alertBox.draw(this.ctx, this.mouseX, this.mouseY);
@@ -235,7 +283,7 @@ var LevelEditor = Class({
 
 								console.log(x, y)
 								console.log(this.focusedArea)
-								level[this.focusedArea.x][this.focusedArea.y][x][y] = selectedElement;
+								level[this.focusedArea.x][this.focusedArea.y].elements[x][y] = selectedElement;
 							}
 						}
 					}
@@ -246,11 +294,22 @@ var LevelEditor = Class({
 	},
 	createArea: function(){
 
-		level[this.focusedArea.x][this.focusedArea.y] = segment.slice();
+		level[this.focusedArea.x][this.focusedArea.y] = $.extend(true, {}, segment);
 		this.focusArea(this.focusedArea.x, this.focusedArea.y);
 
 	},
-	// Draws thel area map
+	changeBackground: function(bIndex) {
+
+
+		console.log(this);
+		if (this.isFocused){
+
+			level[this.focusedArea.x][this.focusedArea.y].background = bIndex;
+
+		}
+
+	},
+	// Draws the area map
 	drawGrid: function(){
 
 		ctx = this.ctx;
@@ -331,10 +390,12 @@ var LevelEditor = Class({
 	drawArea: function(areaX, areaY, offX, offY, maxSize){
 
 		// gets the area
-		var area = level[areaX][areaY];
+		var area = level[areaX][areaY].elements;
+
+		var backgroundSprite = level[areaX][areaY].background;
 
 		// Draws the background sprite 
-		this.drawSprite(sprites.backgrounds.one, offX, offY, maxSize);
+		this.drawSprite(sprites.backgrounds[backgroundSprite], offX, offY, maxSize);
 
 		elementSize = maxSize / 5;
 
@@ -449,6 +510,8 @@ var LevelEditor = Class({
 
 		// displays the zoom ut button
 		$("#zoom-out").show();
+
+		$("#lvl-edtr-b-group").show();
 	},
 	unfocusArea: function(){
 
@@ -456,5 +519,7 @@ var LevelEditor = Class({
 		this.zoomTime = new Date().getTime();
 
 		$("#zoom-out").hide();
+
+		$("#lvl-edtr-b-group").hide();
 	}
-})
+});
