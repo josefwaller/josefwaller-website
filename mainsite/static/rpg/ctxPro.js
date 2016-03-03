@@ -38,30 +38,60 @@ var CTXPro = Class({
 
 		// Draws two base rects
 		this.ctx.fillStyle = this.fillStyle;
-		this.fillRect(
-			x + r,
-			y,
-			w - 2 * r,
-			h);
-		this.fillRect(
-			x,
-			y + r,
-			w,
-			h - 2 * r);
+		
+		// draws the rect
+		this.ctx.beginPath();
 
-		// draws corners
-		// top left
-		this.fillArc(x + r + 1, y + r + 1, r, 0, 2 * Math.PI);
+		// starts at top right corner after the curve
+		this.moveTo(x + r, y);
 
-		// top right
-		this.fillArc(x + w - r, y + r + 1, r, 0, 2 * Math.PI);
+		// top line
+		this.lineTo(x + w - r, y);
 
-		// bottom right
-		this.fillArc(x + w - r, y + h - r, r, 0, 2 * Math.PI);
+		// top right corner
+		this.arc(x + w - r, y + r, r, 1.5, 2);
 
-		// bottom left
-		this.fillArc(x + r + 1, y + h - r, r, 0, 2 * Math.PI);
+		// right line
+		this.lineTo(x + w, y + h - r);
 
+		// bottom right corner
+		this.arc(x + w - r, y + h - r, r, 0, 0.5);
+
+		// bottom line
+		this.lineTo(x + r, y + h);
+
+		// bottom left corner
+		this.arc(x + r, y + h - r, r, 0.5, 1);
+
+		// left line
+		this.lineTo(x, y + r);
+
+		// top left corner
+		this.arc(x + r, y + r, r, 1, 1.5);
+
+		this.ctx.fill();
+
+	},
+	moveTo: function(x, y){
+		this.ctx.moveTo(
+			Math.round(x * this.unit),
+			Math.round(y * this.unit)
+		);
+	},
+	lineTo: function(x, y){
+		this.ctx.lineTo(
+			Math.round(x * this.unit),
+			Math.round(y * this.unit)
+		);
+	},
+	arc: function(x, y, r, sA, eA) {
+
+		this.ctx.arc(
+			Math.round(x * this.unit), 
+			Math.round(y * this.unit), 
+			Math.round(r * this.unit), 
+			sA * Math.PI, 
+			eA * Math.PI);
 	},
 	drawImage: function(img, x, y, w, h){
 
