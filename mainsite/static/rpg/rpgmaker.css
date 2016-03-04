@@ -92,9 +92,16 @@ canvas
 }
 
 /* used for gorizontal scrolling buttons */
-.list-inline
+.btn-group-horizontal
 {
 	margin-left: 0px;
 	white-space: nowrap;
 	overflow:auto;
+	height: 100px;
+}
+
+.btn-group-horizontal > .btn
+{
+	height: 100%;
+	vertical-align: middle;
 }

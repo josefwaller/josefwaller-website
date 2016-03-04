@@ -47,10 +47,18 @@ var AlertBox = new Class({
 
 		this.buttons = [];
 
+		this.changeButtons(p.buttons);
+	},
+
+	changeButtons: function(b) {
+
+		this.buttons = [];
+		
 		var btnW = this.w / 4;
 		var btnH = this.h / 4;
 		var btnY = this.y + this.h * 3/4 - 5;
-		if (!p.buttons){
+
+		if (b === undefined){
 			// Adds default close button
 			this.buttons.push(this.closeButton = new Button({
 				x: this.x + (this.w * 3/8),
@@ -62,15 +70,29 @@ var AlertBox = new Class({
 					close = true;
 				}
 			}));
+
 		}else {
 
-			var numOfButtons = p.buttons.length + 1;
+			var buttonOffsetX = this.x + (this.w - ((b.length + 1) * btnW)) / 2;
 
-			var buttonOffsetX = this.x + (this.w - (numOfButtons * btnW)) / 2;
+			for (var i = 0; i < b.length; i++){
+				this.buttons.push(new Button({
+					x: buttonOffsetX + i * btnW,
+					y: btnY,
+					h: btnH,
+					w: btnW,
+					text: b[i].text,
+					param: b[i].onClick,
+					onClick: function(p){
+						p();
+						close = true;
+					}
+				}));
+			}
 
 			// Adds default close button
 			this.buttons.push(new Button({
-				x: buttonOffsetX,
+				x: buttonOffsetX + b.length * btnW,
 				y: btnY,
 				w: btnW,
 				h: btnH,
@@ -79,22 +101,6 @@ var AlertBox = new Class({
 					close = true;
 				}
 			}));
-
-			for (var i = 0; i < p.buttons.length; i++){
-				this.buttons.push(new Button({
-					x: buttonOffsetX + (i + 1) * btnW,
-					y: btnY,
-					h: btnH,
-					w: btnW,
-					text: p.buttons[i].text,
-					param: p.buttons[i].onClick,
-					onClick: function(p){
-						p();
-						close = true;
-					}
-				}));
-			}
-
 		}
 	},
 
@@ -179,8 +185,13 @@ var AlertBox = new Class({
 	},
 
 	onClick: function(mX, mY){
-		for (var i = 0; i < this.buttons.length; i++){
-			this.buttons[i].checkForClick(mX, mY);
+		if (this.isActive){
+
+			console.log("Active");
+
+			for (var i = 0; i < this.buttons.length; i++){
+				this.buttons[i].checkForClick(mX, mY);
+			}
 		}
 	},
 

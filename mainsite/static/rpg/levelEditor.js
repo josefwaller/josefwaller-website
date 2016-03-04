@@ -4,6 +4,8 @@ var objects;
 
 var selectedElement = 0;
 
+var deleteArea = false;
+
 
 // variables for buttons to change 
 var createArea = false;
@@ -54,6 +56,10 @@ var LevelEditor = Class({
 	backgroundCanvases: [],
 
 	isFocused: false,
+
+	// divs to hide and show
+	focusToolsDiv: null,
+	unfocusToolsDiv: null,
 	
 	init: function(p) {
 
@@ -71,6 +77,9 @@ var LevelEditor = Class({
 				}
 			}
 		}
+
+		this.focusToolsDiv = $("#lvl-edtr-focus-tools");
+		this.unfocusToolsDiv = $("#lvl-edtr-unfocus-tools");
 
 		// Creates example segment
 		segment = {
@@ -161,6 +170,18 @@ var LevelEditor = Class({
 			}
 		});
 
+		// adds the eraser button
+		$("#eraser").click({levelEditor: this}, function(event){
+
+			levelEditor.selectElement("eraser");
+
+		});
+
+		// adds the remove area button
+		$("#remove-area").click(function(event){
+			levelEditor.removeArea();
+		});
+
 		// sets background buttons
 		$("#lvl-edtr-b-group").html("");
 
@@ -218,6 +239,15 @@ var LevelEditor = Class({
 			changeBackground = false;
 		}
 
+		if (deleteArea){
+
+			level[this.focusedArea.x][this.focusedArea.y] = null;
+			this.unfocusArea();
+
+			deleteArea = false;
+
+		}
+
 		this.drawGrid();
 
 		this.alertBox.draw(this.ctx, this.mouseX, this.mouseY);
@@ -253,17 +283,6 @@ var LevelEditor = Class({
 
 		}
 
-		// adds the eraser button
-		var eraserBtn = $("<a class='btn btn-lg'></a>");
-		eraserBtn.text("Eraser");
-		eraserBtn.click({levelEditor: this}, function(event){
-
-			event.data.levelEditor.selectElement("eraser");
-
-		})
-
-		btnGroup.append(eraserBtn);
-
 	},
 	onMouseUp: function(){},
 	onMouseHold: function(){},
@@ -294,7 +313,19 @@ var LevelEditor = Class({
 							this.fillObjectButtons();
 
 						}else {
+
+							// alert box setup
 							this.alertBox.activate();
+							this.alertBox.title = "Create Area?";
+							this.alertBox.text = "Create a new area?";
+							this.alertBox.changeButtons([
+								{
+									text: "Create Area",
+									onClick: function(){
+										createArea = true;
+									}
+								}
+							]);
 
 							// remembers the area clicks
 							this.focusedArea.x = x;
@@ -315,9 +346,12 @@ var LevelEditor = Class({
 								var x = Math.floor((this.mouseX - (this.w - this.focusedAreaSize) / 2) / this.focusedAreaSize * 5);
 								var y = Math.floor((this.mouseY - (this.h - this.focusedAreaSize) / 2) / this.focusedAreaSize * 5);
 
-								console.log(x, y)
-								console.log(this.focusedArea)
-								level[this.focusedArea.x][this.focusedArea.y].elements[x][y] = selectedElement;
+								if (selectedElement == "eraser"){
+									level[this.focusedArea.x][this.focusedArea.y].elements[x][y] = null;
+								}else {
+
+									level[this.focusedArea.x][this.focusedArea.y].elements[x][y] = selectedElement;
+								}
 							}
 						}
 					}
@@ -330,6 +364,25 @@ var LevelEditor = Class({
 
 		level[this.focusedArea.x][this.focusedArea.y] = $.extend(true, {}, segment);
 		this.focusArea(this.focusedArea.x, this.focusedArea.y);
+
+	},
+	removeArea: function(){
+
+		if (this.isFocused){
+
+			this.alertBox.title = "Delete Area?";
+			this.alertBox.text = "Are you sure you want to delte this area?";
+			this.alertBox.changeButtons([
+				{
+					text: "Delete Area",
+					onClick: function() {
+						deleteArea = true;
+					}
+				}
+			]);
+
+			this.alertBox.activate();
+		}
 
 	},
 	changeBackground: function(bIndex) {
@@ -543,7 +596,7 @@ var LevelEditor = Class({
 		this.focusedArea.y = y;
 
 		// displays the zoom ut button
-		$("#zoom-out").show();
+		this.focusToolsDiv.show();
 
 		$("#lvl-edtr-b-group").show();
 	},
@@ -552,7 +605,7 @@ var LevelEditor = Class({
 		this.isUnzooming = true;
 		this.zoomTime = new Date().getTime();
 
-		$("#zoom-out").hide();
+		this.focusToolsDiv.hide();
 
 		$("#lvl-edtr-b-group").hide();
 	}
