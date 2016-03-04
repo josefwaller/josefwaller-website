@@ -277,7 +277,7 @@ var Art = Class({
 			objectButtonGroup.append(button);
 
 			button.append(canvas);
-			button.append("<br>" + this.getNameFromCamel(i));
+			button.append("<br>" + getNameFromCamel(i));
 
 			// Gets the first sprite
 			spriteName = Object.keys(sprites[i])[0];
@@ -641,30 +641,6 @@ var Art = Class({
 
 		return [pixelX, pixelY];
 	},
-	getNameFromCamel: function(name){
-
-		// Capitalizes the first letter
-		name = name.charAt(0).toUpperCase() + name.slice(1);
-
-		alphabet = "abcdefghijklmnopqrstuvwxyz";
-		
-		// Cycles through and checks if it shoudl insert a space
-		for (var n = 1; n < name.length; n++){
-
-			// Check if it is uppercase
-			if (name.charAt(n).toUpperCase() === name.charAt(n) && alphabet.indexOf(name.charAt(n).toLowerCase()) !== -1){
-				// Gets the first part (starts at zero)
-				firstPart = name.slice(0, n - name.length);
-				// Gets the second part
-				secondPart = name.slice(n);
-				// adds them
-				name = firstPart + " " + secondPart;
-				// Adds one to n, since a space was created
-				n++;
-			}
-		}
-		return name;
-	},
 	changeSpriteButtons: function() {
 
 		// Resets all of the sprite buttons
@@ -692,7 +668,7 @@ var Art = Class({
 			button.append(canvas);
 
 			// Gets the name from camelHumps
-			var name = this.getNameFromCamel(i);
+			var name = getNameFromCamel(i);
 
 			button.append("<br>" + name);
 
@@ -921,4 +897,29 @@ function changeButtonColor() {
 	}
 
 	art.updateAllButtons();
+}
+
+function getNameFromCamel (name){
+
+	// Capitalizes the first letter
+	name = name.charAt(0).toUpperCase() + name.slice(1);
+
+	alphabet = "abcdefghijklmnopqrstuvwxyz";
+	
+	// Cycles through and checks if it shoudl insert a space
+	for (var n = 1; n < name.length; n++){
+
+		// Check if it is uppercase
+		if (name.charAt(n).toUpperCase() === name.charAt(n) && alphabet.indexOf(name.charAt(n).toLowerCase()) !== -1){
+			// Gets the first part (starts at zero)
+			firstPart = name.slice(0, n - name.length);
+			// Gets the second part
+			secondPart = name.slice(n);
+			// adds them
+			name = firstPart + " " + secondPart;
+			// Adds one to n, since a space was created
+			n++;
+		}
+	}
+	return name;
 }

@@ -4,9 +4,11 @@ var objects;
 
 var selectedElement = 0;
 
-var createArea = false;
 
+// variables for buttons to change 
+var createArea = false;
 var changeBackground = false;
+var erase;
 
 var LevelEditor = Class({
 
@@ -125,14 +127,30 @@ var LevelEditor = Class({
 
 		for (var i in sprites){
 
+			// Copies sprites
 			if ($.inArray(i, notElements) === -1){
 
 				objects.push({
 					name: i,
 					object: i,
-					sprite: Object.keys(sprites[i])[0]
-				})
+					sprite: Object.keys(sprites[i])[0],
+					maxNum: 3
+				});
 
+			}
+
+			var index = objects.length - 1;
+
+			// changes the max value if it needs to be changed
+			switch (i){
+
+				case "player":
+					objects[index].maxNum = 1;
+					break;
+
+				case ("breakableBarrier" || "invincibleBarrier"):
+					objects[index].maxNum = 20;
+					break;
 			}
 		}
 
@@ -212,7 +230,7 @@ var LevelEditor = Class({
 
 		for (var i = 0; i < objects.length; i++){
 
-			var btn = $("<div class='btn btn-lg'></div>");
+			var btn = $("<a class='btn btn-lg'></a>");
 
 			var canvas = $("<canvas></canvas>");
 
@@ -223,7 +241,7 @@ var LevelEditor = Class({
 			});
 
 			btn.append(canvas);
-			btn.append("<br>" + objects[i].name);
+			btn.append("<br>" + getNameFromCamel(objects[i].name));
 
 			btn.click({levelEditor: this, i: i}, function(event){
 
@@ -234,6 +252,18 @@ var LevelEditor = Class({
 			btnGroup.append(btn);
 
 		}
+
+		// adds the eraser button
+		var eraserBtn = $("<a class='btn btn-lg'></a>");
+		eraserBtn.text("Eraser");
+		eraserBtn.click({levelEditor: this}, function(event){
+
+			event.data.levelEditor.selectElement("eraser");
+
+		})
+
+		btnGroup.append(eraserBtn);
+
 	},
 	onMouseUp: function(){},
 	onMouseHold: function(){},

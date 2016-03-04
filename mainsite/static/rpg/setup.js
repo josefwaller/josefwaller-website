@@ -94,22 +94,22 @@ function setup () {
 			stand: [],
 			dialog: []
 		},
-		meleeWeapon: {
-			onGround: [],
-			useUp: []
-		},
-		rangedWeapon: {
-			onGround: [],
-			useUp: []
-		},
-		invincibleBarrier: {
-			whole: []
-		},
-		breakableBarrier: {
-			whole: [],
-			breaking: [],
-			broken: []
-		},
+		// meleeWeapon: {
+		// 	onGround: [],
+		// 	useUp: []
+		// },
+		// rangedWeapon: {
+		// 	onGround: [],
+		// 	useUp: []
+		// },
+		// invincibleBarrier: {
+		// 	whole: []
+		// },
+		// breakableBarrier: {
+		// 	whole: [],
+		// 	breaking: [],
+		// 	broken: []
+		// },
 		backgrounds: {
 			one: [],
 			two: [],
