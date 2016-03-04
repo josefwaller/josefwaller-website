@@ -118,19 +118,23 @@ var LevelEditor = Class({
 
 		this.focusedAreaSize = this.h;
 
-
-		objects = [
-			{
-				name: "Player",
-				object: "player",
-				sprite: "runDownOne"
-			},
-			{
-				name: "Enemy One",
-				object: "enemyOne",
-				sprite: "runDownOne"
-			}
+		var notElements = [
+			"backgrounds"
 		];
+		objects = [];
+
+		for (var i in sprites){
+
+			if ($.inArray(i, notElements) === -1){
+
+				objects.push({
+					name: i,
+					object: i,
+					sprite: Object.keys(sprites[i])[0]
+				})
+
+			}
+		}
 
 		// sets the zoom out button to zoom out
 		$("#zoom-out").click(function() {

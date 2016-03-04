@@ -50,7 +50,7 @@ function setup () {
 			runUpTwo: [],
 			dialog: [],
 		},
-		enemyOne: {
+		meleeEnemyOne: {
 			runDownOne: [],
 			runDownTwo: [],
 			runSideOne: [],
@@ -58,7 +58,23 @@ function setup () {
 			runUpOne: [],
 			runUpTwo: []
 		},
-		enemyTwo: {
+		meleeEnemyTwo: {
+			runDownOne: [],
+			runDownTwo: [],
+			runSideOne: [],
+			runSideTwo: [],
+			runUpOne: [],
+			runUpTwo: []
+		},
+		rangedEnemyOne: {
+			runDownOne: [],
+			runDownTwo: [],
+			runSideOne: [],
+			runSideTwo: [],
+			runUpOne: [],
+			runUpTwo: []
+		},
+		rangedEnemyTwo: {
 			runDownOne: [],
 			runDownTwo: [],
 			runSideOne: [],
@@ -77,6 +93,22 @@ function setup () {
 		npcThree: {
 			stand: [],
 			dialog: []
+		},
+		meleeWeapon: {
+			onGround: [],
+			useUp: []
+		},
+		rangedWeapon: {
+			onGround: [],
+			useUp: []
+		},
+		invincibleBarrier: {
+			whole: []
+		},
+		breakableBarrier: {
+			whole: [],
+			breaking: [],
+			broken: []
 		},
 		backgrounds: {
 			one: [],
