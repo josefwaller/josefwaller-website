@@ -36,6 +36,14 @@ var CTXPro = Class({
 	},
 	fillRoundedRect: function(x, y, w, h, r){
 
+		// Round to nearest units
+
+		x = Math.round(x * this.unit);
+		y = Math.round(y * this.unit);
+		w = Math.round(w * this.unit);
+		h = Math.round(h * this.unit);
+		r = Math.round(r * this.unit);
+
 		// Draws two base rects
 		this.ctx.fillStyle = this.fillStyle;
 		
@@ -74,22 +82,22 @@ var CTXPro = Class({
 	},
 	moveTo: function(x, y){
 		this.ctx.moveTo(
-			Math.round(x * this.unit),
-			Math.round(y * this.unit)
+			x,
+			y
 		);
 	},
 	lineTo: function(x, y){
 		this.ctx.lineTo(
-			Math.round(x * this.unit),
-			Math.round(y * this.unit)
+			x,
+			y
 		);
 	},
 	arc: function(x, y, r, sA, eA) {
 
 		this.ctx.arc(
-			Math.round(x * this.unit), 
-			Math.round(y * this.unit), 
-			Math.round(r * this.unit), 
+			x, 
+			y, 
+			r,
 			sA * Math.PI, 
 			eA * Math.PI);
 	},
