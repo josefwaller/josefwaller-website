@@ -44,10 +44,13 @@ function setup () {
 		player: {
 			runDownOne: [],
 			runDownTwo: [],
+			attackDown: [],
 			runSideOne: [],
 			runSideTwo: [],
+			attackSide: [],
 			runUpOne: [],
 			runUpTwo: [],
+			attackUp: [],
 			dialog: [],
 		},
 		meleeEnemyOne: {
