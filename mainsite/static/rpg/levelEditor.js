@@ -98,10 +98,6 @@ var LevelEditor = Class({
 			}
 		}
 
-		// Used for testing
-		level[0][1] = $.extend(true, {}, segment);
-		level[0][1].elements[3][3] = 0;
-
 		this.alertBox = new AlertBox({
 			w: this.w,
 			h: this.h,
@@ -143,7 +139,8 @@ var LevelEditor = Class({
 					name: i,
 					object: i,
 					sprite: Object.keys(sprites[i])[0],
-					maxNum: 3
+					maxNum: 3,
+					num: 0
 				});
 
 			}
@@ -282,7 +279,6 @@ var LevelEditor = Class({
 			btnGroup.append(btn);
 
 		}
-
 	},
 	onMouseUp: function(){},
 	onMouseHold: function(){},
@@ -347,10 +343,15 @@ var LevelEditor = Class({
 								var y = Math.floor((this.mouseY - (this.h - this.focusedAreaSize) / 2) / this.focusedAreaSize * 5);
 
 								if (selectedElement == "eraser"){
+									objects[level[this.focusedArea.x][this.focusedArea.y].elements[x][y]].num--;
 									level[this.focusedArea.x][this.focusedArea.y].elements[x][y] = null;
 								}else {
 
-									level[this.focusedArea.x][this.focusedArea.y].elements[x][y] = selectedElement;
+									if (objects[selectedElement].num < objects[selectedElement].maxNum){
+
+										level[this.focusedArea.x][this.focusedArea.y].elements[x][y] = selectedElement;
+										objects[selectedElement].num++;
+									}
 								}
 							}
 						}
