@@ -94,6 +94,10 @@ var Art = Class({
 	copyObject: null,
 	copySprite: null,
 
+	colorButtonManager: null,
+	spriteButtonManager: null,
+	objectButtonManager: null,
+
 	ct: null,
 
 	// The x coordinate between the area rendered by the canvas area and the bars and buttons
@@ -250,7 +254,7 @@ var Art = Class({
 		// Creates the eraser button
 		eraserDiv = $("<a class='btn btn-lg' id='eraser'>Eraser</a>");
 		eraserDiv.click(function(event) {
-			art.selectColor("Eraser");
+			art.selectColor(8);
 		})
 		eraserDiv.css("background-color", "#66ccff");
 		eraserDiv.css("color", "#ffffff");
@@ -288,6 +292,14 @@ var Art = Class({
 
 		}
 
+		// creates a button manager
+		this.colorButtonManager = new ButtonGroup({
+			id: "color-btns"
+		});
+
+		this.objectButtonManager = new ButtonGroup({
+			id:"art-objects-btns"
+		});
 		// Sets the animation display to update 
 		this.lastAnimTime = new Date().getTime();
 
@@ -610,25 +622,19 @@ var Art = Class({
 	},
 	selectColor: function(colorIndex) {
 
-		if (this.isErasing){
-			$("#eraser").removeAttr("selected");
-		}else {
-			$($("#color-btns").children()[selectedColor]).removeAttr("selected");
-		}
-		if (colorIndex == "Eraser"){
+		if (colorIndex == 8){
+
 			this.isErasing = true;
-			$("#eraser").attr("selected", "true");
+
 		}else{
 			this.isErasing = false;
-
-			// Selects a color and sets the crosshairs appropriatly
-			selectedColor = colorIndex;
-			$($("#color-btns").children()[selectedColor]).attr("selected", "true");
-
-			this.colorBar.setCrosshairs(colors[selectedColor].hue);
-			this.saturationBar.setCrosshairs(colors[selectedColor].sat / 255);
-			this.brightnessBar.setCrosshairs(colors[selectedColor].bright / 255);
 		}
+
+		this.colorButtonManager.selectButton(colorIndex);
+
+		this.colorBar.setCrosshairs(colors[selectedColor].hue);
+		this.saturationBar.setCrosshairs(colors[selectedColor].sat / 255);
+		this.brightnessBar.setCrosshairs(colors[selectedColor].bright / 255);
 
 		this.drawSide();
 		this.drawCanvasArea();
@@ -648,16 +654,20 @@ var Art = Class({
 		this.spriteCanvases = {};
 
 		// Sets all the canvases in the sprite buttons
+
+		this.spriteButtonManager = new ButtonGroup({
+			id: "art-sprites-btns"
+		})
 		spriteButtonGroup = $("#art-sprites-btns");
 		spriteButtonGroup.html("");
+
 		for (i in sprites[selectedObject]){
 
 			// Creates button
 			button = $("<a class='btn btn-lg' id='" + selectedObject + "-" + i + "'></a>");
 			button.click({sprite: i}, function(event) {
 
-				sprite = event.data.sprite;
-				art.changeSprite(sprite);
+				art.changeSprite(event.data.sprite);
 
 			})
 			// Creates canvas
@@ -709,40 +719,21 @@ var Art = Class({
 			// this.drawAnimation();
 
 		}else {
-			// Unselectes the current button
-			$("#" + selectedObject + "-" + selectedSprite).removeAttr("selected");
-
-			selectedSprite = spriteIndex;
-
-			// Selects the new button
-			$("#" + selectedObject + "-" + selectedSprite).attr("selected", "true");
-
-			selectedAnimationSprite = 0;
-			// Find the animation to display
-			for (i = 0; i < animations.length; i++){
-
-				if ($.inArray(selectedSprite, animations[i]) !== -1){
-
-					selectedAnimation = i;
-					break;
-				}
-			}
-
-
+			
+			this.spriteButtonManager.selectButton(Object.keys(sprites[selectedObject]).indexOf(spriteIndex));
 
 		}
 	},
 	changeSelectedObject: function(objIndex) { 
 
 		// Changes the selected button
-		$("#" + selectedObject).removeAttr("selected");
+		this.objectButtonManager.selectButton(Object.keys(sprites).indexOf(objIndex));
 
 		// Changes the selected Object
 		selectedObject = objIndex;
 
 		// Sets the selected sprite
 		selectedSprite = Object.keys(sprites[selectedObject])[0];
-		$("#" + selectedObject).attr("selected", "true");
 
 		// Changes the animation display sprites
 

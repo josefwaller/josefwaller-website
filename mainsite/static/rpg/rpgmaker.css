@@ -97,11 +97,13 @@ canvas
 	margin-left: 0px;
 	white-space: nowrap;
 	overflow:auto;
-	height: 100px;
+	height: 110px;
 }
 
 .btn-group-horizontal > .btn
 {
 	height: 100%;
 	vertical-align: middle;
+	padding-bottom: 15px;
+	box-sizing: border-box;
 }

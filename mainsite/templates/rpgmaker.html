@@ -23,6 +23,7 @@
 		<script src="{% static 'rpg/scrollBar.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/ctxPro.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/alertBox.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/buttonGroup.js' %}" type="text/javascript"></script>
 
 		<!-- Font -->
 		<link href='https://fonts.googleapis.com/css?family=Raleway|Press+Start+2P' rel='stylesheet' type='text/css'>
@@ -75,10 +76,10 @@
 					<canvas id="art-canvas" moz-opaque></canvas>
 					<img id="gradiant" style="display:none" src="{% static 'images/rpgmaker/gradient.jpg' %}">
 					<!-- the different objects to choose to edit -->
-					<div class="btn-group btn-group-justified" id="art-objects-btns" role="group">
+					<div class="btn-group-horizontal" id="art-objects-btns" role="group">
 					</div>
 					<!-- the different sprites for the selected object -->
-					<div class="btn-group btn-group-justified" id="art-sprites-btns" role="group">
+					<div class="btn-group-horizontal" id="art-sprites-btns" role="group">
 					</div>
 					<!-- the different available colors -->
 					<div class="btn-group btn-group-justified" id="color-btns" role="group">
