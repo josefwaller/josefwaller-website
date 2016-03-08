@@ -161,6 +161,7 @@ var LevelEditor = Class({
 		}
 
 		// sets the zoom out button to zoom out
+		$("#lvl-edtr-focus-tools").hide();
 		$("#zoom-out").click(function() {
 			if (levelEditor.isFocused){
 				levelEditor.unfocusArea();
@@ -173,6 +174,10 @@ var LevelEditor = Class({
 			levelEditor.selectElement("eraser");
 
 		});
+
+
+		$("#lvl-edtr-b-group").hide();
+		$("#lvl-edtr-obj-btns").hide();
 
 		// adds the remove area button
 		$("#remove-area").click(function(event){
@@ -306,7 +311,6 @@ var LevelEditor = Class({
 						if (level[x][y] !== null){
 
 							this.focusArea(x, y);
-							this.fillObjectButtons();
 
 						}else {
 
@@ -363,6 +367,7 @@ var LevelEditor = Class({
 	},
 	createArea: function(){
 
+		// creates a new segment for the area
 		level[this.focusedArea.x][this.focusedArea.y] = $.extend(true, {}, segment);
 		this.focusArea(this.focusedArea.x, this.focusedArea.y);
 
@@ -596,10 +601,14 @@ var LevelEditor = Class({
 		this.focusedArea.x = x;
 		this.focusedArea.y = y;
 
-		// displays the zoom ut button
+		// displays the zoom out button
 		this.focusToolsDiv.show();
 
+		// displays the object buttons
+		this.fillObjectButtons();
+
 		$("#lvl-edtr-b-group").show();
+		$("#lvl-edtr-obj-btns").show();
 	},
 	unfocusArea: function(){
 
@@ -609,5 +618,6 @@ var LevelEditor = Class({
 		this.focusToolsDiv.hide();
 
 		$("#lvl-edtr-b-group").hide();
+		$("#lvl-edtr-obj-btns").hide();
 	}
 });
