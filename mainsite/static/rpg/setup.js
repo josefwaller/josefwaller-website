@@ -281,4 +281,4 @@ $(document.body).ready(function(){
 });
 
 // after loading, shows the stuff
-// $(window).on("load", function(){setup()});
+$(window).on("load", function(){setup()});

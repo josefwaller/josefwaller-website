@@ -180,12 +180,13 @@ canvas
 
 /* Loading animation */
 @keyframes loading-down {
-    from {
+    0% {
     	top: 0;
     }
-    to {
+    100% {
     	top: 100%;
     	height: 0;
+    	overflow: hidden;
     }
 }
 

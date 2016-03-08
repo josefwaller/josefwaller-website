@@ -18,8 +18,9 @@ var Dialog = Class({
 		numOfDialogs = 3;
 
 		// Dialogs switch between player and npc[selectedDialog]
+		// all dialogs must have at least one line in them
 		while(dialogs.length < numOfDialogs){
-			dialogs.push([]);
+			dialogs.push([""]);
 		}
 
 		// Sets all the buttons to switch between dialogs
@@ -49,7 +50,7 @@ var Dialog = Class({
 
 		$("#dialog-btn-group").append(button);
 
-		this.addDialog();
+		this.updateDialogs();
 
 	},
 
@@ -159,4 +160,4 @@ var Dialog = Class({
 	onMouseUp:function(){},
 	onMouseHold:function(){},
 	onClick:function(){}
-})
+});
