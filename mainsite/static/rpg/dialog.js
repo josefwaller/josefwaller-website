@@ -49,8 +49,7 @@ var Dialog = Class({
 
 		$("#dialog-btn-group").append(button);
 
-		// Updates the dialog div
-		this.updateDialogs();
+		this.addDialog();
 
 	},
 
@@ -133,10 +132,12 @@ var Dialog = Class({
 		this.updateDialogs();
 	},
 	removeDialog: function() {
-		dialogs[selectedDialog].pop();
-		this.updateDialogs();
-	},
 
+		if (dialogs[selectedDialog].length > 1){
+			dialogs[selectedDialog].pop();
+			this.updateDialogs();
+		}
+	},
 	selectDialog: function(index) {
 
 		selectedDialog = index;
@@ -154,7 +155,6 @@ var Dialog = Class({
 			}
 		}
 	},
-
 	// Filler functions
 	onMouseUp:function(){},
 	onMouseHold:function(){},

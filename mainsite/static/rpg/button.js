@@ -92,6 +92,7 @@ var Button = new Class({
 			// Draws text
 			ctx.fillStyle = this.textColor;
 			ctx.setFont(this.fontSize, this.font);
+			
 			x = this.x + (this.w - ctx.measureText(this.text, this.fontSize + "px " + this.font).width) / 2;
 			y = this.y + this.h / 2;
 			ctx.fillText(this.text, x, y);

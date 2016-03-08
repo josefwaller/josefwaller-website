@@ -39,7 +39,11 @@ var mouse = {
 }
 
 function setup () {
-	
+
+	//hides the loading screen
+	$("#loading").addClass("loading-down-anim");
+	$("#rpgmaker-container").show();
+
 	sprites = {
 		player: {
 			runDownOne: [],
@@ -256,4 +260,25 @@ function update() {
 	}
 }
 
-$(document.body).ready(setup);
+// shows the loading screen
+$(document.body).ready(function(){
+	$("#loading").show();
+	$("#rpgmaker-container").hide();
+
+	// sets up animation cicle thingy
+	var parent = $("#loading-circle");
+	parent.html("");
+	for (var i = 0; i < 8; i++){
+
+		var dot = $("<div id='loading-circle-fixed-container'></div>");
+		var container = $("<div id='loading-circle-container'></div>");
+		container.css("animation-delay", (i / 10) + "s");
+		dot.append(container);
+		container.append($("<div id='loading-circle-dot'></div>"));
+		parent.append(dot);
+
+	}
+});
+
+// after loading, shows the stuff
+// $(window).on("load", function(){setup()});
