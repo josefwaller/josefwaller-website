@@ -101,22 +101,22 @@ function setup () {
 			stand: [],
 			dialog: []
 		},
-		// meleeWeapon: {
-		// 	onGround: [],
-		// 	useUp: []
-		// },
-		// rangedWeapon: {
-		// 	onGround: [],
-		// 	useUp: []
-		// },
-		// invincibleBarrier: {
-		// 	whole: []
-		// },
-		// breakableBarrier: {
-		// 	whole: [],
-		// 	breaking: [],
-		// 	broken: []
-		// },
+		meleeWeapon: {
+			onGround: [],
+			useUp: []
+		},
+		rangedWeapon: {
+			onGround: [],
+			useUp: []
+		},
+		invincibleBarrier: {
+			whole: []
+		},
+		breakableBarrier: {
+			whole: [],
+			breaking: [],
+			broken: []
+		},
 		backgrounds: {
 			one: [],
 			two: [],
@@ -188,7 +188,7 @@ function setup () {
 		mouse.down = false;
 	})
 	changeScreen(null, 0);
-	window.setInterval(update, 1000/60)
+	window.setTimeout(update, 1000/60)
 
 }
 
@@ -258,6 +258,8 @@ function update() {
 
 		this.mouse.middleClick = false;
 	}
+
+	window.setTimeout(update, 1000/60);
 }
 
 // shows the loading screen

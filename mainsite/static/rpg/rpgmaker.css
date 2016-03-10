@@ -34,6 +34,16 @@ canvas
 	width: 40px;
 }
 
+/* Sets up the art setup of three canvases */
+#art-canvas-canvas
+{
+	float: left;
+}
+#art-side-canvases
+{
+	display: inline-block;
+}
+
 #l1-btn
 {
 	background-color: #66ff66;

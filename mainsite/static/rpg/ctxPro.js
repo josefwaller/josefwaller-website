@@ -11,6 +11,7 @@ var CTXPro = Class({
 
 	init: function(p) {
 
+		this.canvas = p.canvas;
 		this.ctx = p.canvas[0].getContext("2d");
 		this.unit = p.canvas.width() / p.w;
 
@@ -22,7 +23,31 @@ var CTXPro = Class({
 
 		p.canvas[0].width = p.canvas.width();
 		p.canvas[0].height = p.canvas.height();
-	},	
+	},
+	resizeCanvas: function(x, y){
+
+		var ratio;
+
+		if (x == null){
+
+			ratio = this.canvas.height() / this.canvas.width();
+
+			x = y * ratio;
+
+		}else {
+
+			ratio = this.canvas.width() / this.canvas.height();
+
+			y = x * ratio;
+		}
+
+		this.canvas.width(x * this.unit);
+		this.canvas.height(y * this.unit);
+
+		this.canvas[0].width = x;
+		this.canvas[0].height = y;
+
+	},
 	fillRect: function(x, y, w, h){
 
 		this.ctx.globalAlpha = this.globalAlpha;
@@ -51,46 +76,81 @@ var CTXPro = Class({
 		this.ctx.beginPath();
 
 		// starts at top right corner after the curve
-		this.moveTo(x + r, y);
+		this.ctx.moveTo(x + r, y);
 
 		// top line
-		this.lineTo(x + w - r, y);
+		this.ctx.lineTo(x + w - r, y);
 
 		// top right corner
-		this.arc(x + w - r, y + r, r, 1.5, 2);
+		this.ctx.arc(x + w - r, y + r, r, 1.5 * Math.PI, 2 * Math.PI);
 
 		// right line
-		this.lineTo(x + w, y + h - r);
+		this.ctx.lineTo(x + w, y + h - r);
 
 		// bottom right corner
-		this.arc(x + w - r, y + h - r, r, 0, 0.5);
+		this.ctx.arc(x + w - r, y + h - r, r, 0 * Math.PI, 0.5 * Math.PI);
 
 		// bottom line
-		this.lineTo(x + r, y + h);
+		this.ctx.lineTo(x + r, y + h);
 
 		// bottom left corner
-		this.arc(x + r, y + h - r, r, 0.5, 1);
+		this.ctx.arc(x + r, y + h - r, r, 0.5 * Math.PI, 1 * Math.PI);
 
 		// left line
-		this.lineTo(x, y + r);
+		this.ctx.lineTo(x, y + r);
 
 		// top left corner
-		this.arc(x + r, y + r, r, 1, 1.5);
+		this.ctx.arc(x + r, y + r, r, 1 * Math.PI, 1.5 * Math.PI);
 
 		this.ctx.fill();
 
 	},
+	fillTriangle: function(x, y, s, isSideways){
+
+
+		x = Math.round(x * this.unit);
+		y = Math.round(y * this.unit);
+		s = Math.round(s * this.unit);
+
+		this.ctx.fillStyle = this.fillStyle;
+
+		this.ctx.beginPath();
+		if (isSideways){
+
+			this.ctx.moveTo(x + (s / 2), y);
+			this.ctx.lineTo(x - (s / 2), y + (s / 2));
+			this.ctx.lineTo(x - (s / 2), y - (s / 2));
+
+		}else {
+
+			this.ctx.moveTo(x, y - (s / 2));
+			this.ctx.lineTo(x + (s / 2), y + (s / 2));
+			this.ctx.lineTo(x - (s / 2), y + (s / 2));
+		}
+
+		this.ctx.fill();
+
+		console.log(x, y, s);
+
+	},
 	moveTo: function(x, y){
 		this.ctx.moveTo(
-			x,
-			y
+			Math.round(x * this.unit),
+			Math.round(y * this.unit)
 		);
 	},
 	lineTo: function(x, y){
 		this.ctx.lineTo(
-			x,
-			y
+			Math.round(x * this.unit),
+			Math.round(y * this.unit)
 		);
+	},
+	beginPath: function(){
+		this.ctx.beginPath();
+	},
+	fill: function(){
+		this.ctx.fillStyle = this.fillStyle;
+		this.ctx.fill();
 	},
 	arc: function(x, y, r, sA, eA) {
 

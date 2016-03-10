@@ -25,9 +25,10 @@ var ColorBar = Class({
 
 	draw: function(ctx, colors){
 
-
 		if (this.img != null){
+
 			ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
+
 		}else {
 
 			for (var i = 0; i < this.w; i++){

@@ -33,6 +33,9 @@ var hoverSprites =	{
 
 }
 
+// used for buttons to tell classes to shift the drawing
+var shift = [0, 0];
+
 var Art = Class({
 	canvas: null,
 	ctx: null,
@@ -76,6 +79,14 @@ var Art = Class({
 	// The interval between switching sprites
 	animationInterval: 1000 / 5,
 	lastAnimTime: 0,
+
+	// compass buttons
+	compassButtons: [],
+
+	// the position and size of the compass layouts
+	compassX: 0,
+	compassY: 0,
+	compassSize: 0,
 
 	// The buttons
 	copyButton: null,
@@ -158,12 +169,7 @@ var Art = Class({
 			w: 200,
 			h: (this.h - (this.offsetY + 90)) / 3 - 20,
 			text: "Copy Sprite",
-			textColor: btnColors.text,
-			textY: null,
-			font: "Raleway",
-			fontSize: 15,
-			color: btnColors.color,
-			hoverColor: btnColors.hover,
+
 			onClick: function(){
 				art.isCopying = true;
 
@@ -180,12 +186,6 @@ var Art = Class({
 			w: 200,
 			h: this.copyButton.h,
 			text: "Mirror",
-			textColor: btnColors.text,
-			textY: null,
-			font: "Raleway",
-			fontSize: 15,
-			color: btnColors.color,
-			hoverColor: btnColors.hover,
 			onClick: function() {
 				art.mirrorSprite();
 			}
@@ -193,8 +193,9 @@ var Art = Class({
 
 		// Sets the animation display coordinates
 		this.animationDisplay.x = x,
-		this.animationDisplay.y = Math.round(this.mirrorButton.y + this.mirrorButton.h + 10);
-		this.animationDisplay.w = 200;
+		this.animationDisplay.y = this.mirrorButton.y + this.mirrorButton.h + 10;
+		// width is only half to fit the compass
+		this.animationDisplay.w = 100;
 		this.animationDisplay.h = Math.round(this.mirrorButton.h);
 
 		// Sets the offset and pixel size for the animation display
@@ -208,6 +209,60 @@ var Art = Class({
 			this.animationDisplay.offsetY = (this.animationDisplay.h - this.animationDisplay.w) / 2;
 			this.animationDisplay.offsetX = 0;
 		}
+
+		// creates the compass for shifting the sprite up/down/left or right
+		this.compassSize = 100 / 3;
+		this.compassX = x + 100;
+		this.compassY = this.mirrorButton.y + this.mirrorButton.h + 10;
+
+		/*
+			Should make a compass like this
+			   ____
+			 __|__|__
+			|__|__|__|
+			   |__|
+
+		*/
+		this.compassButtons[0] = new Button({
+				x: this.compassX,
+				y: this.compassY + this.compassSize,
+				w: this.compassSize,
+				h: this.compassSize,
+				text: "",
+				onClick: function(p){
+					shift[0] = 1;
+				}
+		});
+		this.compassButtons[1] = new Button({
+				x: this.compassX + this.compassSize,
+				y: this.compassY,
+				w: this.compassSize,
+				h: this.compassSize,
+				text: "",
+				onClick: function(p){
+					shift[1] = -1;
+				}
+		});
+		this.compassButtons[2] = new Button({
+				x: this.compassX + 2 * this.compassSize,
+				y: this.compassY + this.compassSize,
+				w: this.compassSize,
+				h: this.compassSize,
+				param: this,
+				onClick: function(p){
+					shift[0] = 1;
+				}
+		});
+		this.compassButtons[3] = new Button({
+				x: this.compassX + this.compassSize,
+				y: this.compassY + 2 * this.compassSize,
+				w: this.compassSize,
+				h: this.compassSize,
+				param: this,
+				onClick: function(p){
+					shift[1] = 1;
+				}
+		});
 
 		// Creates the cancel button when copying
 		text = "Cancel"
@@ -326,7 +381,12 @@ var Art = Class({
 
 		if (!this.isCopying){
 
-			if (this.mouseX <  this.offsetX + this.size * this.pixelSize + 15){
+			if (shift[0] !== 0 && shift[1] !== 0){
+				this.shiftSprite(shift[0], shift[1]);
+				shift = [0, 0];
+			}
+
+			if (this.mouseX <  this.splitX){
 				this.drawCanvasArea();
 			} else {
 				this.drawSide();
@@ -361,8 +421,9 @@ var Art = Class({
 	},
 	onClick: function() {
 
-		// Checks if the bars are selected
 		if (!this.isCopying){
+
+			// Checks if the bars are selected
 			this.colorBar.checkForSelection(this.mouseX, this.mouseY);
 			this.saturationBar.checkForSelection(this.mouseX, this.mouseY);
 			this.brightnessBar.checkForSelection(this.mouseX, this.mouseY);
@@ -370,8 +431,12 @@ var Art = Class({
 			this.copyButton.checkForClick(this.mouseX, this.mouseY);
 			this.mirrorButton.checkForClick(this.mouseX, this.mouseY);
 
-		}else {
+			for (var i = 0; i < this.compassButtons.length; i++){
+				this.compassButtons[i].checkForClick(this.mouseX, this.mouseY);
+			}
+
 		}
+
 		this.copyAlertBox.onClick(this.mouseX, this.mouseY);
 	},
 	onMouseUp: function() {
@@ -568,12 +633,14 @@ var Art = Class({
 	drawSide: function() {
 
 		ct = this.ct;
+
 		ct.fillStyle = this.backgroundColor;
 		ct.fillRect(
 			this.splitX,
 			0,
 			this.w - this.splitX,
 			this.animationDisplay.y);
+
 		// Draws bars/buttons
 		this.colorBar.draw(ct);
 
@@ -619,6 +686,34 @@ var Art = Class({
 				}
 			}
 		}
+
+		// draws compass
+		// note that is does not call the draw() on the button object
+		// rather it draws a rotated rectangle, and then a normal whit3e on on top
+		var x = this.compassX;
+		var y = this.compassY;
+		var s = this.compassSize * 3;
+
+		// draws larger, outer, rotated rect
+
+		ct.fillStyle = btnColors.color;
+
+		ct.beginPath();
+		ct.moveTo(x, y + (s / 2));
+
+		ct.lineTo(x + (s / 2), y);
+		ct.lineTo(x + s, y + (s / 2));
+		ct.lineTo(x + (s / 2), y + s);
+		ct.fill();
+
+		// draws smaller white rect
+		ct.fillStyle = "#ffffff";
+		ct.fillRect(
+			x + (s / 4),
+			y + (s / 4),
+			s / 2,
+			s / 2
+		);
 	},
 	selectColor: function(colorIndex) {
 
@@ -628,6 +723,8 @@ var Art = Class({
 
 		}else{
 			this.isErasing = false;
+
+			selectedColor = colorIndex;
 		}
 
 		this.colorButtonManager.selectButton(colorIndex);
@@ -720,6 +817,7 @@ var Art = Class({
 
 		}else {
 			
+			selectedSprite = spriteIndex;
 			this.spriteButtonManager.selectButton(Object.keys(sprites[selectedObject]).indexOf(spriteIndex));
 
 		}
@@ -798,6 +896,85 @@ var Art = Class({
 		this.drawCanvasArea();
 
 		// Updates the buttons
+		this.updateSelectedButtons();
+	},
+	shiftSprite: function(x, y){
+
+		// shifts the selected sprite by one pixel
+
+		// the new sprite to replace the current one
+		var newSprite = [];
+
+		// reference of the current sprite
+		var s = sprites[selectedObject][selectedSprite];
+
+		// checks if it needs to shift5 along the x coord
+		if (x !== 0){
+
+			// creates an example empty x line
+			var empty = [];
+
+			// fills empty with null
+			while(empty.length < this.size){
+				empty.push(null);
+			}
+
+			// Cycles through and copies the value of the x line before or after it
+			for (var i = 0; i < s.length; i++){
+
+				// checks if the x coordinate exists
+				// otherwise it is at the end
+				if (i - x >= 0 && i - x < s.length){
+
+					// copies the value
+					newSprite.push(s[i - x]);
+				}else {
+
+					// copies the empty line
+					newSprite.push($.extend([], empty, true));
+				}
+
+			}
+
+		}
+
+		// checks if it need to shift by y
+		if (y !== 0){
+
+			// cycles through
+			for (var i = 0; i < s.length; i++){
+
+				// creates a new x array
+				newSprite.push([]);
+
+				// cycles through and copies the next y value
+				for (var z = 0; z < s[i].length; z++){
+
+					// checks if it is not near the edges
+					if (z - y >= 0 && z - y < s[i].length){
+
+						// adds the next value
+						newSprite[i].push(s[i][z - y]);
+
+					}else {
+
+						// adds an empty pixel
+						newSprite[i].push(null);
+					}
+					
+				}
+			}
+
+
+		}
+
+		// sets sprites to new sprite
+		sprites[selectedObject][selectedSprite] = newSprite;
+
+		// draws the new sprite on the canvas
+		this.drawCanvasArea();
+
+		// redrawsx the buttons
 		this.updateSelectedButtons();
 	}
 })

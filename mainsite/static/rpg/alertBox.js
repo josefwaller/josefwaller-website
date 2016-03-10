@@ -187,8 +187,6 @@ var AlertBox = new Class({
 	onClick: function(mX, mY){
 		if (this.isActive){
 
-			console.log("Active");
-
 			for (var i = 0; i < this.buttons.length; i++){
 				this.buttons[i].checkForClick(mX, mY);
 			}
