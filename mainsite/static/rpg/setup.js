@@ -42,6 +42,11 @@ function setup () {
 
 	//hides the loading screen
 	$("#loading").addClass("loading-down-anim");
+
+	// removes the loading screen when it is done animating
+	$("#loading").one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
+		$("#loading").html("");
+	});
 	$("#rpgmaker-container").show();
 
 	sprites = {
@@ -264,8 +269,17 @@ function update() {
 
 // shows the loading screen
 $(document.body).ready(function(){
-	$("#loading").show();
+
+	// gets loading divs
+	var loading = $("#loading");
+	var loadingCont = $("#loading-container");
+
+	// shows the loading screen and hides the rest
+	loading.show();
 	$("#rpgmaker-container").hide();
+
+	// sets the margin for the vetically aligned div
+	loadingCont.css("margin-top", (loading.height() - loadingCont.height()) / 2);
 
 	// sets up animation cicle thingy
 	var parent = $("#loading-circle");
