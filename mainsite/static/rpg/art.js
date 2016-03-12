@@ -223,46 +223,160 @@ var Art = Class({
 			   |__|
 
 		*/
-		this.compassButtons[0] = new Button({
-				x: this.compassX,
-				y: this.compassY + this.compassSize,
-				w: this.compassSize,
-				h: this.compassSize,
-				text: "",
-				onClick: function(p){
-					shift[0] = 1;
+
+		compassButtonCheckForMouse = function(mX, mY){
+
+			// checks if the mouse is hovering
+
+			var r = (100 / 3) / 2;
+
+			// checks if the mouse is with the best fitting rectangle
+			if (mX >= this.x - r && mX <= this.x + r){
+
+				if (mY >= this.y - r && mY <= this.y + r){
+
+					// for compass, makes sure it's not in the middle rect
+					if (mX >= this.compassX + 2 * r && mX <= this.compassX + 2 * (2 * r)){
+						if (mY >= this.compassY + 2 * r && mY <= this.compassY + 2 * (2 * r)){
+
+							return false
+
+						}
+					}
+
+					// Since it is an even line, the equation
+					// y = r - x works, so x + y <= r
+					var pointToMouseX = Math.abs(this.x - mX);
+					var pointToMouseY = Math.abs(this.y - mY);
+
+					// checks if x + y <= r
+					if (pointToMouseX + pointToMouseY <= r){
+						return true
+					}
 				}
-		});
-		this.compassButtons[1] = new Button({
-				x: this.compassX + this.compassSize,
-				y: this.compassY,
-				w: this.compassSize,
-				h: this.compassSize,
-				text: "",
-				onClick: function(p){
-					shift[1] = -1;
-				}
-		});
-		this.compassButtons[2] = new Button({
-				x: this.compassX + 2 * this.compassSize,
-				y: this.compassY + this.compassSize,
-				w: this.compassSize,
-				h: this.compassSize,
-				param: this,
-				onClick: function(p){
-					shift[0] = 1;
-				}
-		});
-		this.compassButtons[3] = new Button({
-				x: this.compassX + this.compassSize,
-				y: this.compassY + 2 * this.compassSize,
-				w: this.compassSize,
-				h: this.compassSize,
-				param: this,
-				onClick: function(p){
-					shift[1] = 1;
-				}
-		});
+			}
+
+			return false;
+
+		}
+
+		compassButtonDraw = function(ctx, mX, mY){
+
+			var r = (100 / 3) / 2;
+
+			if (this.checkForMouseHover(mX, mY)){
+				ctx.fillStyle = btnColors.hover;
+			}else {
+				ctx.fillStyle = btnColors.color;
+			}
+
+			// draws a rotated rect
+			ctx.beginPath();
+
+			// top point
+			ctx.moveTo(this.x, this.y - r);
+
+			// right point
+			ctx.lineTo(this.x + r, this.y);
+
+			// down point
+			ctx.lineTo(this.x, this.y + r);
+
+			// left point
+			ctx.lineTo(this.x - r, this.y);
+
+			ctx.fill();
+
+		}
+
+		compassButtonCheckForClick = function(mX, mY){
+
+			if (this.checkForMouseHover(mX, mY)){
+				this.onClick();
+			}
+
+		}
+
+		for (var i = 0; i < 4; i++){
+
+			var offX;
+			var offY;
+
+			if (i % 2 === 0){
+
+				offX = this.compassX + this.compassSize * 1.5;
+				offY = this.compassY + (this.compassSize * ((i / 2) + 1));
+
+			}else {
+
+				offX = this.compassX + (this.compassSize * (2.5 - (i / 2)));
+				offY = this.compassY + this.compassSize * 1.5;
+
+			}
+
+			this.compassButtons[i] = new Button({
+					x: offX,
+					y: offY,
+					w: this.compassSize,
+					h: this.compassSize,
+					text: "",
+					onClick: function(){
+
+						// ((this.i + 1) % 4) / (this.i + 1) = 1 except when i = 3, where it equals 0
+						// (this.i - Math.floor(this.i / 2)) = 0 for 0 and 1 for 1 and 1 for 2
+
+						shift[(this.i + 1) % 2] = ((this.i + 1) % 4) / (this.i + 1) * (2 * (this.i - Math.floor(this.i / 2))) - 1;
+					}
+			});
+
+			this.compassButtons[i].draw = compassButtonDraw;
+			this.compassButtons[i].checkForMouseHover = compassButtonCheckForMouse;
+			this.compassButtons[i].checkForClick = compassButtonCheckForClick;
+			this.compassButtons[i].compassX = this.compassX;
+			this.compassButtons[i].compassY = this.compassY;
+			this.compassButtons[i].i = i;
+
+		}
+		// this.compassButtons[0] = new Button({
+		// 		x: this.compassX,
+		// 		y: this.compassY + this.compassSize,
+		// 		w: this.compassSize,
+		// 		h: this.compassSize,
+		// 		text: "",
+		// 		onClick: function(p){
+		// 			shift[0] = 1;
+		// 		}
+		// });
+		// this.compassButtons[1] = new Button({
+		// 		x: this.compassX + this.compassSize,
+		// 		y: this.compassY,
+		// 		w: this.compassSize,
+		// 		h: this.compassSize,
+		// 		text: "",
+		// 		onClick: function(p){
+		// 			shift[1] = -1;
+		// 		}
+		// });
+		// this.compassButtons[2] = new Button({
+		// 		x: this.compassX + 2 * this.compassSize,
+		// 		y: this.compassY + this.compassSize,
+		// 		w: this.compassSize,
+		// 		h: this.compassSize,
+		// 		param: this,
+		// 		onClick: function(p){
+		// 			shift[0] = 1;
+		// 		}
+		// });
+		// this.compassButtons[3] = new Button({
+		// 		x: this.compassX + this.compassSize,
+		// 		y: this.compassY + 2 * this.compassSize,
+		// 		w: this.compassSize,
+		// 		h: this.compassSize,
+		// 		param: this,
+		// 		onClick: function(p){
+		// 			shift[1] = 1;
+		// 		}
+		// });
 
 		// Creates the cancel button when copying
 		text = "Cancel"
@@ -381,15 +495,25 @@ var Art = Class({
 
 		if (!this.isCopying){
 
-			if (shift[0] !== 0 && shift[1] !== 0){
+			if (shift[0] !== 0 || shift[1] !== 0){
 				this.shiftSprite(shift[0], shift[1]);
 				shift = [0, 0];
 			}
 
-			if (this.mouseX <  this.splitX){
+			// checks what it should draw
+			if (this.mouseX < this.splitX){
+
 				this.drawCanvasArea();
 			} else {
-				this.drawSide();
+
+				if (this.mouseY < this.animationDisplay.y){
+
+					this.drawSide();
+				}else {
+
+					// draws the animation display for the buttons
+					this.drawAnimation();
+				}
 			}
 
 			if (new Date().getTime() - this.lastAnimTime > this.animationInterval){
@@ -692,27 +816,31 @@ var Art = Class({
 		// rather it draws a rotated rectangle, and then a normal whit3e on on top
 		var x = this.compassX;
 		var y = this.compassY;
-		var s = this.compassSize * 3;
+		var s = this.compassSize;
 
-		// draws larger, outer, rotated rect
+		// // draws larger, outer, rotated rect
 
-		ct.fillStyle = btnColors.color;
+		// ct.fillStyle = btnColors.color;
 
-		ct.beginPath();
-		ct.moveTo(x, y + (s / 2));
+		// ct.beginPath();
+		// ct.moveTo(x, y + (s / 2));
 
-		ct.lineTo(x + (s / 2), y);
-		ct.lineTo(x + s, y + (s / 2));
-		ct.lineTo(x + (s / 2), y + s);
-		ct.fill();
+		// ct.lineTo(x + (s / 2), y);
+		// ct.lineTo(x + s, y + (s / 2));
+		// ct.lineTo(x + (s / 2), y + s);
+		// ct.fill();
+
+		for (var i = 0; i < this.compassButtons.length; i++){
+			this.compassButtons[i].draw(this.ct, this.mouseX, this.mouseY);
+		}
 
 		// draws smaller white rect
 		ct.fillStyle = "#ffffff";
 		ct.fillRect(
-			x + (s / 4),
-			y + (s / 4),
-			s / 2,
-			s / 2
+			x + s,
+			y + s,
+			s,
+			s
 		);
 	},
 	selectColor: function(colorIndex) {

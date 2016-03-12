@@ -60,24 +60,24 @@ var Button = new Class({
 
 	draw: function(ctx, mouseX, mouseY) {
 
-		if (this.color !== null){
+		color = this.color;
 
-			color = this.color;
+		// checks if the mouse is over the button
 
-			// Changes the mouse pointer to click
+		if (this.x <= mouseX && this.x + this.w > mouseX){
+			if (this.y <= mouseY && this.y + this.h > mouseY){
 
-			if (this.x <= mouseX && this.x + this.w > mouseX){
-				if (this.y <= mouseY && this.y + this.h > mouseY){
+				// changes to hover color
+				color = this.hoverColor;
 
-					color = this.hoverColor;
-					$(document.body).css("cursor", "pointer");
-				}
+				// changes the mouse to pointer
+				$(document.body).css("cursor", "pointer");
 			}
-
-			// Fills the initial rect  
-			ctx.fillStyle = color;
-			ctx.fillRect(this.x, this.y, this.w, this.h);
 		}
+
+		// Fills the initial rect  
+		ctx.fillStyle = color;
+		ctx.fillRect(this.x, this.y, this.w, this.h);
 
 		// Draws text if it has any
 		if (this.text){

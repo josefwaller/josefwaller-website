@@ -71,7 +71,7 @@ var ScrollBar = new Class({
 		// Draws text
 		ctx.setFont(11, "Raleway");
 
-		ctx.fillStyle = "#3399ff";
+		ctx.fillStyle = "#000000";
 
 		ctx.fillText(
 			this.text, 
@@ -89,9 +89,7 @@ var ScrollBar = new Class({
 		circleY = this.y + this.h;
 
 		// Draws circle
-		// ctx.beginPath();
 		ctx.fillArc(circleX, circleY, this.radius, 0, 2 * Math.PI);
-		// ctx.fill();
 
 	}
 })

@@ -284,14 +284,21 @@ $(document.body).ready(function(){
 	// sets up animation cicle thingy
 	var parent = $("#loading-circle");
 	parent.html("");
+
+	// creates 8 dots
 	for (var i = 0; i < 8; i++){
 
-		var dot = $("<div id='loading-circle-fixed-container'></div>");
+		// creates dot and container elements
+		var outerContainer = $("<div id='loading-circle-fixed-container'></div>");
 		var container = $("<div id='loading-circle-container'></div>");
+
+		// sets the css
 		container.css("animation-delay", (i / 10) + "s");
-		dot.append(container);
+
+		// appends things to other things
+		outerContainer.append(container);
 		container.append($("<div id='loading-circle-dot'></div>"));
-		parent.append(dot);
+		parent.append(outerContainer);
 
 	}
 });

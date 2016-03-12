@@ -185,11 +185,13 @@ var LevelEditor = Class({
 		});
 
 		// sets background buttons
-		$("#lvl-edtr-b-group").html("");
+		var backgroundBtns = $("#lvl-edtr-b-group");
+
+		backgroundBtns.html("");
 
 		for (var i = 1; i < 4; i++){
 
-			var backgroundBtn = $("<a class='btn btn-lg' id='lvl-edtr-b" + i + "'></a>");
+			var backgroundBtn = $("<a class='btn btn-lg lvl-edtr-background-btn' id='lvl-edtr-b" + i + "'></a>");
 
 			var canvas = $("<canvas></canvas>");
 
@@ -211,7 +213,7 @@ var LevelEditor = Class({
 			backgroundBtn.append(canvas);
 			backgroundBtn.append("Background " + backgroundNum);
 
-			$("#lvl-edtr-b-group").append(backgroundBtn);
+			backgroundBtns.append(backgroundBtn);
 
 		}
 	},
