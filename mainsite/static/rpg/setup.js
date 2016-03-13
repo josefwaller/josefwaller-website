@@ -40,6 +40,8 @@ var mouse = {
 	hold: false
 }
 
+var size = 16;
+
 function setup () {
 
 	var loading = $("#loading");
@@ -55,7 +57,7 @@ function setup () {
 	$("#rpgmaker-container").show();
 
 	// Sets up art canvas
-	art = Art({size: 16});
+	art = Art({size: size});
 
 	// sets up music canvas
 	music = Music({});

@@ -348,15 +348,28 @@ var LevelEditor = Class({
 								var x = Math.floor((this.mouseX - (this.w - this.focusedAreaSize) / 2) / this.focusedAreaSize * 5);
 								var y = Math.floor((this.mouseY - (this.h - this.focusedAreaSize) / 2) / this.focusedAreaSize * 5);
 
+								// gets whatever is on the space
+								var formerElement = level[this.focusedArea.x][this.focusedArea.y].elements[x][y];
+
 								if (selectedElement == "eraser"){
-									objects[level[this.focusedArea.x][this.focusedArea.y].elements[x][y]].num--;
 									level[this.focusedArea.x][this.focusedArea.y].elements[x][y] = null;
+
+									// removes the former element
+									if (formerElement !== null){
+										objects[formerElement].num--;
+
+									}
 								}else {
 
 									if (objects[selectedElement].num < objects[selectedElement].maxNum){
 
 										level[this.focusedArea.x][this.focusedArea.y].elements[x][y] = selectedElement;
 										objects[selectedElement].num++;
+
+										if (formerElement !== null){
+											objects[formerElement].num--;
+
+										}
 									}
 								}
 							}
@@ -547,11 +560,13 @@ var LevelEditor = Class({
 					if (pixelX < 5 && pixelX >= 0){
 
 						this.ctx.fillStyle = "#ffffff";
+						this.ctx.globalAlpha = 0.8;
 						this.ctx.fillRect(
 							offX + pixelX * elementSize,
 							offY + pixelY * elementSize,
 							elementSize + 1,
 							elementSize + 1);
+						this.ctx.globalAlpha = 1;
 
 					}
 				}
