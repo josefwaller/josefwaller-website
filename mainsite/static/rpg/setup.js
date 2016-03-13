@@ -42,6 +42,8 @@ var mouse = {
 
 var size = 16;
 
+var playingGame = false;
+
 function setup () {
 
 	var loading = $("#loading");
@@ -81,10 +83,10 @@ function setup () {
 	$("#game-btn").click(showGameScreen);
 
 	// sets up the game screen
-	var game = $("#game");
+	var gameScreen = $("#game");
 	var gameCont = $("#game-cont");
 
-	gameCont.css("margin-top", (game.height() - gameCont.height()) / 2);
+	gameCont.css("margin-top", (gameScreen.height() - gameCont.height()) / 2);
 
 	$("#game-quit-btn").click(hideGameScreen);
 
@@ -163,44 +165,69 @@ function changeScreen(event, i) {
 }
 
 function update() {
-	managers = [
-		levelEditor,
-		art,
-		music,
-		dialog
-	];
+
+	if (playingGame){
+
+		m = game;
+
+	}else {
+
+
+		// gets all the managers
+		managers = [
+			levelEditor,
+			art,
+			music,
+			dialog
+		];
+
+		m = managers[currentScreen];
+	}
 
 	// Resets the pointer
 	$(document.body).css("cursor", "initial");
 
-	managers[currentScreen].update();
+	// updates
+	m.update();
 
+	// runs any mouse-related functions
 	if (mouse.down){
-		managers[currentScreen].onMouseHold();
+		m.onMouseHold();
 	}else {
-		managers[currentScreen].onMouseUp();
+		m.onMouseUp();
 	}
 
 	if (mouse.click){
-		managers[currentScreen].onClick();
+
+		m.onClick();
 
 		mouse.click = false;
+
 	}else if (mouse.middleClick){
-		managers[currentScreen].onMiddleClick();
+
+		m.onMiddleClick();
 
 		this.mouse.middleClick = false;
+
 	}
 
+	// sets to update again
 	window.setTimeout(update, 1000/60);
 }
 
 function showGameScreen(){
 
+	// removes the up anim
 	if (screens.game.hasClass("game-up-anim")){
 		screens.game.removeClass("game-up-anim");
 	}
+	// adds the down animation
 	screens.game.addClass("game-down-anim");
+
+	// shows the game screen
 	screens.game.show();
+
+	playingGame = true;
 
 }
 
@@ -211,6 +238,8 @@ function hideGameScreen(){
 	}
 	screens.game.addClass("game-up-anim");
 	screens.game.show();
+
+	playingGame = false;
 }
 
 // shows the loading screen

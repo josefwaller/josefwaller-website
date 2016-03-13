@@ -504,7 +504,12 @@ var LevelEditor = Class({
 		var backgroundSprite = level[areaX][areaY].background;
 
 		// Draws the background sprite 
-		this.drawSprite(sprites.backgrounds[backgroundSprite], offX, offY, maxSize);
+		drawSprite(
+			this.ctx, 
+			sprites.backgrounds[backgroundSprite],
+			offX, 
+			offY, 
+			maxSize);
 
 		elementSize = maxSize / 5;
 
@@ -516,7 +521,8 @@ var LevelEditor = Class({
 
 					var obj = objects[area[x][y]];
 
-					this.drawSprite(
+					drawSprite(
+						this.ctx,
 						sprites[obj.object][obj.sprite],
 						offX + x * elementSize,
 						offY + y * elementSize,
@@ -570,27 +576,6 @@ var LevelEditor = Class({
 						this.ctx.globalAlpha = 1;
 
 					}
-				}
-			}
-		}
-	},
-	drawSprite: function(sprite, offX, offY, s){
-
-		var pixelSize = s / size;
-
-		for (var x = 0; x < sprite.length; x++){
-
-			for (var y = 0; y < sprite[x].length; y++){
-
-				if (sprite[x][y] !== null){
-
-					this.ctx.fillStyle = colors[sprite[x][y]].hex;
-					this.ctx.fillRect(
-						offX + pixelSize * x, 
-						offY + pixelSize * y, 
-						pixelSize, 
-						pixelSize
-						);
 				}
 			}
 		}
