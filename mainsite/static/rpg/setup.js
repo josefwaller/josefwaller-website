@@ -27,6 +27,8 @@ var art;
 var music;
 var dialog;
 var levelEditor;
+var game;
+
 
 var mouse = {
 	pos : {
@@ -64,6 +66,9 @@ function setup () {
 	// sets up level editor
 	levelEditor = LevelEditor({});
 
+	// sets up the game player
+	game = GamePlayer({});
+
 	// Sets up changing screens
 	$("#level-editor-btn").click({i:0}, changeScreen);
 	$("#art-btn").click({i:1}, changeScreen);
@@ -74,10 +79,12 @@ function setup () {
 	$("#game-btn").click(showGameScreen);
 
 	// sets up the game screen
-	var game = $("#game-canvas");
-	var gameCont = $("#game");
+	var game = $("#game");
+	var gameCont = $("#game-cont");
 
-	game.css("margin-top", (gameCont.height() - game.height()) / 2);
+	gameCont.css("margin-top", (game.height() - gameCont.height()) / 2);
+
+	$("#game-quit-btn").click(hideGameScreen);
 
 
 	// Sets screens
@@ -187,9 +194,21 @@ function update() {
 
 function showGameScreen(){
 
-	// screens.game.className = "game-down-anim";
+	if (screens.game.hasClass("game-up-anim")){
+		screens.game.removeClass("game-up-anim");
+	}
+	screens.game.addClass("game-down-anim");
 	screens.game.show();
 
+}
+
+function hideGameScreen(){
+
+	if (screens.game.hasClass("game-down-anim")){
+		screens.game.removeClass("game-down-anim");
+	}
+	screens.game.addClass("game-up-anim");
+	screens.game.show();
 }
 
 // shows the loading screen

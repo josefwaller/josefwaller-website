@@ -8,14 +8,20 @@
 
 		<!-- scripts -->
 
+		<!-- classes in javascript -->
 		<script src="{% static 'rocket/class.js' %}" type="text/javascript"></script>
+
+		<!-- the set up script -->
 		<script src="{% static 'rpg/setup.js' %}" type="text/javascript"></script>
 
+		<!-- managers for different screens -->
 		<script src="{% static 'rpg/art.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/music.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/dialog.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/levelEditor.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/gamePlayer.js' %}" type="text/javascript"></script>
 
+		<!-- utilities for different screens -->
 		<script src="{% static 'rpg/colorBar.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/spriteCanvas.js' %}" type="text/javascript"></script>
 		<script src="{% static 'rpg/button.js' %}" type="text/javascript"></script>
@@ -155,7 +161,15 @@
 					</div> -->
 				</div>
 				<div class="col-md-10 col-centered" id="game">
-					<canvas id="game-canvas"></canvas>
+					<!-- used for vertical alignment -->
+					<div id="game-cont">
+						<div id="game-canvas-cont">
+							<div class="btn-group btn-group-justified">
+								<a class="btn btn-lg" id="game-quit-btn">Quit</a>
+							</div>
+							<canvas id="game-canvas"></canvas>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

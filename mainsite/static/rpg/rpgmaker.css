@@ -132,16 +132,29 @@ canvas
 /* Game Elements */
 #game
 {
-
-	animation: game-down 1s;
-	animation-fill-mode: forwards;
 	position: absolute;
 	height: 100%;
 }
-
+#game-cont
+{
+	text-align: center;
+	width: 100%;
+}
+#game-canvas-cont
+{
+	width: 500px;
+	display: inline-block;
+}
 #game-canvas
 {
 	background-color: #f00000;
+}
+
+.game-down-anim
+{
+
+	animation: game-down 1s;
+	animation-fill-mode: forwards;
 }
 @keyframes game-down
 {
@@ -153,6 +166,21 @@ canvas
 	}
 }
 
+.game-up-anim
+{
+
+	animation: game-up 1s;
+	animation-fill-mode: forwards;
+}
+@keyframes game-up
+{
+	0% {
+		top: 0%;
+	}
+	100% {
+		top: -100%;
+	}
+}
 
 
 /* the loading screen */
