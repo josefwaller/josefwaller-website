@@ -125,8 +125,107 @@ var Art = Class({
 		this.h = 416;
 
 		this.ct = CTXPro({canvas: $("#art-canvas"), w: this.w, h: this.h});
+
 		// Sets the size
 		this.size = p.size
+
+		// sets up the sprite structure
+		sprites = {
+			player: {
+				runDownOne: [],
+				runDownTwo: [],
+				attackDown: [],
+				runSideOne: [],
+				runSideTwo: [],
+				attackSide: [],
+				runUpOne: [],
+				runUpTwo: [],
+				attackUp: [],
+				dialog: [],
+			},
+			meleeEnemyOne: {
+				runDownOne: [],
+				runDownTwo: [],
+				runSideOne: [],
+				runSideTwo: [],
+				runUpOne: [],
+				runUpTwo: []
+			},
+			meleeEnemyTwo: {
+				runDownOne: [],
+				runDownTwo: [],
+				runSideOne: [],
+				runSideTwo: [],
+				runUpOne: [],
+				runUpTwo: []
+			},
+			rangedEnemyOne: {
+				runDownOne: [],
+				runDownTwo: [],
+				runSideOne: [],
+				runSideTwo: [],
+				runUpOne: [],
+				runUpTwo: []
+			},
+			rangedEnemyTwo: {
+				runDownOne: [],
+				runDownTwo: [],
+				runSideOne: [],
+				runSideTwo: [],
+				runUpOne: [],
+				runUpTwo: []
+			},
+			npcOne: {
+				stand: [],
+				dialog: []
+			},
+			npcTwo: {
+				stand: [],
+				dialog: []
+			},
+			npcThree: {
+				stand: [],
+				dialog: []
+			},
+			meleeWeapon: {
+				onGround: [],
+				useUp: []
+			},
+			rangedWeapon: {
+				onGround: [],
+				useUp: []
+			},
+			invincibleBarrier: {
+				whole: []
+			},
+			breakableBarrier: {
+				whole: [],
+				breaking: [],
+				broken: []
+			},
+			backgrounds: {
+				one: [],
+				two: [],
+				three: []
+			}
+		}
+
+		// Fills the empty arrays for sprites
+		for (s in sprites){
+
+			for (index in sprites[s]){
+
+				while (sprites[s][index].length < this.size){
+
+					var arr = []
+					while (arr.length < this.size){
+						arr.push(null)
+					}
+
+					sprites[s][index].push(arr)
+				}
+			}
+		}
 
 		// Sets offsets and pixelSize
 		// Rounded so the canvas doesn't have to render anti-aliasing and is faster
@@ -266,6 +365,7 @@ var Art = Class({
 
 			if (this.checkForMouseHover(mX, mY)){
 				ctx.fillStyle = btnColors.hover;
+				$(document.body).css("cursor", "pointer");
 			}else {
 				ctx.fillStyle = btnColors.color;
 			}

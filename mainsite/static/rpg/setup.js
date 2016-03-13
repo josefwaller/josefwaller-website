@@ -40,134 +40,53 @@ var mouse = {
 
 function setup () {
 
+	var loading = $("#loading");
+
 	//hides the loading screen
-	$("#loading").addClass("loading-down-anim");
+	loading.addClass("loading-down-anim");
 
 	// removes the loading screen when it is done animating
-	$("#loading").one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
-		$("#loading").html("");
+	loading.one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
+		loading.html("");
 	});
+
 	$("#rpgmaker-container").show();
 
-	sprites = {
-		player: {
-			runDownOne: [],
-			runDownTwo: [],
-			attackDown: [],
-			runSideOne: [],
-			runSideTwo: [],
-			attackSide: [],
-			runUpOne: [],
-			runUpTwo: [],
-			attackUp: [],
-			dialog: [],
-		},
-		meleeEnemyOne: {
-			runDownOne: [],
-			runDownTwo: [],
-			runSideOne: [],
-			runSideTwo: [],
-			runUpOne: [],
-			runUpTwo: []
-		},
-		meleeEnemyTwo: {
-			runDownOne: [],
-			runDownTwo: [],
-			runSideOne: [],
-			runSideTwo: [],
-			runUpOne: [],
-			runUpTwo: []
-		},
-		rangedEnemyOne: {
-			runDownOne: [],
-			runDownTwo: [],
-			runSideOne: [],
-			runSideTwo: [],
-			runUpOne: [],
-			runUpTwo: []
-		},
-		rangedEnemyTwo: {
-			runDownOne: [],
-			runDownTwo: [],
-			runSideOne: [],
-			runSideTwo: [],
-			runUpOne: [],
-			runUpTwo: []
-		},
-		npcOne: {
-			stand: [],
-			dialog: []
-		},
-		npcTwo: {
-			stand: [],
-			dialog: []
-		},
-		npcThree: {
-			stand: [],
-			dialog: []
-		},
-		meleeWeapon: {
-			onGround: [],
-			useUp: []
-		},
-		rangedWeapon: {
-			onGround: [],
-			useUp: []
-		},
-		invincibleBarrier: {
-			whole: []
-		},
-		breakableBarrier: {
-			whole: [],
-			breaking: [],
-			broken: []
-		},
-		backgrounds: {
-			one: [],
-			two: [],
-			three: []
-		}
-	}
-
-	// Fills the empty arrays
-	size = 16
-	for (s in sprites){
-
-		for (index in sprites[s]){
-
-			while (sprites[s][index].length < size){
-
-				var arr = []
-				while (arr.length < size){
-					arr.push(null)
-				}
-
-				sprites[s][index].push(arr)
-			}
-		}
-	}
-
 	// Sets up art canvas
-	art = Art({size: size});
+	art = Art({size: 16});
+
 	// sets up music canvas
 	music = Music({});
+
 	// sets up dialog
 	dialog = Dialog({});
+
 	// sets up level editor
 	levelEditor = LevelEditor({});
 
 	// Sets up changing screens
-	$("#level-editor-btn").click({i:0}, changeScreen)
-	$("#art-btn").click({i:1}, changeScreen)
-	$("#music-btn").click({i:2}, changeScreen)
-	$("#dialog-btn").click({i:3}, changeScreen)
+	$("#level-editor-btn").click({i:0}, changeScreen);
+	$("#art-btn").click({i:1}, changeScreen);
+	$("#music-btn").click({i:2}, changeScreen);
+	$("#dialog-btn").click({i:3}, changeScreen);
+
+	// note that the game button does not call changeScreen
+	$("#game-btn").click(showGameScreen);
+
+	// sets up the game screen
+	var game = $("#game-canvas");
+	var gameCont = $("#game");
+
+	game.css("margin-top", (gameCont.height() - game.height()) / 2);
+
 
 	// Sets screens
 	screens = {
 		levelEditor: $("#level-editor"),
 		art: $("#art"),
 		music: $("#music"),
-		dialog: $("#dialog")
+		dialog: $("#dialog"),
+		game: $("#game")
 	}
 
 	// Sets mouse position when it moves
@@ -205,10 +124,9 @@ function changeScreen(event, i) {
 	}
 
 	// Hides all the screens
-	screens.levelEditor.hide();
-	screens.art.hide();
-	screens.music.hide();
-	screens.dialog.hide();
+	for (var s in screens){
+		screens[s].hide();
+	}
 
 	// Chooses the appropriate screen
 
@@ -265,6 +183,13 @@ function update() {
 	}
 
 	window.setTimeout(update, 1000/60);
+}
+
+function showGameScreen(){
+
+	// screens.game.className = "game-down-anim";
+	screens.game.show();
+
 }
 
 // shows the loading screen

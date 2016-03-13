@@ -129,6 +129,31 @@ canvas
 }
 
 
+/* Game Elements */
+#game
+{
+
+	animation: game-down 1s;
+	animation-fill-mode: forwards;
+	position: absolute;
+	height: 100%;
+}
+
+#game-canvas
+{
+	background-color: #f00000;
+}
+@keyframes game-down
+{
+	0% {
+		top: -100%;
+	}
+	100% {
+		top: 0%;
+	}
+}
+
+
 
 /* the loading screen */
 
