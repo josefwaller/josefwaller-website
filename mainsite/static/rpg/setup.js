@@ -82,6 +82,10 @@ function setup () {
 	// note that the game button does not call changeScreen
 	$("#game-btn").click(showGameScreen);
 
+	//sets up load and save screens
+	$("#save").click(saveGame);
+	$("#load").click(loadGame);
+
 	// sets up the game screen
 	var gameScreen = $("#game");
 	var gameCont = $("#game-cont");
@@ -104,7 +108,7 @@ function setup () {
 	$(document).mousemove(function(event) {
 		mouse.pos.x = event.pageX;
 		mouse.pos.y = event.pageY;
-	})
+	});
 
 	// Sets mouse values in current situation
 	$(document).mousedown(function(event){
@@ -118,10 +122,13 @@ function setup () {
 				mouse.middleClick = true;
 				break;
 		}
-	})
+	});
+
 	$(document).mouseup(function(event){
 		mouse.down = false;
-	})
+	});
+
+	// sets screen to default
 	changeScreen(null, 0);
 	window.setTimeout(update, 1000/60)
 
@@ -228,9 +235,7 @@ function showGameScreen(){
 	screens.game.show();
 
 	playingGame = true;
-
 }
-
 function hideGameScreen(){
 
 	if (screens.game.hasClass("game-down-anim")){
@@ -240,6 +245,84 @@ function hideGameScreen(){
 	screens.game.show();
 
 	playingGame = false;
+}
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+
+}
+function saveGame(){
+
+	console.log("ASDF");
+
+	// gets the save data
+	var toSave = {
+		level: level, 
+		sprites: sprites,
+		colors: colors,
+		notes: musicTracks,
+		musicSettings: ({
+			volumes: volumes,
+			speed: barSpeed
+		}),
+		dialog: dialogs
+	}
+
+	// sends the data to the server
+	$.ajax({
+		beforeSend: function(xhr, settings) {
+			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		},
+		url: "/rpgmaker_save/",
+		type: "POST",
+		data: JSON.stringify(toSave),
+		success: function (res){
+			console.log(res);
+		}
+
+	})
+
+
+	// $.ajax({
+	// 	beforeSend: function(xhr, settings) {
+	// 		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+	// 			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	// 		}
+	// 	},
+	// 	url: "/evolution_save/",
+	// 	type: "POST",
+	// 	contentType: "text/plain",
+	// 	data: JSON.stringify(toSave),
+	// 	success: function (response){
+	// 		if (response == "failure"){
+	// 			alert("Failed to save code. Please contact the admin at josef@josefwaller.com")
+	// 		}else{
+	// 			alert("Your code is " + response)
+	// 		}
+	// 	}
+	// })
+}
+function loadGame(){
+
 }
 
 // shows the loading screen

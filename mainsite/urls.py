@@ -9,5 +9,7 @@ urlpatterns = [
     url(r'^rpgmaker/$', views.RPGMakerView.as_view(), name="rpgmaker"),
 
     url(r'^evolution_save/$', views.save_evolution, name="save evolution"),
-    url(r'^evolution_get/$', views.get_evolution_save, name='get evolution save')
+    url(r'^evolution_get/$', views.get_evolution_save, name='get evolution save'),
+
+    url(r'^rpgmaker_save/$', views.save_rpg_game, name='save rpg game')
 ]
