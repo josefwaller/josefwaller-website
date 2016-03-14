@@ -20,7 +20,7 @@ class SpriteObjectSave (models.Model):
 	# a dictionary of the prites for this object
 	# for example, player would have runDownOne, runDownTwo, etc
 	# and each would be an id pointing towards a SpriteSave object
-	spritesDictionaryJSON = models.CharField(max_length=100)
+	spritesDictionaryJSON = models.CharField(max_length=200)
 
 class SpriteSetSave (models.Model):
 
@@ -35,7 +35,7 @@ class SpriteSetSave (models.Model):
 class MusicSave (models.Model):
 
 	notesJSON = models.CharField(max_length=2000)
-	settingsJSON = models.CharField(max_length=100)
+	settingsJSON = models.CharField(max_length=500)
 
 class DialogSave (models.Model):
 
@@ -47,6 +47,8 @@ class LevelSave (models.Model):
 
 class GameSave (models.Model):
 
+	# the ids of the associated saves
+	# ex music id is the id for the MusicSave Object for this game
 	spritesID = models.IntegerField()
 	musicID = models.IntegerField()
 	dialogID = models.IntegerField()

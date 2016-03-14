@@ -246,31 +246,7 @@ function hideGameScreen(){
 
 	playingGame = false;
 }
-// using jQuery
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-var csrftoken = getCookie('csrftoken');
-function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-
-}
 function saveGame(){
-
-	console.log("ASDF");
 
 	// gets the save data
 	var toSave = {
@@ -278,10 +254,10 @@ function saveGame(){
 		sprites: sprites,
 		colors: colors,
 		notes: musicTracks,
-		musicSettings: ({
+		musicSettings: {
 			volumes: volumes,
 			speed: barSpeed
-		}),
+		},
 		dialog: dialogs
 	}
 
@@ -296,32 +272,81 @@ function saveGame(){
 		type: "POST",
 		data: JSON.stringify(toSave),
 		success: function (res){
-			console.log(res);
+
+			if (res == 'failure'){
+
+				alert("Error: please contact the admin at josef@josefwaller.com")
+			}else {
+				alert("Your code is " + res);
+			}
 		}
 
-	})
-
-
-	// $.ajax({
-	// 	beforeSend: function(xhr, settings) {
-	// 		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-	// 			xhr.setRequestHeader("X-CSRFToken", csrftoken);
-	// 		}
-	// 	},
-	// 	url: "/evolution_save/",
-	// 	type: "POST",
-	// 	contentType: "text/plain",
-	// 	data: JSON.stringify(toSave),
-	// 	success: function (response){
-	// 		if (response == "failure"){
-	// 			alert("Failed to save code. Please contact the admin at josef@josefwaller.com")
-	// 		}else{
-	// 			alert("Your code is " + response)
-	// 		}
-	// 	}
-	// })
+	});
 }
 function loadGame(){
+
+	var data;
+
+	var id = prompt("Please enter an id:");
+
+	$.ajax({
+		beforeSend: function(xhr, settings) {
+			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		},
+		url: "/rpgmaker_get/",
+		type: "POST",
+		data: JSON.stringify(id),
+		success: function (res){
+
+			if (res == 'failure'){
+
+				alert("Error: please contact the admin at josef@josefwaller.com")
+			}else {
+				
+				// now i have to do stuff with this
+				var data = JSON.parse(res);
+
+				console.log(data);
+
+				// checks for each sprite if it is null
+				for (var object in data.sprites){
+					for (var sprite in data.sprites[object]){
+
+						if (data.sprites[object][sprite] === null){
+
+							// creates a null filled sprite
+
+							var empty = [];
+
+							for (var x = 0; x < size; x++){
+								empty.push([]);
+								for (var y = 0; y < size; y++){
+
+									empty[x].push(null);
+
+								}
+							}
+
+						}else {
+
+							sprites[object][sprite] = data.sprites[object][sprite];
+
+						}
+
+					}
+				}
+				colors = data.colors;
+				musicTracks = data.notes;
+				volumes = data.musicSettings.volumes;
+				barSpeed = data.musicSettings.speed;
+				level = data.level;
+				dialogs = data.dialogs;
+
+			}
+		}
+	})
 
 }
 

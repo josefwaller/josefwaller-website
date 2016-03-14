@@ -85,7 +85,7 @@ def get_evolution_save (request):
 	}
 
 	return HttpResponse(json.dumps(return_dict))
-		
+
 def save_evolution (request):
 
 	try:
@@ -143,8 +143,6 @@ def save_rpg_game (request):
 		# Parses the data
 		data = json.loads(json_data)
 
-			
-
 		# Creates a new save for each field
 
 		sprite_set_save_dict = {}
@@ -162,7 +160,7 @@ def save_rpg_game (request):
 
 				if (list_is_empty(data['sprites'][sprite_object_key][sprite_key])):
 
-					this_sprite_dict[sprite_object_key] = None
+					this_sprite_dict[sprite_key] = None
 
 				else:
 
@@ -170,7 +168,7 @@ def save_rpg_game (request):
 					sprite_save.save()
 
 					# records the id for the sprite set object
-					this_sprite_dict[sprite_object_key] = sprite_save.save()
+					this_sprite_dict[sprite_key] = sprite_save.id
 
 			# adds the sprite set
 			# there is one for each object
@@ -225,6 +223,92 @@ def save_rpg_game (request):
 		# returns the id
 		return HttpResponse(gameSave.id)
 
+
+	except:
+
+		exc_type, exc_value, exc_traceback = sys.exc_info()
+		lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
+		print (''.join('!! ' + line for line in lines))  # Log it or whatever here
+
+		error_message = "failure"
+		return HttpResponse(error_message)
+
+def get_rpg_game (request):
+
+	try:
+
+		# gets the GameSave object by id
+		# gets each field by the id in GameObject
+		#---> For art, gets the references for each SpriteObjectSave Object
+		#-------> Then gets the references for each SpriteSave Object
+		#-----------> Then adds that data to return
+		# Returns data
+
+		# Gets the json data
+		json_data = request.body.decode('utf-8')
+
+		# Parses the data
+		data = json.loads(json_data)
+
+		# gets the game object
+		try:
+			game_save = models.GameSave.objects.get(pk=data)
+		except :
+			return HttpResponse(json.dumps({"status": "notexist"}))
+
+		toReturn = {}
+
+		# Gets all easy to get values
+		# I.E. everything but art
+
+		level_save = models.LevelSave.objects.get(pk=game_save.levelID)
+		toReturn['level'] = json.loads(level_save.levelJSON)
+
+		music_save = models.MusicSave.objects.get(pk=game_save.musicID)
+		toReturn['notes'] = json.loads(music_save.notesJSON)
+		toReturn['musicSettings'] = json.loads(music_save.settingsJSON)
+
+		dialog_save = models.DialogSave.objects.get(pk=game_save.dialogID)
+		toReturn['dialog'] = dialog_save.dialogJSON
+
+		# Gets the sprites
+
+		sprite_set_save = models.SpriteSetSave.objects.get(pk=game_save.spritesID)
+
+		# saves the color
+		toReturn['colors'] = json.loads(sprite_set_save.colorsJSON)
+
+		# the sprites as a dictionary
+		sprite_dict = {}
+
+		indexes = json.loads(sprite_set_save.spriteDictionaryJSON)
+
+		# gets each SpriteObjectSave Object
+		for sprite_object_key in indexes:
+
+			sprite_dict[sprite_object_key] = {}
+
+			# gets the save
+			sprite_object_save = models.SpriteObjectSave.objects.get(pk=indexes[sprite_object_key])
+
+			sprite_indexes = json.loads(sprite_object_save.spritesDictionaryJSON)
+
+			for sprite_index_key in sprite_indexes:
+
+				if sprite_indexes[sprite_index_key] == None:
+					sprite_dict[sprite_object_key][sprite_index_key] = None
+
+				else:
+
+					sprite_save = models.SpriteSave.objects.get(pk=sprite_indexes[sprite_index_key])
+
+					# adds it 
+					sprite_dict[sprite_object_key][sprite_index_key] = json.loads(sprite_save.spriteJSON)
+
+
+		toReturn['sprites'] = sprite_dict
+		#returns the data
+		return HttpResponse(json.dumps(toReturn))
 
 	except:
 

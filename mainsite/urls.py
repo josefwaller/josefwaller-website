@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^evolution_save/$', views.save_evolution, name="save evolution"),
     url(r'^evolution_get/$', views.get_evolution_save, name='get evolution save'),
 
-    url(r'^rpgmaker_save/$', views.save_rpg_game, name='save rpg game')
+    url(r'^rpgmaker_save/$', views.save_rpg_game, name='save rpg game'),
+    url(r'^rpgmaker_get/$', views.get_rpg_game, name='get rpg game')
 ]
