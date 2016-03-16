@@ -106,7 +106,7 @@ var AlertBox = new Class({
 
 	draw: function(ctx, mX, mY){
 
-		ctx.fillStyle = this.color;
+		ctx.fillStyle = btnColors.color;
 
 		// checks if it should deactivate
 		if (close){
@@ -117,7 +117,9 @@ var AlertBox = new Class({
 		// draws itself defaults
 		if (this.isActive){
 
-			ctx.fillRoundedRect(
+			ctx.fillStyle = btnColors.color;
+
+			ctx.fillRect(
 				this.x,
 				this.y,
 				this.w,
@@ -147,15 +149,13 @@ var AlertBox = new Class({
 
 			var percentage = (new Date().getTime() - this.activateTime) / this.activateDuration;
 
+			ctx.fillStyle = btnColors.color;
 
-			ctx.fillStyle = this.color;
-
-			ctx.fillRoundedRect(
+			ctx.fillRect(
 				this.x + (this.w - (this.w * percentage)) / 2,
 				this.y + (this.h - (this.h * percentage)) / 2,
 				this.w * percentage,
-				this.h * percentage,
-				this.r * percentage);
+				this.h * percentage);
 
 			if (percentage >= 1){
 				this.isActivating = false;
@@ -172,8 +172,9 @@ var AlertBox = new Class({
 				this.isActive = false;
 			}else {
 
+				ctx.fillStyle = btnColors.color;
 				// draws it shrinking
-				ctx.fillRoundedRect(
+				ctx.fillRect(
 					this.x + (this.w * percentage) / 2,
 					this.y + (this.h * percentage) / 2,
 					this.w - this.w * percentage,

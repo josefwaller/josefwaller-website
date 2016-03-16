@@ -3,20 +3,22 @@ var SpriteCanvas = Class({
 	canvas: null,
 	ctx: null,
 
-	image: 0,
+	object: null,
+	sprite: null,
 
 	// increaes the resolution to avoid blur
 	res_mulitplier: 3,
 
 	init: function(p) {
 
-		this.image = sprites[p.object][p.sprite];
+		this.object = p.object;
+		this.sprite = p.sprite;
 
 		this.canvas = p.canvas;
 		this.ctx = this.canvas[0].getContext("2d");
 
-		this.canvas[0].width = this.image.length * this.res_mulitplier;
-		this.canvas[0].height = this.image.length * this.res_mulitplier;
+		this.canvas[0].width = size * this.res_mulitplier;
+		this.canvas[0].height = size * this.res_mulitplier;
 	},
 
 	draw: function() {
@@ -24,11 +26,13 @@ var SpriteCanvas = Class({
 		ctx = this.ctx;
 		ctx.clearRect(0, 0, this.canvas[0].width, this.canvas[0].height);
 
-		for (x = 0; x < this.image.length; x++){
-			for (y = 0; y < this.image[x].length; y++){
+		var image = sprites[this.object][this.sprite];
 
-				if (this.image[x][y] !== null){
-					ctx.fillStyle = colors[this.image[x][y]].hex;
+		for (x = 0; x < image.length; x++){
+			for (y = 0; y < image[x].length; y++){
+
+				if (image[x][y] !== null){
+					ctx.fillStyle = colors[image[x][y]].hex;
 					ctx.fillRect(
 						x * this.res_mulitplier, 
 						y * this.res_mulitplier, 

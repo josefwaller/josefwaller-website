@@ -437,46 +437,6 @@ var Art = Class({
 			this.compassButtons[i].i = i;
 
 		}
-		// this.compassButtons[0] = new Button({
-		// 		x: this.compassX,
-		// 		y: this.compassY + this.compassSize,
-		// 		w: this.compassSize,
-		// 		h: this.compassSize,
-		// 		text: "",
-		// 		onClick: function(p){
-		// 			shift[0] = 1;
-		// 		}
-		// });
-		// this.compassButtons[1] = new Button({
-		// 		x: this.compassX + this.compassSize,
-		// 		y: this.compassY,
-		// 		w: this.compassSize,
-		// 		h: this.compassSize,
-		// 		text: "",
-		// 		onClick: function(p){
-		// 			shift[1] = -1;
-		// 		}
-		// });
-		// this.compassButtons[2] = new Button({
-		// 		x: this.compassX + 2 * this.compassSize,
-		// 		y: this.compassY + this.compassSize,
-		// 		w: this.compassSize,
-		// 		h: this.compassSize,
-		// 		param: this,
-		// 		onClick: function(p){
-		// 			shift[0] = 1;
-		// 		}
-		// });
-		// this.compassButtons[3] = new Button({
-		// 		x: this.compassX + this.compassSize,
-		// 		y: this.compassY + 2 * this.compassSize,
-		// 		w: this.compassSize,
-		// 		h: this.compassSize,
-		// 		param: this,
-		// 		onClick: function(p){
-		// 			shift[1] = 1;
-		// 		}
-		// });
 
 		// Creates the cancel button when copying
 		text = "Cancel"
@@ -488,46 +448,8 @@ var Art = Class({
 			text:"Choose a sprite to copy below."
 		});
 
-
-		// Sets the button's colors
-		colorButtons = $("#color-btns");
-		colorButtons.html("");
-
-		for (i = 0; i < colors.length; i++){
-
-			// Creates button for the color
-			div = $("<a class='btn btn-lg'></a>");
-			colorButtons.append(div);
-
-			// Selected div to show when selected
-			selectedDiv = $("<div class='selected-div'></div>");
-			div.append(selectedDiv);
-			
-			// Sets the text color so it is visible
-			if (colors[i].bright < 128){
-				div.css("color", "#ffffff");
-			}else {
-				div.css("color", "#000000");
-			}
-
-			// Sets teh background color
-			div.css("background-color", colors[i].hex);
-			div.append(colors[i].hex);
-
-			div.click({colorIndex: i}, function(event){
-
-				art.selectColor(event.data.colorIndex);
-			})
-		}
-
-		// Creates the eraser button
-		eraserDiv = $("<a class='btn btn-lg' id='eraser'>Eraser</a>");
-		eraserDiv.click(function(event) {
-			art.selectColor(8);
-		})
-		eraserDiv.css("background-color", "#66ccff");
-		eraserDiv.css("color", "#ffffff");
-		colorButtons.append(eraserDiv);
+		// create the color buttons
+		this.setColorButtons();
 
 		// Adds the sprite buttons
 		this.changeSpriteButtons();
@@ -1074,6 +996,49 @@ var Art = Class({
 		this.objectCanvases[selectedObject].draw();
 		this.changeSpriteButtons();
 	},
+	setColorButtons: function(){
+
+		// Sets the button's colors
+		colorButtons = $("#color-btns");
+		colorButtons.html("");
+
+		for (i = 0; i < colors.length; i++){
+
+			// Creates button for the color
+			div = $("<a class='btn btn-lg'></a>");
+			colorButtons.append(div);
+
+			// Selected div to show when selected
+			selectedDiv = $("<div class='selected-div'></div>");
+			div.append(selectedDiv);
+			
+			// Sets the text color so it is visible
+			if (colors[i].bright < 128){
+				div.css("color", "#ffffff");
+			}else {
+				div.css("color", "#000000");
+			}
+
+			// Sets teh background color
+			div.css("background-color", colors[i].hex);
+			div.append(colors[i].hex);
+
+			div.click({colorIndex: i}, function(event){
+
+				art.selectColor(event.data.colorIndex);
+			})
+		}
+
+		// Creates the eraser button
+		eraserDiv = $("<a class='btn btn-lg' id='eraser'>Eraser</a>");
+		eraserDiv.click(function(event) {
+			art.selectColor(8);
+		})
+		eraserDiv.css("background-color", "#66ccff");
+		eraserDiv.css("color", "#ffffff");
+		colorButtons.append(eraserDiv);
+
+	},
 	updateSelectedButtons: function() {
 		// Updates the current selected sprite and object button canvases
 		this.objectCanvases[selectedObject].draw();
@@ -1083,6 +1048,7 @@ var Art = Class({
 		// Updates all the button canvases
 		// When a color is changed, something that affects all sprites
 		for (i in this.objectCanvases){
+			
 			this.objectCanvases[i].draw();
 		}
 		for (i in this.spriteCanvases){

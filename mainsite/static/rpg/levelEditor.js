@@ -486,6 +486,7 @@ var LevelEditor = Class({
 						this.areaSize * this.zoomMulti - 2 * this.gridBorder);
 				}else {
 					this.ctx.fillStyle = btnColors.color;
+
 					this.ctx.fillRect(
 					this.offsetX + x * this.areaSize * this.zoomMulti + this.scaleMulti.x + this.gridBorder / 2,
 					this.offsetY + y * this.areaSize * this.zoomMulti + this.scaleMulti.y + this.gridBorder / 2,

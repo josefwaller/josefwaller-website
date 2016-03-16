@@ -132,6 +132,8 @@ function setup () {
 	changeScreen(null, 0);
 	window.setTimeout(update, 1000/60)
 
+	loadGame();
+
 }
 
 function changeScreen(event, i) {
@@ -235,6 +237,8 @@ function showGameScreen(){
 	screens.game.show();
 
 	playingGame = true;
+
+	game.createGame();
 }
 function hideGameScreen(){
 
@@ -287,7 +291,7 @@ function loadGame(){
 
 	var data;
 
-	var id = prompt("Please enter an id:");
+	var id = 30;//prompt("Please enter an id:");
 
 	$.ajax({
 		beforeSend: function(xhr, settings) {
@@ -307,8 +311,6 @@ function loadGame(){
 				
 				// now i have to do stuff with this
 				var data = JSON.parse(res);
-
-				console.log(data);
 
 				// checks for each sprite if it is null
 				for (var object in data.sprites){
@@ -337,12 +339,21 @@ function loadGame(){
 
 					}
 				}
+
+				// does everything else
 				colors = data.colors;
+				art.setColorButtons();
+
+				// updates the sprite canvases
+				// keep after adding color
+				art.updateAllButtons();
+
 				musicTracks = data.notes;
 				volumes = data.musicSettings.volumes;
 				barSpeed = data.musicSettings.speed;
 				level = data.level;
 				dialogs = data.dialogs;
+
 
 			}
 		}
