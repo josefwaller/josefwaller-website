@@ -111,6 +111,8 @@ var Music = Class({
 			})
 		}
 
+		console.log("ASDF")
+
 		// Top layer of settings
 		var paddingWidth = 15;
 		var y = 270;

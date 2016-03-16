@@ -970,6 +970,9 @@ var Art = Class({
 			selectedSprite = spriteIndex;
 			this.spriteButtonManager.selectButton(Object.keys(sprites[selectedObject]).indexOf(spriteIndex));
 
+			// Changes the animation preview
+			this.changeAnimation()
+
 		}
 	},
 	changeSelectedObject: function(objIndex) { 
@@ -983,6 +986,15 @@ var Art = Class({
 		// Sets the selected sprite
 		selectedSprite = Object.keys(sprites[selectedObject])[0];
 
+		this.changeAnimation();
+		this.updateSpriteAnimations();
+
+		this.objectCanvases[selectedObject].draw();
+		this.changeSpriteButtons();
+	},
+	changeAnimation: function(){
+
+
 		// Changes the animation display sprites
 
 		for (var i = 0; i < animations.length; i++){
@@ -991,10 +1003,6 @@ var Art = Class({
 				break;
 			}
 		}
-		this.updateSpriteAnimations();
-
-		this.objectCanvases[selectedObject].draw();
-		this.changeSpriteButtons();
 	},
 	setColorButtons: function(){
 

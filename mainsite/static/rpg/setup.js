@@ -3,6 +3,9 @@ var background;
 
 var screens;
 
+// The ID of the current game, so that when saving it will overwrite
+var currentGameID = null;
+
 var btnColors = {
 	color: "#3399ff",
 	text:"#ffffff",
@@ -132,7 +135,7 @@ function setup () {
 	changeScreen(null, 0);
 	window.setTimeout(update, 1000/60)
 
-	loadGame();
+	// loadGame();
 
 }
 
@@ -265,12 +268,20 @@ function saveGame(){
 		dialog: dialogs
 	}
 
+	// Checks if it is a loaded game
+	if (currentGameID !== null){
+
+		toSave.id = currentGameID;
+
+	}
+
 	// sends the data to the server
 	$.ajax({
 		beforeSend: function(xhr, settings) {
 			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			}
+			console.log(toSave.dialog)
 		},
 		url: "/rpgmaker_save/",
 		type: "POST",
@@ -281,7 +292,13 @@ function saveGame(){
 
 				alert("Error: please contact the admin at josef@josefwaller.com")
 			}else {
-				alert("Your code is " + res);
+
+				if (currentGameID === null){
+					alert("Your code is " + res);
+					currentGameID = res;
+				}else {
+					alert ("Successfully Saved");
+				}
 			}
 		}
 
@@ -352,9 +369,10 @@ function loadGame(){
 				volumes = data.musicSettings.volumes;
 				barSpeed = data.musicSettings.speed;
 				level = data.level;
-				dialogs = data.dialogs;
+				dialogs = data.dialog;
 
-
+				// saves the current game
+				currentGameID = id;
 			}
 		}
 	})
