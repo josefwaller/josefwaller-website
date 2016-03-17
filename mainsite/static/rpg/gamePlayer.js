@@ -21,6 +21,15 @@ var GamePlayer = Class({
 
 	enemies: [],
 
+	isScrolling: false,
+	scrollDirection: null,
+	scrollTime: null,
+	scrollDuration: 1000,
+	scrollDirection: {
+		x: 0,
+		y: 0
+	},
+
 	init: function(p){
 
 		this.canvas = $("#game-canvas");
@@ -74,19 +83,148 @@ var GamePlayer = Class({
 		// draws the area the player is in
 		var area = level[this.activeArea.x][this.activeArea.y];
 
+		if (this.isScrolling){
+
+			var percentage = (new Date().getTime() - this.scrollTime) / this.scrollDuration;
+
+			// checks if it is done scrolling
+			if (percentage > 1){
+
+				this.activeArea.x += this.scrollDirection.x;
+				this.activeArea.y += this.scrollDirection.y;
+				this.isScrolling = false;
+
+				switch(this.scrollDirection.x){
+
+					case -1:
+						this.player.x = (this.s - this.player.s) - 1;
+						break;
+
+					case 1:
+						this.player.x = 1;
+						break;
+
+					case 0:
+
+						switch (this.scrollDirection.y){
+
+							case -1:
+								this.player.y = this.s - this.player.s - 1;
+								break;
+
+							case 1:
+								this.player.y = 1;
+								break;
+						}
+
+				}
+
+			}else {
+
+				var xMovement = this.s * percentage * this.scrollDirection.x;
+				var yMovement = this.s * percentage * this.scrollDirection.y;
+
+				// draws the old area
+				this.drawArea(
+					-xMovement,
+					-yMovement,
+					this.activeArea.x,
+					this.activeArea.y)
+
+				// draw the new area
+				this.drawArea(
+					(this.scrollDirection.x * this.s) - xMovement,
+					(this.scrollDirection.y * this.s) - yMovement,
+					this.activeArea.x + this.scrollDirection.x,
+					this.activeArea.y + this.scrollDirection.y);
+			}
+
+		}
+		if (!this.isScrolling){
+
+			this.drawArea(
+				0,
+				0,
+				this.activeArea.x,
+				this.activeArea.y);	
+
+
+			if (this.player !== null){
+				// runs the player functions
+				this.player.onKey(keysPressed, 1);
+				this.player.update();
+				this.player.draw(this.ctx);
+
+				// checks if it should scroll
+
+				if (this.player.x > this.s - this.player.s || this.player.x < 0){
+					
+					this.scroll(this.player.x / Math.abs(this.player.x), 0);
+
+				}else if (this.player.y > this.s - this.player.s || this.player.y < 0){
+
+					this.scroll(0, this.player.y / Math.abs(this.player.y));
+				}
+			}
+		}
+
+	},
+
+	scroll: function(addX, addY){
+
+		// checks if the area exists
+		var maxPlayer = this.s - this.player.s - 1;
+		var minPlayer = 1;
+		switch(true){
+
+			case (this.activeArea.x + addX >= level.length):
+				this.player.x = maxPlayer;
+				return;
+
+			case (this.activeArea.x + addX < 0):
+				this.player.x = minPlayer;
+				return;
+
+			case (this.activeArea.y + addY >= level.length):
+				this.player.y = maxPlayer
+				return;
+
+			case (this.activeArea.y + addY < 0):
+				this.plauer.y = minPlayer;
+				return;
+
+		}
+
+		// sets up to scroll
+		this.isScrolling = true;
+			
+		this.scrollDirection.x = addX;
+		this.scrollDirection.y = addY;
+
+		this.scrollTime = new Date().getTime();
+	},
+
+	drawArea:function(x, y, areaX, areaY){
+
+		area = level[areaX][areaY];
+
 		drawSprite(
 			this.ctx,
 			sprites.backgrounds[area.background],
-			0,
-			0,
+			x,
+			y,
 			this.s);
 
-		if (this.player !== null){
-			// runs the player functions
-			this.player.onKey(keysPressed, 1);
-			this.player.update();
-			this.player.draw(this.ctx);
-		}
+		// draws a semi transparent black layer to darken background
+		// so that the sprites show up more
+		this.ctx.globalAlpha = 0.1;
+		this.ctx.fillStyle = "#000000";
+		this.ctx.fillRect(
+			x,
+			y,
+			this.s,
+			this.s);
+		this.ctx.globalAlpha = 1;
 
 	},
 
