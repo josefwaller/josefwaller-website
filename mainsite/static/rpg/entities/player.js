@@ -48,6 +48,8 @@ var Player = Class({
 		// takes an array of keys
 		for (var i = 0; i < keys.length; i++){
 
+			this.mirror = false;
+
 			// checks if it is mooving
 			var movingKeys = [
 				"ArrowLeft",
@@ -83,6 +85,7 @@ var Player = Class({
 				case "ArrowRight":
 					this.currentAnimation = "runSide";
 					this.x += this.speed * delta;
+					this.mirror = true;
 					break;
 
 			}
@@ -110,7 +113,12 @@ var Player = Class({
 		var spriteSet = sprites.player;
 		var spriteName = this.animations[this.currentAnimation][this.currentSpriteIndex];
 
-		var sprite = spriteSet[spriteName];
+		var sprite = spriteSet[spriteName].slice();
+		if (this.mirror){
+
+			sprite.reverse();
+
+		}
 
 		drawSprite(ctx, sprite, this.x, this.y, this.s);
 
