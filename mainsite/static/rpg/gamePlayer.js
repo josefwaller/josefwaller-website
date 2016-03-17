@@ -1,5 +1,8 @@
 var keysPressed = [];
 
+// delta time
+var delta;
+
 var GamePlayer = Class({
 
 	canvas: null,
@@ -13,6 +16,8 @@ var GamePlayer = Class({
 	s: 100,
 
 	player: null,
+
+	lastTime: 0,
 
 	enemies: [],
 
@@ -34,12 +39,19 @@ var GamePlayer = Class({
 				// adds the key
 				keysPressed.push(event.key);
 			}
+
+			// checks if the keys would scroll the window
+		    if([32, 37, 38, 39, 40].indexOf(event.keyCode) !== -1) {
+		        event.preventDefault();
+		    }
+
 		});
 
 		$(document.body).keyup(function(event){
 
+			var index = keysPressed.indexOf(event.key);
 			// checks that the key is in the array
-			if (keysPressed.indexOf(event.key) !== -1){
+			if (index !== -1){
 
 				// removes the key
 				keysPressed.splice(index, 1);
@@ -55,6 +67,10 @@ var GamePlayer = Class({
 
 	update: function(){
 		
+		var d = new Date().getTime();
+		delta = (d - this.lastTime) / 1000;
+		this.lastTime = d;
+
 		// draws the area the player is in
 		var area = level[this.activeArea.x][this.activeArea.y];
 
@@ -72,10 +88,6 @@ var GamePlayer = Class({
 			this.player.draw(this.ctx);
 		}
 
-	},
-
-	onKeyPress: function(event){
-		console.log("ASDF");
 	},
 
 	onClick:function(){},

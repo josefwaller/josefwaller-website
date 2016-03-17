@@ -49,9 +49,10 @@ var playingGame = false;
 
 function setup () {
 
-	var loading = $("#loading");
 
 	//hides the loading screen
+
+	var loading = $("#loading");
 	loading.addClass("loading-down-anim");
 
 	// removes the loading screen when it is done animating
@@ -60,7 +61,6 @@ function setup () {
 	});
 
 	$("#rpgmaker-container").show();
-
 	// Sets up art canvas
 	art = Art({size: size});
 
@@ -135,9 +135,10 @@ function setup () {
 	changeScreen(null, 0);
 	window.setTimeout(update, 1000/60)
 
-	// loadGame();
+	loadGame();
 
 }
+
 
 function changeScreen(event, i) {
 

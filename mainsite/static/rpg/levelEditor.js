@@ -506,7 +506,7 @@ var LevelEditor = Class({
 
 		// Draws the background sprite 
 		drawSprite(
-			this.ctx, 
+			this.ctx,
 			sprites.backgrounds[backgroundSprite],
 			offX, 
 			offY, 

@@ -971,7 +971,7 @@ var Art = Class({
 			this.spriteButtonManager.selectButton(Object.keys(sprites[selectedObject]).indexOf(spriteIndex));
 
 			// Changes the animation preview
-			this.changeAnimation()
+			this.changeAnimation();
 
 		}
 	},
