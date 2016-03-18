@@ -17,6 +17,8 @@ var GamePlayer = Class({
 
 	player: null,
 
+	items: [],
+
 	lastTime: 0,
 
 	enemies: [],
@@ -76,6 +78,7 @@ var GamePlayer = Class({
 
 	update: function(){
 		
+		// gets delta time
 		var d = new Date().getTime();
 		delta = (d - this.lastTime) / 1000;
 		this.lastTime = d;
@@ -155,22 +158,32 @@ var GamePlayer = Class({
 				this.player.update();
 				this.player.draw(this.ctx);
 
+				var playerPos = this.player.getPos();
+
 				// checks if it should scroll
 
-				if (this.player.x > this.s - this.player.s || this.player.x < 0){
+				if (playerPos.x > this.s - this.player.getSize() || playerPos.x < 0){
 					
-					this.scroll(this.player.x / Math.abs(this.player.x), 0);
+					this.scroll(playerPos.x / Math.abs(playerPos.x), 0);
 
-				}else if (this.player.y > this.s - this.player.s || this.player.y < 0){
-
-					this.scroll(0, this.player.y / Math.abs(this.player.y));
 				}
+				if (playerPos.y > this.s - this.player.getSize() || playerPos.y < 0){
+
+					this.scroll(0, playerPos.y / Math.abs(playerPos.y));
+				}
+			}
+
+			for (var i = 0; i < this.items.length; i++){
+				this.items[i].update();
+				this.items[i].draw(this.ctx);
 			}
 		}
 
 	},
 
 	scroll: function(addX, addY){
+
+		console.log("ASDF");
 
 		// checks if the area exists
 		var canMoveToArea = false;
@@ -179,6 +192,7 @@ var GamePlayer = Class({
 		var destX = this.activeArea.x + addX;
 		var destY = this.activeArea.y + addY;
 
+		// checks that the area exists
 		if (destX >= 0 && destX < level.length){
 			 if (destY >= 0 && destY < level.length){
 			 	if (level[destX][destY] !== null){
@@ -201,6 +215,7 @@ var GamePlayer = Class({
 		}else {
 
 			//moves player back to boundaries
+
 			// the max x and y the player can go
 			var max = this.s - this.player.s;
 
@@ -208,17 +223,13 @@ var GamePlayer = Class({
 
 				// rounds the player's x coord
 
-				this.player.x = Math.abs(Math.round(this.player.x / max) * max);
+				this.player.setPos(Math.abs(Math.round(this.player.x / max) * max), null);
 
-				// checks if it needs to move the player over
-				if (this.player.x >= this.s){
-					this.player.x -= this.player.s;
-				}
-
-			}else if (addY !== 0){
+			}
+			if (addY !== 0){
 
 				// does the same as above only with Y
-				this.player.y = Math.abs(Math.round(this.player.y / max) * max);
+				this.player.setPos(null, Math.abs(Math.round(this.player.getPos().y / max) * max));
 			}
 
 		}
@@ -290,6 +301,30 @@ var GamePlayer = Class({
 
 										break;
 
+									case "meleeWeapon" || "rangedWeapon":
+
+										var type;
+
+										if (objects[l[x][y]].name === "meleeWeapon"){
+
+											type = "melee";
+										}else {
+
+											type = "ranged";
+										}
+
+										// gets self for reference
+										var self = this;
+
+										this.items.push(new Item({
+											x: blockSize * x,
+											y: blockSize * y,
+											s: blockSize,
+											type: type,
+											parent: self
+										}));
+
+										break;
 
 									default:
 										console.log(objects[l[x][y]].name)

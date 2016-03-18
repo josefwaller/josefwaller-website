@@ -11,6 +11,8 @@ var animations = [
 	["runSideOne", "runSideTwo"],
 	["runUpOne", "runUpTwo"],
 	["runDownOne", "runDownTwo"],
+	["attackSide", "runSideOne"],
+	["attackUp", "runUpOne"],
 	["attackDown", "runDownOne"],
 	["stand"],
 	["dialog"],
@@ -19,6 +21,10 @@ var animations = [
 	["one"],
 	["two"],
 	["three"],
+
+	// items
+	["onGround"],
+	["useUp"]
 ];
 
 var hoverSprites =	{
@@ -28,6 +34,12 @@ var hoverSprites =	{
 		attackDown: {
 			object: "enemyOne",
 			sprite: "runDownOne"
+		}
+	},
+	meleeWeapon: {
+		useUp: {
+			object: "player",
+			sprite: "attackUp"
 		}
 	}
 
@@ -680,27 +692,6 @@ var Art = Class({
 		ct.fillStyle = this.backgroundColor;
 		ct.fillRect(0, 0, this.splitX, this.h);
 
-		// // Draws grid
-		for (i = 0; i <= this.size; i++){
-
-			ct.fillStyle = "#000000";
-
-			// Draws x line
-			ct.fillRect(
-				this.offsetX + this.pixelSize * i, 
-				this.offsetY, 
-				1, 
-				this.size * this.pixelSize);
-
-			// Draws y line
-			ct.fillRect(
-				this.offsetX, 
-				this.offsetY + this.pixelSize * i, 
-				this.size * this.pixelSize, 
-				1);
-
-		}
-
 		if (selectedObject in hoverSprites){
 			if (selectedSprite in hoverSprites[selectedObject]){
 				// Draws underlaying Sprite
@@ -755,6 +746,30 @@ var Art = Class({
 
 			}
 		}
+
+		// // Draws grid
+
+		ct.fillStyle = "#000000";
+		ct.globalAlpha = 0.7;
+
+		for (i = 0; i <= this.size; i++){
+
+			// Draws x line
+			ct.fillRect(
+				this.offsetX + this.pixelSize * i, 
+				this.offsetY, 
+				1, 
+				this.size * this.pixelSize);
+
+			// Draws y line
+			ct.fillRect(
+				this.offsetX, 
+				this.offsetY + this.pixelSize * i, 
+				this.size * this.pixelSize, 
+				1);
+		}
+
+		ct.globalAlpha = 1;
 
 		// // Checks if the mouse is on the grid
 		if (!this.isCopying){

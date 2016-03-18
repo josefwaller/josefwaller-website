@@ -363,6 +363,8 @@ def get_rpg_game (request):
 
 				else:
 
+					print("Save found for %s: %s" % (sprite_object_key, sprite_index_key))
+
 					sprite_save = models.SpriteSave.objects.get(pk=sprite_indexes[sprite_index_key])
 
 					# adds it 

@@ -19,6 +19,11 @@ var Player = Class({
 		]
 	},
 
+	hasTool: {
+		ranged: false,
+		melee: false
+	},
+
 	currentSpriteIndex: 0,
 
 	currentAnimation: "runDown",
@@ -122,5 +127,26 @@ var Player = Class({
 
 		drawSprite(ctx, sprite, this.x, this.y, this.s);
 
+	},
+
+	// Get and Set functions
+	getPos: function(){
+		return {
+			x: this.x, 
+			y: this.y
+		};
+	},
+
+	setPos: function(x, y){
+		if (x !== null){
+			this.x = x;
+		}
+		if (y !== null){
+			this.y = y;
+		}
+	},
+
+	getSize: function(){
+		return this.s;
 	}
 })
