@@ -24,7 +24,7 @@ var GamePlayer = Class({
 	isScrolling: false,
 	scrollDirection: null,
 	scrollTime: null,
-	scrollDuration: 1000,
+	scrollDuration: 500,
 	scrollDirection: {
 		x: 0,
 		y: 0
@@ -173,35 +173,55 @@ var GamePlayer = Class({
 	scroll: function(addX, addY){
 
 		// checks if the area exists
-		var maxPlayer = this.s - this.player.s - 1;
-		var minPlayer = 1;
-		switch(true){
+		var canMoveToArea = false;
 
-			case (this.activeArea.x + addX >= level.length):
-				this.player.x = maxPlayer;
-				return;
+		// the destination indexes
+		var destX = this.activeArea.x + addX;
+		var destY = this.activeArea.y + addY;
 
-			case (this.activeArea.x + addX < 0):
-				this.player.x = minPlayer;
-				return;
+		if (destX >= 0 && destX < level.length){
+			 if (destY >= 0 && destY < level.length){
+			 	if (level[destX][destY] !== null){
 
-			case (this.activeArea.y + addY >= level.length):
-				this.player.y = maxPlayer
-				return;
-
-			case (this.activeArea.y + addY < 0):
-				this.plauer.y = minPlayer;
-				return;
-
+					canMoveToArea = true;
+				}
+			}
 		}
 
-		// sets up to scroll
-		this.isScrolling = true;
-			
-		this.scrollDirection.x = addX;
-		this.scrollDirection.y = addY;
+		if (canMoveToArea){
 
-		this.scrollTime = new Date().getTime();
+			// sets up to scroll
+			this.isScrolling = true;
+				
+			this.scrollDirection.x = addX;
+			this.scrollDirection.y = addY;
+
+			this.scrollTime = new Date().getTime();
+
+		}else {
+
+			//moves player back to boundaries
+			// the max x and y the player can go
+			var max = this.s - this.player.s;
+
+			if (addX !== 0){
+
+				// rounds the player's x coord
+
+				this.player.x = Math.abs(Math.round(this.player.x / max) * max);
+
+				// checks if it needs to move the player over
+				if (this.player.x >= this.s){
+					this.player.x -= this.player.s;
+				}
+
+			}else if (addY !== 0){
+
+				// does the same as above only with Y
+				this.player.y = Math.abs(Math.round(this.player.y / max) * max);
+			}
+
+		}
 	},
 
 	drawArea:function(x, y, areaX, areaY){
@@ -263,7 +283,10 @@ var GamePlayer = Class({
 											x: blockSize * x,
 											y: blockSize * y,
 											s: blockSize
-										})
+										});
+
+										this.activeArea.x = lX;
+										this.activeArea.y = lY;
 
 										break;
 
