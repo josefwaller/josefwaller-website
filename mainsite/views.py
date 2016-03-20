@@ -118,8 +118,9 @@ def save_rpg_game (request):
 
 			# Gets the components from ID
 			level_save = models.LevelSave.objects.get(pk=ids['level'])
-			music_save = models.LevelSave.objects.get(pk=ids['music'])
-			dialog_save = models.LevelSave.objects.get(pk=ids['dialog'])
+			music_save = models.MusicSave.objects.get(pk=ids['music'])
+			dialog_save = models.DialogSave.objects.get(pk=ids['dialog'])
+			sprite_set_save = models.SpriteSetSave.objects.get(pk=ids['sprite_set'])
 
 			# saves over the components
 			level_save.levelJSON = json.dumps(data['level'])
@@ -129,10 +130,13 @@ def save_rpg_game (request):
 
 			dialog_save.dialogJSON = json.dumps(data['dialog'])
 
+			sprite_set_save.colorsJSON = json.dumps(data['colors'])
+
 			# saves them
 			level_save.save()
 			music_save.save()
 			dialog_save.save()
+			sprite_set_save.save()
 
 			# saves over the sprites
 			for sprite_object_key in ids['sprites']:
@@ -363,8 +367,6 @@ def get_rpg_game (request):
 
 				else:
 
-					print("Save found for %s: %s" % (sprite_object_key, sprite_index_key))
-
 					sprite_save = models.SpriteSave.objects.get(pk=sprite_indexes[sprite_index_key])
 
 					# adds it 
@@ -432,6 +434,7 @@ def get_game_component_ids(game_id):
 		"level": level_save.id,
 		"music": music_save.id,
 		"dialog": dialog_save.id,
+		"sprite_set": sprite_set_save.id,
 		"sprite_objects": indexes,
 		"sprites": returnIndexes
 	}

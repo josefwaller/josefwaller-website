@@ -193,7 +193,9 @@ var Art = Class({
 			},
 			rangedWeapon: {
 				onGround: [],
-				useUp: []
+				useUp: [],
+				useSide: [],
+				useDown: []
 			},
 			invincibleBarrier: {
 				whole: []
@@ -248,6 +250,9 @@ var Art = Class({
 			}
 		}
 
+		// copies the hoverSprite for rangedWeapon from meleeWeapon
+		this.hoverSprites.rangedWeapon = this.hoverSprites.meleeWeapon
+		
 		// Sets offsets and pixelSize
 		// Rounded so the canvas doesn't have to render anti-aliasing and is faster
 		this.offsetX = Math.round(this.w * (1/10));
