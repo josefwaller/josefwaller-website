@@ -304,7 +304,9 @@ var GamePlayer = Class({
 
 										break;
 
-									case "meleeWeapon" || "rangedWeapon":
+									// fall through for both weapons
+									case "meleeWeapon":
+									case "rangedWeapon":
 
 										var type;
 

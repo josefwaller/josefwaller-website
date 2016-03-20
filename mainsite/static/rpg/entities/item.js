@@ -1,7 +1,7 @@
 // both melee and ranged
 // will just change the player's status when hit
 
-var Item = Class({
+var Item = new Class({
 
 	x: 0,
 	y: 0,
@@ -19,8 +19,9 @@ var Item = Class({
 		this.x = p.x;
 		this.y = p.y;
 		this.s = p.s;
-		this.area.x = p.area.x;
-		this.area.y = p.area.y;
+
+		// copies the area to not get a reference, which would change with each item
+		this.area = JSON.parse(JSON.stringify(p.area));
 
 		// Either 'melee' or 'ranged'
 		this.type = p.type;
