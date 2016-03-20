@@ -27,23 +27,6 @@ var animations = [
 	["useUp"]
 ];
 
-var hoverSprites =	{
-
-	player: {},
-	enemyOne: {
-		attackDown: {
-			object: "enemyOne",
-			sprite: "runDownOne"
-		}
-	},
-	meleeWeapon: {
-		useUp: {
-			object: "player",
-			sprite: "attackUp"
-		}
-	}
-
-}
 
 // used for buttons to tell classes to shift the drawing
 var shift = [0, 0];
@@ -123,6 +106,9 @@ var Art = Class({
 
 	ct: null,
 
+	// the sprite to display under another sprite
+	hoverSprites: null,
+
 	// The x coordinate between the area rendered by the canvas area and the bars and buttons
 	// Future Josef, this is important, it divides the screen to minimize required rendering
 	splitX: null,
@@ -201,7 +187,9 @@ var Art = Class({
 			},
 			meleeWeapon: {
 				onGround: [],
-				useUp: []
+				useUp: [],
+				useSide: [],
+				useDown: []
 			},
 			rangedWeapon: {
 				onGround: [],
@@ -235,6 +223,27 @@ var Art = Class({
 					}
 
 					sprites[s][index].push(arr)
+				}
+			}
+		}
+
+		this.hoverSprites = {
+
+			meleeWeapon: {
+				useUp: {
+					object: "player",
+					sprite: "attackUp",
+					shift: [0, size * 3/4]
+				},
+				useSide: {
+					object: "player",
+					sprite: "attackSide",
+					shift: [size * 3/4, 0]
+				},
+				useDown: {
+					object: "player",
+					sprite: "attackDown",
+					shift: [0, -size * 3/4]
 				}
 			}
 		}
@@ -530,8 +539,16 @@ var Art = Class({
 		if (!this.isCopying){
 
 			if (shift[0] !== 0 || shift[1] !== 0){
-				this.shiftSprite(shift[0], shift[1]);
+				// shifts the selected sprite
+				var s = sprites[selectedObject][selectedSprite];
+				sprites[selectedObject][selectedSprite] = this.getShiftedSprite(s, shift[0], shift[1]);
 				shift = [0, 0];
+
+				// draws the new sprite on the canvas
+				this.drawCanvasArea();
+
+				// redraws the buttons
+				this.updateSelectedButtons();
 			}
 
 			// checks what it should draw
@@ -692,13 +709,13 @@ var Art = Class({
 		ct.fillStyle = this.backgroundColor;
 		ct.fillRect(0, 0, this.splitX, this.h);
 
-		if (selectedObject in hoverSprites){
-			if (selectedSprite in hoverSprites[selectedObject]){
+		if (selectedObject in this.hoverSprites){
+			if (selectedSprite in this.hoverSprites[selectedObject]){
 				// Draws underlaying Sprite
 				ct.globalAlpha = 0.5;
-				s = hoverSprites[selectedObject][selectedSprite];
+				s = this.hoverSprites[selectedObject][selectedSprite];
 
-				sprite = sprites[s.object][s.sprite];
+				sprite = this.getShiftedSprite(sprites[s.object][s.sprite], s.shift[0], s.shift[1]);
 
 				for (var x = 0; x < this.size; x++){
 					for (var y = 0; y < this.size; y++){
@@ -849,23 +866,9 @@ var Art = Class({
 		}
 
 		// draws compass
-		// note that is does not call the draw() on the button object
-		// rather it draws a rotated rectangle, and then a normal whit3e on on top
 		var x = this.compassX;
 		var y = this.compassY;
 		var s = this.compassSize;
-
-		// // draws larger, outer, rotated rect
-
-		// ct.fillStyle = btnColors.color;
-
-		// ct.beginPath();
-		// ct.moveTo(x, y + (s / 2));
-
-		// ct.lineTo(x + (s / 2), y);
-		// ct.lineTo(x + s, y + (s / 2));
-		// ct.lineTo(x + (s / 2), y + s);
-		// ct.fill();
 
 		for (var i = 0; i < this.compassButtons.length; i++){
 			this.compassButtons[i].draw(this.ct, this.mouseX, this.mouseY);
@@ -1115,7 +1118,7 @@ var Art = Class({
 		// Updates the buttons
 		this.updateSelectedButtons();
 	},
-	shiftSprite: function(x, y){
+	getShiftedSprite: function(sprite, x, y){
 
 		// shifts the selected sprite by one pixel
 
@@ -1123,7 +1126,7 @@ var Art = Class({
 		var newSprite = [];
 
 		// reference of the current sprite
-		var s = sprites[selectedObject][selectedSprite];
+		var s = sprite;
 
 		// checks if it needs to shift5 along the x coord
 		if (x !== 0){
@@ -1186,13 +1189,7 @@ var Art = Class({
 		}
 
 		// sets sprites to new sprite
-		sprites[selectedObject][selectedSprite] = newSprite;
-
-		// draws the new sprite on the canvas
-		this.drawCanvasArea();
-
-		// redrawsx the buttons
-		this.updateSelectedButtons();
+		return newSprite;
 	}
 })
 

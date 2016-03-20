@@ -57,6 +57,7 @@ var Item = Class({
 
 		this.isUsed = true;
 		this.parent.player.hasTool[this.type] = true;
+		this.parent.player.selectedTool = this.type;
 
 	},
 
