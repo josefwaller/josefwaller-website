@@ -6,6 +6,7 @@ var Item = Class({
 	x: 0,
 	y: 0,
 	s: 0,
+	area: {},
 
 	type: 0,
 
@@ -18,6 +19,8 @@ var Item = Class({
 		this.x = p.x;
 		this.y = p.y;
 		this.s = p.s;
+		this.area.x = p.area.x;
+		this.area.y = p.area.y;
 
 		// Either 'melee' or 'ranged'
 		this.type = p.type;
@@ -75,6 +78,11 @@ var Item = Class({
 				this.s);
 		}
 
+	},
+
+	// get set functions
+	getArea: function(){
+		return this.area;
 	}
 
 });

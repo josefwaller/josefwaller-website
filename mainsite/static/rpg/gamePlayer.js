@@ -174,16 +174,19 @@ var GamePlayer = Class({
 			}
 
 			for (var i = 0; i < this.items.length; i++){
-				this.items[i].update();
-				this.items[i].draw(this.ctx);
+				var itemArea = this.items[i].getArea();
+
+				if (itemArea.x === this.activeArea.x && itemArea.y === this.activeArea.y){
+
+					this.items[i].update();
+					this.items[i].draw(this.ctx);
+				}
 			}
 		}
 
 	},
 
 	scroll: function(addX, addY){
-
-		console.log("ASDF");
 
 		// checks if the area exists
 		var canMoveToArea = false;
@@ -321,7 +324,11 @@ var GamePlayer = Class({
 											y: blockSize * y,
 											s: blockSize,
 											type: type,
-											parent: self
+											parent: self,
+											area: {
+												x: lX,
+												y: lY
+											}
 										}));
 
 										break;

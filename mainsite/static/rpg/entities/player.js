@@ -313,7 +313,7 @@ var Player = Class({
 					toolSprite = sprites.rangedWeapon["use" + direction];
 
 				}else {
-					console.error("Invalid Tool");
+					console.error("Invalid selectedTool");
 				}
 
 				toolSprite = toolSprite.slice();
