@@ -335,6 +335,22 @@ var GamePlayer = Class({
 
 										break;
 
+									// fall through for both meleeEnemies
+									// case "meleeEnemyOne":
+									// case "meleeEnemyTwo":
+
+									// 	this.enemies.push(new MeleeEnemy({
+									// 		x: blockSize * x,
+									// 		y: blockSize * y,
+									// 		s: blockSize,
+									// 		area: {
+									// 			x: lX,
+									// 			y: lY
+									// 		}
+									// 	}));
+
+									// 	break;
+
 									default:
 										console.log(objects[l[x][y]].name)
 

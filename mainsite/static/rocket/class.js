@@ -9,8 +9,23 @@ function Class (classObj){
 		classObj.init(params)
 
 		var newObj = {};
+
+		// checks for super class
+		if ("SUPERCLASS" in classObj){
+
+			var SUPERCLASS = new classObj.SUPERCLASS(params);
+
+			// copies the values
+			for (var key in SUPERCLASS){
+				newObj[key] = SUPERCLASS[key];
+			}
+
+		}
+
 		for (classObjIndex in classObj){
-			newObj[classObjIndex] = classObj[classObjIndex];
+			if (classObjIndex !== "SUPERCLASS"){
+				newObj[classObjIndex] = classObj[classObjIndex];
+			}
 		}
 
 		newObj.id = id;
