@@ -64,11 +64,6 @@ var Item = new Class({
 				this.s);
 		}
 
-	},
-
-	// get set functions
-	getArea: function(){
-		return this.area;
 	}
 
 });

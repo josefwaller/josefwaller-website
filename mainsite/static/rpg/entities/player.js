@@ -1,8 +1,8 @@
 var Player = new Class({
-	
-	x: 0,
-	y: 0,
-	s: 0,
+
+	SUPERCLASS: Entity,
+
+	spriteSetName: "player",
 
 	// all the sprites this entity uses
 	sprites: [
@@ -52,6 +52,7 @@ var Player = new Class({
 	selectedTool: null,
 
 	isAttacking: false,
+	spaceIsDown: false,
 	attackTime: 0,
 	attackDuration: 150,
 
@@ -94,6 +95,8 @@ var Player = new Class({
 
 	onKey: function(keys, delta){
 
+		this.spaceIsDown = false;
+
 		// takes an array of keys
 		for (var i = 0; i < keys.length; i++){
 
@@ -121,6 +124,8 @@ var Player = new Class({
 
 				// checks for attacking
 				case " ":
+
+					this.spaceIsDown = true;
 					
 					if (!this.isAttacking){
 						this.isAttacking = true;
@@ -165,7 +170,7 @@ var Player = new Class({
 
 			// check if player is done attacking
 			var time = new Date().getTime();
-			if (time - this.attackTime > this.attackDuration){
+			if (time - this.attackTime > this.attackDuration && !this.spaceIsDown){
 
 				this.isAttacking = false;
 
@@ -227,19 +232,7 @@ var Player = new Class({
 					}
 				}
 
-
-				// checks if it needs to change the animation sprite
-				var time = new Date().getTime();
-				if (time - this.lastAnimChange > this.animationDelay){
-
-					this.currentSpriteIndex++;
-					if (this.currentSpriteIndex >= this.currentAnimation.length){
-						this.currentSpriteIndex = 0;
-					}
-
-					this.lastAnimChange = time;
-				}
-
+				this.checkForAnimChange();
 
 			}
 
@@ -253,17 +246,7 @@ var Player = new Class({
 
 	draw: function(ctx){
 
-		var spriteSet = sprites.player;
-		var spriteName = this.sprites[this.currentAnimation[this.currentSpriteIndex]];
-
-		var sprite = spriteSet[spriteName].slice();
-		if (this.mirror){
-
-			sprite.reverse();
-
-		}
-
-		drawSprite(ctx, sprite, this.x, this.y, this.s);
+		this.superRender(ctx);
 
 		if (this.isAttacking){
 
@@ -339,25 +322,5 @@ var Player = new Class({
 			this.x += this.speed * x * delta;
 			this.y += this.speed * y * delta;
 		}
-	},
-	// Get and Set functions
-	getPos: function(){
-		return {
-			x: this.x, 
-			y: this.y
-		};
-	},
-
-	setPos: function(x, y){
-		if (x !== null){
-			this.x = x;
-		}
-		if (y !== null){
-			this.y = y;
-		}
-	},
-
-	getSize: function(){
-		return this.s;
 	}
 })

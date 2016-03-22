@@ -854,21 +854,13 @@ var Art = Class({
 
 		sprite = sprites[selectedObject][animationSprite];
 
-		for (x = 0; x < sprite.length; x++){
-			for (y = 0; y < sprite[x].length; y++){
 
-				if (sprite[x][y] !== null){
-
-					ct.fillStyle = colors[sprite[x][y]].hex;
-					ct.fillRect(
-						this.animationDisplay.x + this.animationDisplay.offsetX + this.animationDisplay.pixelSize * x,
-						this.animationDisplay.y + this.animationDisplay.offsetY + this.animationDisplay.pixelSize * y,
-						this.animationDisplay.pixelSize + 1,
-						this.animationDisplay.pixelSize + 1
-					);
-				}
-			}
-		}
+		drawSprite(
+			ct,
+			sprite,
+			this.animationDisplay.x + this.animationDisplay.offsetX,
+			this.animationDisplay.y + this.animationDisplay.offsetY,
+			this.animationDisplay.h);
 
 		// draws compass
 		var x = this.compassX;
@@ -995,6 +987,9 @@ var Art = Class({
 
 			// Changes the animation preview
 			this.changeAnimation();
+
+			// updates the canvas
+			this.drawCanvasArea();
 
 		}
 	},

@@ -173,6 +173,8 @@ var GamePlayer = Class({
 				}
 			}
 
+			// updates everything
+
 			for (var i = 0; i < this.items.length; i++){
 				var itemArea = this.items[i].getArea();
 
@@ -181,6 +183,17 @@ var GamePlayer = Class({
 					this.items[i].update();
 					this.items[i].draw(this.ctx);
 				}
+			}
+
+			for (var i = 0; i < this.enemies.length; i++){
+
+				if (this.enemies[i].getArea().x === this.activeArea.x && this.enemies[i].getArea().y === this.activeArea.y){
+
+					this.enemies[i].update();
+					this.enemies[i].draw(this.ctx);
+
+				}
+
 			}
 		}
 
@@ -269,6 +282,9 @@ var GamePlayer = Class({
 
 	createGame: function(){
 
+		// gets self for reference
+		var self = this;
+
 		// creates the game from the level
 		for (var lX = 0; lX < level.length; lX++){
 			for (var lY = 0; lY < level[lX].length; lY++){
@@ -296,7 +312,8 @@ var GamePlayer = Class({
 										this.player = new Player({
 											x: blockSize * x,
 											y: blockSize * y,
-											s: blockSize
+											s: blockSize,
+											parent: self
 										});
 
 										this.activeArea.x = lX;
@@ -318,9 +335,6 @@ var GamePlayer = Class({
 											type = "ranged";
 										}
 
-										// gets self for reference
-										var self = this;
-
 										this.items.push(new Item({
 											x: blockSize * x,
 											y: blockSize * y,
@@ -336,20 +350,31 @@ var GamePlayer = Class({
 										break;
 
 									// fall through for both meleeEnemies
-									// case "meleeEnemyOne":
-									// case "meleeEnemyTwo":
+									case "meleeEnemyOne":
+									case "meleeEnemyTwo":
 
-									// 	this.enemies.push(new MeleeEnemy({
-									// 		x: blockSize * x,
-									// 		y: blockSize * y,
-									// 		s: blockSize,
-									// 		area: {
-									// 			x: lX,
-									// 			y: lY
-									// 		}
-									// 	}));
+										var type;
+										if (objects[l[x][y]].name === "meleeEnemyOne"){
 
-									// 	break;
+											type = 1;
+
+										}else {
+											type = 2;
+										}
+
+										this.enemies.push(new MeleeEnemy({
+											x: blockSize * x,
+											y: blockSize * y,
+											s: blockSize,
+											area: {
+												x: lX,
+												y: lY
+											},
+											parent: self,
+											type: type
+										}));
+
+										break;
 
 									default:
 										console.log(objects[l[x][y]].name)
@@ -362,6 +387,8 @@ var GamePlayer = Class({
 				}
 			}
 		}
+
+		this.lastTime = new Date().getTime();
 	}
 
 });

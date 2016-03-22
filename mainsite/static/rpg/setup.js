@@ -282,7 +282,6 @@ function saveGame(){
 			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			}
-			console.log(toSave.dialog)
 		},
 		url: "/rpgmaker_save/",
 		type: "POST",
