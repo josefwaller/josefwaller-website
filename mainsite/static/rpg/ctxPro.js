@@ -133,6 +133,37 @@ var CTXPro = Class({
 		console.log(x, y, s);
 
 	},
+	borderRect: function(x, y, w, h, thick){
+
+		// top line
+		this.fillRect(
+			x,
+			y,
+			w,
+			thick);
+
+		// right line
+		this.fillRect(
+			x + w - thick,
+			y,
+			thick,
+			h);
+
+		// bottom line
+		this.fillRect(
+			x,
+			y + h - thick,
+			w,
+			thick);
+
+		// left line
+		this.fillRect(
+			x,
+			y,
+			thick,
+			h);
+
+	},
 	moveTo: function(x, y){
 		this.ctx.moveTo(
 			Math.round(x * this.unit),

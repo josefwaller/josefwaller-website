@@ -8,6 +8,8 @@ var GamePlayer = Class({
 	canvas: null,
 	ctx: null,
 
+	hud: null,
+
 	activeArea: {
 		x: 1,
 		y: 1
@@ -195,6 +197,8 @@ var GamePlayer = Class({
 				}
 
 			}
+
+			this.hud.render();
 		}
 
 	},
@@ -289,6 +293,12 @@ var GamePlayer = Class({
 		this.enemies = [];
 		this.items = [];
 		this.player = null;
+
+		// creates the HUD
+		this.hud = new HeadsUpDisplay({
+			parent: self,
+			w: this.s
+		});
 
 		// creates the game from the level
 		for (var lX = 0; lX < level.length; lX++){

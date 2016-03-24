@@ -184,6 +184,11 @@ canvas
 	}
 }
 
+/* removes whitespace from below the HUD Canvas */
+#game-hud-canvas
+{
+	margin-bottom: -5px;
+}
 
 /* the loading screen */
 

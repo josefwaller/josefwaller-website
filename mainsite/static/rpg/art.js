@@ -136,6 +136,7 @@ var Art = Class({
 				runUpTwo: [],
 				attackUp: [],
 				dialog: [],
+				life: [],
 			},
 			meleeEnemyOne: {
 				runDownOne: [],
@@ -252,7 +253,7 @@ var Art = Class({
 				useDown: {
 					object: "player",
 					sprite: "attackDown",
-					shift: [0, -size * 3/4]
+					shift: [0, - size * 3/4]
 				}
 			}
 		}

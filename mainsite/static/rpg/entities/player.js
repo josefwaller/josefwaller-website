@@ -55,10 +55,12 @@ var Player = new Class({
 		melee: false
 	},
 
+	numOfLives: 3,
+
 	selectedTool: null,
 
 	isAttacking: false,
-	spaceIsDown: false,
+	lastKeys: false,
 	attackTime: 0,
 	attackDuration: 150,
 
@@ -105,8 +107,6 @@ var Player = new Class({
 
 	onKey: function(keys, delta){
 
-		this.spaceIsDown = false;
-
 		// takes an array of keys
 		for (var i = 0; i < keys.length; i++){
 
@@ -135,39 +135,57 @@ var Player = new Class({
 				// checks for attacking
 				case " ":
 
-					this.spaceIsDown = true;
-					
-					if (!this.isAttacking && !this.isDying){
-						this.isAttacking = true;
-						this.attackTime = new Date().getTime();
+					if (this.lastKeys.indexOf(" ") === -1){
+						
+						if (!this.isAttacking && !this.isDying){
+							this.isAttacking = true;
+							this.attackTime = new Date().getTime();
 
-						// gets the sprite
-						this.currentSpriteIndex = 0;
+							// gets the sprite
+							this.currentSpriteIndex = 0;
 
-						switch (this.direction){
-							case this.dirs.down:
-								this.currentAnimation = this.animations.attackDown;
-								break
+							switch (this.direction){
+								case this.dirs.down:
+									this.currentAnimation = this.animations.attackDown;
+									break
 
-							// fall through for both sides
-							case this.dirs.right:
-							case this.dirs.left:
-								this.currentAnimation = this.animations.attackSide;
-								break
+								// fall through for both sides
+								case this.dirs.right:
+								case this.dirs.left:
+									this.currentAnimation = this.animations.attackSide;
+									break
 
-							case this.dirs.up:
-								this.currentAnimation = this.animations.attackUp;
-								break;
+								case this.dirs.up:
+									this.currentAnimation = this.animations.attackUp;
+									break;
 
-							default:
-								console.log(this.direction)
+								default:
+									console.log(this.direction)
+							}
+
 						}
 
 					}
 					break;
 
+				// checks for tool switching
+				case "q":
+
+					if (this.lastKeys.indexOf("q") === -1){
+
+						if (this.selectedTool === "ranged" && this.hasTool.melee){
+							this.selectedTool = "melee";
+						}else if (this.hasTool.ranged){
+							this.selectedTool = "ranged";
+						}
+					}
+
+					break;
+
 			}
 		}
+
+		this.lastKeys = keys.slice();
 
 	},
 
@@ -377,10 +395,10 @@ var Player = new Class({
 				// draws the tool
 				var toolSprite;
 
-				if (this.hasTool.melee){
+				if (this.hasTool.melee && this.selectedTool === "melee"){
 					toolSprite = sprites.meleeWeapon["use" + direction];
 
-				}else if (this.hasTool.ranged){
+				}else if (this.hasTool.ranged && this.selectedTool === "ranged"){
 					toolSprite = sprites.rangedWeapon["use" + direction];
 
 				}else {
@@ -410,5 +428,16 @@ var Player = new Class({
 			this.x += this.speed * x * delta;
 			this.y += this.speed * y * delta;
 		}
+	},
+
+	// gets set functions
+	getNumOfLives: function(){
+		return this.numOfLives;
+	},
+	getSelectedTool: function(){
+		return this.selectedTool;
+	},
+	getTools: function(){
+		return this.hasTool;
 	}
 })
