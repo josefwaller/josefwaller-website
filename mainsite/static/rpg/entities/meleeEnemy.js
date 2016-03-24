@@ -14,7 +14,9 @@ var MeleeEnemy = Class({
 		"runUpTwo",
 		"attackDown",
 		"attackSide",
-		"attackUp"
+		"attackUp",
+		"dieOne",
+		"dieTwo"
 	],
 
 	animations: {
@@ -30,12 +32,20 @@ var MeleeEnemy = Class({
 			4,
 			5
 		],
+		die: [
+			9,
+			10
+		]
 	},
 	animationDelay: 200,
 
 	type: null,
 
 	speed: 20,
+
+	isDying: false,
+	dieTime: 0,
+	isDead: false,
 
 	init: function(p){
 
@@ -54,75 +64,108 @@ var MeleeEnemy = Class({
 
 	},
 
-	update: function(){
+	onHit: function(){
 
-		// gets player position
-		var playerPos = this.parent.player.getPos();
-		var playerSize = this.parent.player.getSize();
+		if (!this.isDying && !this.isDead){
 
-		var hitPlayer = false;
+			console.log("HIT")
+			this.isDying = true;
+			this.dieTime = new Date().getTime();
+			this.currentAnimation = this.animations.die;
+			this.lastAnimChange = this.dieTime;
+			this.animationDelay = 100;
+			this.currentSpriteIndex = 0;
+		}
 
-		// checks if it hit the player
-		if (playerPos.x + playerSize > this.x){
-			if (playerPos.x < this.x + this.s){
-				if (playerPos.y + playerSize > this.y){
-					if (playerPos.y < this.y + this.s){
+	},
 
-						hitPlayer = true;
+	update: function(){	
 
+		if (this.isDying){
+
+			this.checkForAnimChange();
+
+			if (new Date().getTime() - this.dieTime >= 2 * this.animationDelay){
+
+				this.isDead = true;
+
+			}
+
+		}else if (!this.isDead){
+
+			// gets player position
+			var playerPos = this.parent.player.getPos();
+			var playerSize = this.parent.player.getSize();
+
+			var hitPlayer = false;
+
+			// checks if it hit the player
+			if (playerPos.x + playerSize > this.x){
+				if (playerPos.x < this.x + this.s){
+					if (playerPos.y + playerSize > this.y){
+						if (playerPos.y < this.y + this.s){
+
+							this.parent.player.onHit();
+							hitPlayer = true;
+
+						}
 					}
 				}
 			}
-		}
 
-		if (!hitPlayer){
-			
-			// chase after player
+			if (!hitPlayer){
 
-			// gets the angle to run after the player
-			var disX = playerPos.x - this.x;
-			var disY = playerPos.y - this.y;
+				// chase after player
 
-			var hyp = Math.sqrt(Math.pow(disX, 2) + Math.pow(disY, 2));
+				// gets the angle to run after the player
+				var disX = playerPos.x - this.x;
+				var disY = playerPos.y - this.y;
 
-			// gets the distances X + Y to go,
-			// forms a right triangle between the enemy and the player
-			// with the speed as the hypotenuse
-			var moveX = this.speed * (disX / hyp);
-			var moveY = this.speed * (disY / hyp);
+				var hyp = Math.sqrt(Math.pow(disX, 2) + Math.pow(disY, 2));
 
-			this.x += moveX * delta;
-			this.y += moveY * delta;
+				// gets the distances X + Y to go,
+				// forms a right triangle between the enemy and the player
+				// with the speed as the hypotenuse
+				var moveX = this.speed * (disX / hyp);
+				var moveY = this.speed * (disY / hyp);
 
-			// changes animation
-			if (Math.abs(disX) > Math.abs(disY)){
+				this.x += moveX * delta;
+				this.y += moveY * delta;
 
-				this.currentAnimation = this.animations.runSide;
-				if (disX > 0){
-					this.mirror = true;
-				}else{
-					this.mirror = false;
-				}
+				// changes animation
+				if (Math.abs(disX) > Math.abs(disY)){
 
-			}else {
+					this.currentAnimation = this.animations.runSide;
+					if (disX > 0){
+						this.mirror = true;
+					}else{
+						this.mirror = false;
+					}
 
-				if (disY > 0){
-					this.currentAnimation = this.animations.runDown;
 				}else {
-					this.currentAnimation = this.animations.runUp;
+
+					if (disY > 0){
+						this.currentAnimation = this.animations.runDown;
+					}else {
+						this.currentAnimation = this.animations.runUp;
+					}
+
 				}
 
+				this.checkForAnimChange();
 			}
-
-			this.checkForAnimChange();
 		}
 
 	},
 
 	draw: function(ctx){
 
-		this.superRender(ctx);
+		if (!this.isDead){
 
-	},
+			this.superRender(ctx);
+
+		}
+
+	}
 
 });

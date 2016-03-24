@@ -52,7 +52,7 @@ var Entity = Class({
 
 		// checks if it needs to change the animation sprite
 		var time = new Date().getTime();
-		if (time - this.lastAnimChange > this.animationDelay){
+		if (time - this.lastAnimChange >= this.animationDelay){
 
 			this.currentSpriteIndex++;
 			

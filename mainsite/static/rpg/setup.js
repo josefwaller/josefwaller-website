@@ -308,7 +308,7 @@ function loadGame(){
 
 	var data;
 
-	var id = 35;//prompt("Please enter an id:");
+	var id = 36;//prompt("Please enter an id:");
 
 	$.ajax({
 		beforeSend: function(xhr, settings) {

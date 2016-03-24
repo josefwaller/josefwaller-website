@@ -285,6 +285,11 @@ var GamePlayer = Class({
 		// gets self for reference
 		var self = this;
 
+		// clears previous entities
+		this.enemies = [];
+		this.items = [];
+		this.player = null;
+
 		// creates the game from the level
 		for (var lX = 0; lX < level.length; lX++){
 			for (var lY = 0; lY < level[lX].length; lY++){
@@ -389,6 +394,17 @@ var GamePlayer = Class({
 		}
 
 		this.lastTime = new Date().getTime();
+	},
+
+	// get set 
+	getEnemies: function(){
+		return this.enemies;
+	},
+	getPlayer: function(){
+		return this.player;
+	},
+	getActiveArea: function(){
+		return this.activeArea;
 	}
 
 });

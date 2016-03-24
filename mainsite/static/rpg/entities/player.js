@@ -39,6 +39,12 @@ var Player = new Class({
 		],
 		attackUp:  [
 			8
+		],
+		die: [
+			0,
+			2,
+			4,
+			2
 		]
 	},
 
@@ -70,6 +76,10 @@ var Player = new Class({
 	animationDelay: 150,
 
 	isMoving: false,
+
+	isDying: false,
+	deathTime: 0,
+	deathDelay: 1000,
 
 	direction: 0,
 
@@ -127,7 +137,7 @@ var Player = new Class({
 
 					this.spaceIsDown = true;
 					
-					if (!this.isAttacking){
+					if (!this.isAttacking && !this.isDying){
 						this.isAttacking = true;
 						this.attackTime = new Date().getTime();
 
@@ -163,92 +173,170 @@ var Player = new Class({
 
 	update: function(){
 
-		// checks for attacking
-		if (this.isAttacking){
+		// Checks if dead
+		// if not, checks if dying
+		// if not, checks for movement
 
-			// attack
+		if (this.isDying){
 
-			// check if player is done attacking
-			var time = new Date().getTime();
-			if (time - this.attackTime > this.attackDuration && !this.spaceIsDown){
+			if (new Date().getTime() - this.deathTime >= this.deathDelay){
 
-				this.isAttacking = false;
+				this.parent.createGame();
 
-				// changes animation
-				switch (this.direction){
-					case this.dirs.down: 
-						this.currentAnimation = this.animations.runDown;
-						break;
+			}
 
-					// fall through for both left and right
-					case this.dirs.left:
-					case this.dirs.right:
-						this.currentAnimation = this.animations.runSide;
-						break;
+			this.checkForAnimChange();
 
-					case this.dirs.up:
-						this.currentAnimation = this.animations.runUp;
-						break;
-				}
-
+			if (this.currentSpriteIndex === 3){
+				this.mirror = true;
+			}else{
+				this.mirror = false;
 			}
 
 		}else {
 
-			// checks for movement
-			if (this.translate.x !== 0 || this.translate.y !== 0){
+			// checks for attacking
+			if (this.isAttacking){
 
-				this.mirror = false;
+				// attack
 
-				// moves accoring to tranlate
-				this.move(this.translate.x, this.translate.y);
+				// gets the attack position
+				var attackOrigin = this.getPos();
+				var maxOffset = this.s * 3 / 4;
 
-				// checks for animation
-				switch(this.translate.y){
-					case 1:
-						// running down
-						this.currentAnimation = this.animations.runDown;
-						this.direction = this.dirs.down;
+				switch (this.direction){
+
+					case this.dirs.up:
+						attackOrigin.y -= maxOffset;
 						break;
 
-					case -1:
-						// running up
-						this.currentAnimation = this.animations.runUp;
-						this.direction = this.dirs.up;
-						break
+					case this.dirs.down:
+						attackOrigin.y += maxOffset;
+						break;
 
+					case this.dirs.left:
+						attackOrigin.x -= maxOffset;
+						break;
+
+					case this.dirs.right:
+						attackOrigin.x += maxOffset;
+						break;
 				}
 
-				// running sideways
-				if (this.translate.x !== 0){
+				// checks if an enemy is there
+				for (var i = 0; i < this.parent.getEnemies().length; i++){
 
-					this.currentAnimation = this.animations.runSide;
+					var e = this.parent.getEnemies()[i];
 
-					if (this.translate.x == 1){
-						this.mirror = true;
-						this.direction = this.dirs.right;
-					}else{
-						this.direction = this.dirs.left;
+					if (e.getArea().x === this.parent.getActiveArea().x && e.getArea().y === this.parent.getActiveArea().y){
+
+						var eS = e.getSize();
+						var eP = e.getPos()
+
+						if (eP.x + eS > attackOrigin.x){
+							if (eP.x < attackOrigin.x + this.s){
+								if (eP.y + eS > attackOrigin.y){
+									if (eP.y < attackOrigin.y + this.s){
+
+										e.onHit();
+
+									}
+								}
+							}
+						}
 					}
 				}
 
-				this.checkForAnimChange();
+				// check if player is done attacking
+				var time = new Date().getTime();
+				if (time - this.attackTime > this.attackDuration && !this.spaceIsDown){
 
+					this.isAttacking = false;
+
+					// changes animation
+					switch (this.direction){
+						case this.dirs.down: 
+							this.currentAnimation = this.animations.runDown;
+							break;
+
+						// fall through for both left and right
+						case this.dirs.left:
+						case this.dirs.right:
+							this.currentAnimation = this.animations.runSide;
+							break;
+
+						case this.dirs.up:
+							this.currentAnimation = this.animations.runUp;
+							break;
+					}
+
+				}
+
+			}else {
+
+				// checks for movement
+				if (this.translate.x !== 0 || this.translate.y !== 0){
+
+					this.mirror = false;
+
+					// moves accoring to tranlate
+					this.move(this.translate.x, this.translate.y);
+
+					// checks for animation
+					switch(this.translate.y){
+						case 1:
+							// running down
+							this.currentAnimation = this.animations.runDown;
+							this.direction = this.dirs.down;
+							break;
+
+						case -1:
+							// running up
+							this.currentAnimation = this.animations.runUp;
+							this.direction = this.dirs.up;
+							break
+
+					}
+
+					// running sideways
+					if (this.translate.x !== 0){
+
+						this.currentAnimation = this.animations.runSide;
+
+						if (this.translate.x == 1){
+							this.mirror = true;
+							this.direction = this.dirs.right;
+						}else{
+							this.direction = this.dirs.left;
+						}
+					}
+
+					this.checkForAnimChange();
+
+				}
+
+				this.translate = {
+					x: 0,
+					y: 0
+				};
 			}
-
-			this.translate = {
-				x: 0,
-				y: 0
-			};
 		}
 
 	},
 
+	onHit: function(){
+
+		if (!this.isDying){
+			this.isDying = true;
+			this.currentAnimation = this.animations.die;
+			this.deathTime = new Date().getTime();
+		}
+	},
 	draw: function(ctx){
 
 		this.superRender(ctx);
 
-		if (this.isAttacking){
+		if (this.isAttacking && !this.isDying){
 
 			// checks for the weapon
 			if (this.selectedTool !== null){

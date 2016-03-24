@@ -14,17 +14,9 @@ var animations = [
 	["attackSide", "runSideOne"],
 	["attackUp", "runUpOne"],
 	["attackDown", "runDownOne"],
-	["stand"],
-	["dialog"],
 
-	// Background
-	["one"],
-	["two"],
-	["three"],
-
-	// items
-	["onGround"],
-	["useUp"]
+	// death
+	["dieOne", "dieTwo"]
 ];
 
 
@@ -74,6 +66,10 @@ var Art = Class({
 	// The interval between switching sprites
 	animationInterval: 1000 / 5,
 	lastAnimTime: 0,
+
+	// whether the sprite has an animation
+	// if not, it just draws the sprite
+	hasAnimation: false,
 
 	// compass buttons
 	compassButtons: [],
@@ -147,7 +143,9 @@ var Art = Class({
 				runSideOne: [],
 				runSideTwo: [],
 				runUpOne: [],
-				runUpTwo: []
+				runUpTwo: [],
+				dieOne: [],
+				dieTwo: []
 			},
 			meleeEnemyTwo: {
 				runDownOne: [],
@@ -155,7 +153,9 @@ var Art = Class({
 				runSideOne: [],
 				runSideTwo: [],
 				runUpOne: [],
-				runUpTwo: []
+				runUpTwo: [],
+				dieOne: [],
+				dieTwo: []
 			},
 			rangedEnemyOne: {
 				runDownOne: [],
@@ -163,7 +163,10 @@ var Art = Class({
 				runSideOne: [],
 				runSideTwo: [],
 				runUpOne: [],
-				runUpTwo: []
+				runUpTwo: [],
+				dieOne: [],
+				dieTwo: [],
+				missile: []
 			},
 			rangedEnemyTwo: {
 				runDownOne: [],
@@ -171,7 +174,10 @@ var Art = Class({
 				runSideOne: [],
 				runSideTwo: [],
 				runUpOne: [],
-				runUpTwo: []
+				runUpTwo: [],
+				dieOne: [],
+				dieTwo: [],
+				missile: []
 			},
 			npcOne: {
 				stand: [],
@@ -195,7 +201,8 @@ var Art = Class({
 				onGround: [],
 				useUp: [],
 				useSide: [],
-				useDown: []
+				useDown: [],
+				missile: []
 			},
 			invincibleBarrier: {
 				whole: []
@@ -251,7 +258,12 @@ var Art = Class({
 		}
 
 		// copies the hoverSprite for rangedWeapon from meleeWeapon
-		this.hoverSprites.rangedWeapon = this.hoverSprites.meleeWeapon
+		this.hoverSprites.rangedWeapon = this.hoverSprites.meleeWeapon;
+		this.hoverSprites.rangedWeapon.missile = {
+			object: "rangedWeapon",
+			sprite: "useSide",
+			shift: [size * 3/4, 0]
+		};
 		
 		// Sets offsets and pixelSize
 		// Rounded so the canvas doesn't have to render anti-aliasing and is faster
@@ -839,7 +851,7 @@ var Art = Class({
 	},
 	drawAnimation: function() {
 
-		ct = this.ct;
+		var ct = this.ct;
 
 		ct.fillStyle = this.backgroundColor;
 		ct.fillRect(
@@ -848,11 +860,18 @@ var Art = Class({
 			this.w - this.splitX,
 			this.h - this.animationDisplay.y);
 
-		animationSprite = animations[selectedAnimation][selectedAnimationSprite];
+		var animationSprite;
+
+		if (this.hasAnimation){
+
+			animationSprite = animations[selectedAnimation][selectedAnimationSprite];
+		}else {
+			animationSprite = selectedSprite;
+		}
 
 		// Draws animation display
 
-		sprite = sprites[selectedObject][animationSprite];
+		var sprite = sprites[selectedObject][animationSprite];
 
 
 		drawSprite(
@@ -1014,12 +1033,22 @@ var Art = Class({
 
 
 		// Changes the animation display sprites
+		var foundAnimation = false;
 
 		for (var i = 0; i < animations.length; i++){
 			if ($.inArray(selectedSprite, animations[i]) !== -1){
+
+				this.hasAnimation = true;
 				selectedAnimation = i;
+				foundAnimation = true;
 				break;
 			}
+		}
+
+		if (!foundAnimation){
+
+			this.hasAnimation = false;
+
 		}
 	},
 	setColorButtons: function(){
@@ -1084,13 +1113,16 @@ var Art = Class({
 	updateSpriteAnimations: function() {
 
 		// Changes the sprite to draw in the animation display
+		if (this.hasAnimation){
 
-		selectedAnimationSprite += 1;
 
-		if (selectedAnimationSprite >= animations[selectedAnimation].length){
+			selectedAnimationSprite += 1;
 
-			selectedAnimationSprite = 0;
+			if (selectedAnimationSprite >= animations[selectedAnimation].length){
 
+				selectedAnimationSprite = 0;
+
+			}
 		}
 	},
 	mirrorSprite: function() {
