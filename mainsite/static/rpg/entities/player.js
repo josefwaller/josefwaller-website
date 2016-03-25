@@ -83,6 +83,13 @@ var Player = new Class({
 	deathTime: 0,
 	deathDelay: 1000,
 
+	isBlinking: false,
+	blinkTime: 0,
+	blinkDuration: 150,
+	numOfBlinks: 6,
+
+	isShowing: true,
+
 	direction: 0,
 
 	// the different directions, named for easy reading
@@ -197,6 +204,7 @@ var Player = new Class({
 
 		if (this.isDying){
 
+			// checks if it has finished dying and the game should restart
 			if (new Date().getTime() - this.deathTime >= this.deathDelay){
 
 				this.parent.createGame();
@@ -212,6 +220,32 @@ var Player = new Class({
 			}
 
 		}else {
+
+			// checks if it should change the blink
+			if (this.isBlinking){
+
+				var time = new Date().getTime();
+
+				// checks if it is done blinking
+				if (time - this.blinkTime > this.blinkDuration * this.numOfBlinks){
+					this.isBlinking = false;
+					this.isShowing = true;
+				}else{
+
+					// gets whether or not it should show
+					var timeSince = time - this.blinkTime;
+					var blinksSince = Math.round(timeSince / this.blinkDuration);
+
+					if (blinksSince % 2 === 0){
+
+						this.isShowing = false;
+
+					}else {
+						this.isShowing = true;
+					}
+				}
+
+			}
 
 			// checks for attacking
 			if (this.isAttacking){
@@ -344,82 +378,97 @@ var Player = new Class({
 
 	onHit: function(){
 
-		if (!this.isDying){
-			this.isDying = true;
-			this.currentAnimation = this.animations.die;
-			this.deathTime = new Date().getTime();
+		if (!this.isDying && !this.isBlinking){
+
+			this.numOfLives--;
+
+			if (this.numOfLives > 0){
+				
+				this.isBlinking = true;
+				this.blinkTime = new Date().getTime();
+
+			}else{
+
+				this.isDying = true;
+				this.currentAnimation = this.animations.die;
+				this.deathTime = new Date().getTime();
+			}
 		}
 	},
+
 	draw: function(ctx){
 
-		this.superRender(ctx);
+		if (this.isShowing){
 
-		if (this.isAttacking && !this.isDying){
+			this.superRender(ctx);
 
-			// checks for the weapon
-			if (this.selectedTool !== null){
+			if (this.isAttacking && !this.isDying){
 
-				// the offset at which to draw the tool
-				var toolOffsetX = 0;
-				var toolOffsetY = 0;
+				// checks for the weapon
+				if (this.selectedTool !== null){
 
-				// the maximum offset, just need the proper direction
-				var toolOffset = (this.s * 3/4);
+					// the offset at which to draw the tool
+					var toolOffsetX = 0;
+					var toolOffsetY = 0;
 
-				// gets the direction
-				var direction;
+					// the maximum offset, just need the proper direction
+					var toolOffset = (this.s * 3/4);
 
-				switch (this.direction){
+					// gets the direction
+					var direction;
 
-					case this.dirs.up:
-						direction = "Up";
-						toolOffsetY = - toolOffset;
-						break;
+					switch (this.direction){
 
-					case this.dirs.left:
-						direction = "Side";
-						toolOffsetX = - toolOffset;
-						break;
+						case this.dirs.up:
+							direction = "Up";
+							toolOffsetY = - toolOffset;
+							break;
 
-					case this.dirs.right:
-						direction = "Side";
-						toolOffsetX = toolOffset;
-						break;
+						case this.dirs.left:
+							direction = "Side";
+							toolOffsetX = - toolOffset;
+							break;
 
-					case this.dirs.down:
-						direction = "Down";
-						toolOffsetY = toolOffset;
-						break;
+						case this.dirs.right:
+							direction = "Side";
+							toolOffsetX = toolOffset;
+							break;
+
+						case this.dirs.down:
+							direction = "Down";
+							toolOffsetY = toolOffset;
+							break;
+
+					}
+					// draws the tool
+					var toolSprite;
+
+					if (this.hasTool.melee && this.selectedTool === "melee"){
+						toolSprite = sprites.meleeWeapon["use" + direction];
+
+					}else if (this.hasTool.ranged && this.selectedTool === "ranged"){
+						toolSprite = sprites.rangedWeapon["use" + direction];
+
+					}else {
+						console.error("Invalid selectedTool");
+					}
+
+					toolSprite = toolSprite.slice();
+					if (this.mirror){
+						toolSprite.reverse();
+					}
+
+					// draws the tool
+					drawSprite(
+						ctx,
+						toolSprite,
+						this.x + toolOffsetX,
+						this.y + toolOffsetY,
+						this.s);
 
 				}
-				// draws the tool
-				var toolSprite;
-
-				if (this.hasTool.melee && this.selectedTool === "melee"){
-					toolSprite = sprites.meleeWeapon["use" + direction];
-
-				}else if (this.hasTool.ranged && this.selectedTool === "ranged"){
-					toolSprite = sprites.rangedWeapon["use" + direction];
-
-				}else {
-					console.error("Invalid selectedTool");
-				}
-
-				toolSprite = toolSprite.slice();
-				if (this.mirror){
-					toolSprite.reverse();
-				}
-
-				// draws the tool
-				drawSprite(
-					ctx,
-					toolSprite,
-					this.x + toolOffsetX,
-					this.y + toolOffsetY,
-					this.s);
 
 			}
-
 		}
 
 	},
