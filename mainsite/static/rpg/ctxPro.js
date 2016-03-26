@@ -237,5 +237,12 @@ var CTXPro = Class({
 			sA, 
 			eA);
 		this.ctx.fill();
+	},
+
+	translate: function(x, y){
+		this.ctx.translate(x * this.unit, y * this.unit);
+	},
+	rotate: function(r){
+		this.ctx.rotate(r * this.unit);
 	}
 });

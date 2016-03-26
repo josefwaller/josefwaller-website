@@ -17,6 +17,16 @@ var Entity = Class({
 
 	mirror: false,
 
+	direction: 0,
+
+	// the different directions, named for easy reading
+	dirs: {
+		up: 0,
+		right: 1,
+		down: 2,
+		left: 3
+	},
+
 	init: function(p){
 
 		this.x = p.x;
@@ -62,6 +72,35 @@ var Entity = Class({
 
 			this.lastAnimChange = time;
 		}
+	},
+
+	isInSameArea: function(entity){
+
+		var entityArea = entity.getArea();
+
+		if (entityArea.x === this.area.x && entityArea.y === this.area.y){
+			return true;
+		}
+
+		return false;
+	},
+	checkForCollision: function(e){
+
+		ePos = e.getPos();
+		eS = e.getSize();
+
+		if (ePos.x + eS > this.x){
+			if (ePos.x < this.x + this.s){
+				if (ePos.y + eS > this.x){
+					if (ePos.y < this.x + this.s){
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+
 	},
 
 	// Get and Set functions

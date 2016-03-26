@@ -19,11 +19,16 @@ var GamePlayer = Class({
 
 	player: null,
 
+	// lists of different entities
 	items: [],
+	enemies: [],
+	missiles: [],
+	npcs: [],
+
+	// a list of the indexes
+	missilesToRemove: [],
 
 	lastTime: 0,
-
-	enemies: [],
 
 	isScrolling: false,
 	scrollDirection: null,
@@ -89,62 +94,9 @@ var GamePlayer = Class({
 		var area = level[this.activeArea.x][this.activeArea.y];
 
 		if (this.isScrolling){
-
-			var percentage = (new Date().getTime() - this.scrollTime) / this.scrollDuration;
-
-			// checks if it is done scrolling
-			if (percentage > 1){
-
-				this.activeArea.x += this.scrollDirection.x;
-				this.activeArea.y += this.scrollDirection.y;
-				this.isScrolling = false;
-
-				switch(this.scrollDirection.x){
-
-					case -1:
-						this.player.x = (this.s - this.player.s) - 1;
-						break;
-
-					case 1:
-						this.player.x = 1;
-						break;
-
-					case 0:
-
-						switch (this.scrollDirection.y){
-
-							case -1:
-								this.player.y = this.s - this.player.s - 1;
-								break;
-
-							case 1:
-								this.player.y = 1;
-								break;
-						}
-
-				}
-
-			}else {
-
-				var xMovement = this.s * percentage * this.scrollDirection.x;
-				var yMovement = this.s * percentage * this.scrollDirection.y;
-
-				// draws the old area
-				this.drawArea(
-					-xMovement,
-					-yMovement,
-					this.activeArea.x,
-					this.activeArea.y)
-
-				// draw the new area
-				this.drawArea(
-					(this.scrollDirection.x * this.s) - xMovement,
-					(this.scrollDirection.y * this.s) - yMovement,
-					this.activeArea.x + this.scrollDirection.x,
-					this.activeArea.y + this.scrollDirection.y);
-			}
-
+			this.scroll();
 		}
+
 		if (!this.isScrolling){
 
 			this.drawArea(
@@ -166,21 +118,20 @@ var GamePlayer = Class({
 
 				if (playerPos.x > this.s - this.player.getSize() || playerPos.x < 0){
 					
-					this.scroll(playerPos.x / Math.abs(playerPos.x), 0);
+					this.beginScroll(playerPos.x / Math.abs(playerPos.x), 0);
 
 				}
 				if (playerPos.y > this.s - this.player.getSize() || playerPos.y < 0){
 
-					this.scroll(0, playerPos.y / Math.abs(playerPos.y));
+					this.beginScroll(0, playerPos.y / Math.abs(playerPos.y));
 				}
 			}
 
 			// updates everything
 
 			for (var i = 0; i < this.items.length; i++){
-				var itemArea = this.items[i].getArea();
 
-				if (itemArea.x === this.activeArea.x && itemArea.y === this.activeArea.y){
+				if (this.entityIsInArea(this.items[i])){
 
 					this.items[i].update();
 					this.items[i].draw(this.ctx);
@@ -189,7 +140,7 @@ var GamePlayer = Class({
 
 			for (var i = 0; i < this.enemies.length; i++){
 
-				if (this.enemies[i].getArea().x === this.activeArea.x && this.enemies[i].getArea().y === this.activeArea.y){
+				if (this.entityIsInArea(this.enemies[i])){
 
 					this.enemies[i].update();
 					this.enemies[i].draw(this.ctx);
@@ -198,12 +149,93 @@ var GamePlayer = Class({
 
 			}
 
+			for (var i = 0; i < this.missiles.length; i++){
+
+				if (this.entityIsInArea(this.missiles[i])){
+
+					this.missiles[i].update();
+					this.missiles[i].draw(this.ctx);
+
+				}
+
+			}
+
+			this.trimMissiles();
+
 			this.hud.render();
+		}
+	},
+
+	entityIsInArea: function(entity){
+
+		var entityArea = entity.getArea();
+
+		if (entityArea.x === this.activeArea.x &&  entityArea.y === this.activeArea.y){
+			
+			return true;
+		}else{
+			
+			return false;
 		}
 
 	},
+	scroll: function(){
+		var percentage = (new Date().getTime() - this.scrollTime) / this.scrollDuration;
 
-	scroll: function(addX, addY){
+		// checks if it is done scrolling
+		if (percentage > 1){
+
+			this.activeArea.x += this.scrollDirection.x;
+			this.activeArea.y += this.scrollDirection.y;
+			this.isScrolling = false;
+
+			switch(this.scrollDirection.x){
+
+				case -1:
+					this.player.x = (this.s - this.player.s) - 1;
+					break;
+
+				case 1:
+					this.player.x = 1;
+					break;
+
+				case 0:
+
+					switch (this.scrollDirection.y){
+
+						case -1:
+							this.player.y = this.s - this.player.s - 1;
+							break;
+
+						case 1:
+							this.player.y = 1;
+							break;
+					}
+
+			}
+
+		}else {
+
+			var xMovement = this.s * percentage * this.scrollDirection.x;
+			var yMovement = this.s * percentage * this.scrollDirection.y;
+
+			// draws the old area
+			this.drawArea(
+				- xMovement,
+				- yMovement,
+				this.activeArea.x,
+				this.activeArea.y)
+
+			// draw the new area
+			this.drawArea(
+				(this.scrollDirection.x * this.s) - xMovement,
+				(this.scrollDirection.y * this.s) - yMovement,
+				this.activeArea.x + this.scrollDirection.x,
+				this.activeArea.y + this.scrollDirection.y);
+		}
+	},
+
+	beginScroll: function(addX, addY){
 
 		// checks if the area exists
 		var canMoveToArea = false;
@@ -276,7 +308,6 @@ var GamePlayer = Class({
 			this.s,
 			this.s);
 		this.ctx.globalAlpha = 1;
-
 	},
 
 	onClick:function(){},
@@ -406,15 +437,39 @@ var GamePlayer = Class({
 		this.lastTime = new Date().getTime();
 	},
 
+	addMissile: function(missile) {
+
+		// adds it to the list
+		this.missiles.push(missile);
+
+	}, 
+	removeMissile: function(missile) {
+
+		var index = this.missiles.indexOf(missile);
+		this.missilesToRemove.push(index);
+	},
+	trimMissiles: function(){
+
+		for (var i = 0; i < this.missilesToRemove.length; i++){
+
+			this.missiles.splice(this.missilesToRemove[i], 1);
+
+		}
+
+		this.missilesToRemove = [];
+	},
 	// get set 
-	getEnemies: function(){
+	getEnemies: function() {
 		return this.enemies;
 	},
-	getPlayer: function(){
+	getPlayer: function() {
 		return this.player;
 	},
-	getActiveArea: function(){
+	getActiveArea: function() {
 		return this.activeArea;
+	},
+	getAreaSize: function(){
+		return this.s;
 	}
 
 });

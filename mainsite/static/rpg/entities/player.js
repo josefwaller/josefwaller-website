@@ -90,23 +90,9 @@ var Player = new Class({
 
 	isShowing: true,
 
-	direction: 0,
-
-	// the different directions, named for easy reading
-	dirs: {
-		up: 0,
-		right: 1,
-		down: 2,
-		left: 3
-	},
-
 	mirror: false,
 
 	init: function(p){
-			
-		this.x = p.x;
-		this.y = p.y;
-		this.s = p.s;
 
 		lastAnimChange = new Date().getTime();
 
@@ -145,6 +131,7 @@ var Player = new Class({
 					if (this.lastKeys.indexOf(" ") === -1){
 						
 						if (!this.isAttacking && !this.isDying){
+
 							this.isAttacking = true;
 							this.attackTime = new Date().getTime();
 
@@ -170,6 +157,43 @@ var Player = new Class({
 									console.log(this.direction)
 							}
 
+							// checks if the player is using the ranged weapon, then it should create a missile
+							if (this.selectedTool === "ranged"){
+
+								// gets the x and y offset for spawning a missile if needed
+								var offX = 0;
+								var offY = 0;
+
+								switch (this.direction){
+									case this.dirs.up:
+										offY = - this.s;
+										break;
+
+									case this.dirs.left:
+										offX = - this.s;
+										break;
+
+									case this.dirs.down:
+										offY = this.s;
+										break;
+
+									case this.dirs.right:
+										offX = this.s;
+										break;
+								}
+
+								this.parent.addMissile(new Missile({
+									x: this.x + offX,
+									y: this.y + offY,
+									s: this.s,
+									parent: this.parent,
+									type: "rangedWeapon",
+									area: this.parent.getActiveArea(),
+									direction: this.direction,
+									isEnemy: false
+								}));
+
+							}
 						}
 
 					}
@@ -250,48 +274,50 @@ var Player = new Class({
 			// checks for attacking
 			if (this.isAttacking){
 
-				// attack
+				// checks it has a weapon
+				if (this.hasTool.melee || this.hasTool.ranged){
 
-				// gets the attack position
-				var attackOrigin = this.getPos();
-				var maxOffset = this.s * 3 / 4;
+					// gets the attack position
+					var attackOrigin = this.getPos();
+					var maxOffset = this.s * 3 / 4;
 
-				switch (this.direction){
+					switch (this.direction){
 
-					case this.dirs.up:
-						attackOrigin.y -= maxOffset;
-						break;
+						case this.dirs.up:
+							attackOrigin.y -= maxOffset;
+							break;
 
-					case this.dirs.down:
-						attackOrigin.y += maxOffset;
-						break;
+						case this.dirs.down:
+							attackOrigin.y += maxOffset;
+							break;
 
-					case this.dirs.left:
-						attackOrigin.x -= maxOffset;
-						break;
+						case this.dirs.left:
+							attackOrigin.x -= maxOffset;
+							break;
 
-					case this.dirs.right:
-						attackOrigin.x += maxOffset;
-						break;
-				}
+						case this.dirs.right:
+							attackOrigin.x += maxOffset;
+							break;
+					}
 
-				// checks if an enemy is there
-				for (var i = 0; i < this.parent.getEnemies().length; i++){
+					// checks if an enemy is there
+					for (var i = 0; i < this.parent.getEnemies().length; i++){
 
-					var e = this.parent.getEnemies()[i];
+						var e = this.parent.getEnemies()[i];
 
-					if (e.getArea().x === this.parent.getActiveArea().x && e.getArea().y === this.parent.getActiveArea().y){
+						if (e.getArea().x === this.parent.getActiveArea().x && e.getArea().y === this.parent.getActiveArea().y){
 
-						var eS = e.getSize();
-						var eP = e.getPos()
+							var eS = e.getSize();
+							var eP = e.getPos()
 
-						if (eP.x + eS > attackOrigin.x){
-							if (eP.x < attackOrigin.x + this.s){
-								if (eP.y + eS > attackOrigin.y){
-									if (eP.y < attackOrigin.y + this.s){
+							if (eP.x + eS > attackOrigin.x){
+								if (eP.x < attackOrigin.x + this.s){
+									if (eP.y + eS > attackOrigin.y){
+										if (eP.y < attackOrigin.y + this.s){
 
-										e.onHit();
+											e.onHit();
 
+										}
 									}
 								}
 							}
@@ -321,7 +347,6 @@ var Player = new Class({
 							this.currentAnimation = this.animations.runUp;
 							break;
 					}
-
 				}
 
 			}else {
@@ -383,7 +408,7 @@ var Player = new Class({
 			this.numOfLives--;
 
 			if (this.numOfLives > 0){
-				
+
 				this.isBlinking = true;
 				this.blinkTime = new Date().getTime();
 

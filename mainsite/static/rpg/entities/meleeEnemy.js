@@ -166,6 +166,10 @@ var MeleeEnemy = Class({
 
 		}
 
+	},
+
+	getIsAlive: function(){
+		return !this.isDead;
 	}
 
 });
