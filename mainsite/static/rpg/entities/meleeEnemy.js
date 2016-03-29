@@ -1,6 +1,6 @@
 var MeleeEnemy = Class({
 	// caps for emphasis
-	SUPERCLASS: Entity,
+	SUPERCLASS: Enemy,
 
 	spriteSetName: "",
 
@@ -60,21 +60,6 @@ var MeleeEnemy = Class({
 			case 2:
 				this.spriteSetName = "meleeEnemyTwo";
 				break;
-		}
-
-	},
-
-	onHit: function(){
-
-		if (!this.isDying && !this.isDead){
-
-			console.log("HIT")
-			this.isDying = true;
-			this.dieTime = new Date().getTime();
-			this.currentAnimation = this.animations.die;
-			this.lastAnimChange = this.dieTime;
-			this.animationDelay = 100;
-			this.currentSpriteIndex = 0;
 		}
 
 	},
@@ -166,10 +151,6 @@ var MeleeEnemy = Class({
 
 		}
 
-	},
-
-	getIsAlive: function(){
-		return !this.isDead;
 	}
 
 });

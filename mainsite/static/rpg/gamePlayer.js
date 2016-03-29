@@ -422,6 +422,31 @@ var GamePlayer = Class({
 
 										break;
 
+									case "rangedEnemyOne":
+									case "rangedEnemyTwo":
+
+										var type;
+
+										if (objects[l[x][y]].name === "rangedEnemyOne"){
+											type = 1;
+										}else{
+											type = 2;
+										}
+
+										this.enemies.push(new RangedEnemy({
+											x: blockSize * x,
+											y: blockSize * y,
+											s: blockSize,
+											area: {
+												x: lX,
+												y: lY
+											},
+											parent: self,
+											type: type
+										}));
+
+										break;
+
 									default:
 										console.log(objects[l[x][y]].name)
 

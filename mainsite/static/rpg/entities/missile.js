@@ -18,9 +18,6 @@ var Missile = Class({
 		this.direction = p.direction;
 
 		this.spriteSetName = p.type;
-
-		// should be immediantly defined using this.setIndex
-		this.index = undefined;
 	},
 
 	update: function(){
