@@ -75,8 +75,22 @@ WSGI_APPLICATION = 'josefwaller_website.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-DATABASES = {}
-DATABASES['default'] = dj_database_url.config(default='postgres://xbvnosxntqciyf:4qIle7fIQ1DWTViowcM7ToYxTG@ec2-54-235-170-124.compute-1.amazonaws.com:5432/d60kmhv8ho05g9')
+if DEBUG:
+
+    CURRENT_DIR = "/Users/Josef/Documents/Github/josefwaller-website/dev_db/"
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': CURRENT_DIR + '/database.db', # <- The path
+            'USER': '',
+            'PASSWORD': '',
+            'HOST': '',
+            'PORT': '',
+        }
+    }
+else:
+    DATABASES = {}
+    DATABASES['default'] = dj_database_url.config(default='postgres://xbvnosxntqciyf:4qIle7fIQ1DWTViowcM7ToYxTG@ec2-54-235-170-124.compute-1.amazonaws.com:5432/d60kmhv8ho05g9')
 
 # Enable Persistent Connections
 DATABASES['default']['CONN_MAX_AGE'] = 500
