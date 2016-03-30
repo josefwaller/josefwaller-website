@@ -35,7 +35,7 @@ var Enemy = Class({
 		]
 	},
 
-	speed: 0,//20,
+	speed: 20,
 
 	isDying: false,
 	dieTime: 0,

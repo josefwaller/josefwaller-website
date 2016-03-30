@@ -113,7 +113,7 @@ var Entity = Class({
 						}else {
 
 							startX = 0;
-							end = offX;
+							endX = offX;
 
 						}
 
@@ -125,6 +125,7 @@ var Entity = Class({
 							startY = 0;
 							endY = offY;
 						}
+
 						// gets the current sprite
 						var thisSprite = this.getCurrentSprite();
 						var otherSprite = e.getCurrentSprite();
@@ -136,8 +137,8 @@ var Entity = Class({
 
 								if (thisSprite[thisX][thisY] !== null){
 
-									for (var otherX = size - startX; otherX >= 0; otherX--){
-										for (var otherY = size - startY; otherY >= 0; otherY--){
+									for (var otherX = size - startX - 1; otherX >= 0; otherX--){
+										for (var otherY = size - startY - 1; otherY >= 0; otherY--){
 
 											if (otherSprite[otherX][otherY] !== null){
 
