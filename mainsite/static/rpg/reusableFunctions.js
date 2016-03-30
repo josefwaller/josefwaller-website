@@ -21,3 +21,32 @@ function drawSprite(ctx, sprite, offX, offY, s){
 		}
 	}
 }
+
+function getKeyFromKeyCode(keyCode){
+
+	// returns a string representation of the key
+	// note Jquery event.key does not work in Chrome or IE8
+
+	switch (keyCode){
+
+		case 37:
+			return "ArrowLeft";
+
+		case 38:
+			return "ArrowUp";
+
+		case 39:
+			return "ArrowRight";
+
+		case 40:
+			return "ArrowDown";
+
+		case 32:
+			return " ";
+
+		case 81:
+			return "q";
+
+	}
+
+}

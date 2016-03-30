@@ -41,12 +41,6 @@ var MeleeEnemy = Class({
 
 	type: null,
 
-	speed: 20,
-
-	isDying: false,
-	dieTime: 0,
-	isDead: false,
-
 	init: function(p){
 
 		// 1 or 2
@@ -68,13 +62,7 @@ var MeleeEnemy = Class({
 
 		if (this.isDying){
 
-			this.checkForAnimChange();
-
-			if (new Date().getTime() - this.dieTime >= 2 * this.animationDelay){
-
-				this.isDead = true;
-
-			}
+			this.die();
 
 		}else if (!this.isDead){
 

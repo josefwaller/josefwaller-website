@@ -161,10 +161,13 @@ var Art = Class({
 			rangedEnemyOne: {
 				runDownOne: [],
 				runDownTwo: [],
+				shootDown: [],
 				runSideOne: [],
 				runSideTwo: [],
+				shootSide: [],
 				runUpOne: [],
 				runUpTwo: [],
+				shootUp: [],
 				dieOne: [],
 				dieTwo: [],
 				missile: []

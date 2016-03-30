@@ -135,8 +135,6 @@ function setup () {
 	changeScreen(null, 0);
 	window.setTimeout(update, 1000/60)
 
-	loadGame();
-
 }
 
 
@@ -308,7 +306,7 @@ function loadGame(){
 
 	var data;
 
-	var id = 37;//prompt("Please enter an id:");
+	var id = prompt("Please enter an id:");
 
 	$.ajax({
 		beforeSend: function(xhr, settings) {

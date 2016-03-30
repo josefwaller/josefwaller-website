@@ -51,11 +51,13 @@ var GamePlayer = Class({
 		// adds keys when pressed
 		$(document.body).keydown(function(event){
 
+			key = getKeyFromKeyCode(event.keyCode);
+
 			// checks it has not already registered the key as pressed
-			if (keysPressed.indexOf(event.key) === -1){
+			if (keysPressed.indexOf(key) === -1){
 
 				// adds the key
-				keysPressed.push(event.key);
+				keysPressed.push(key);
 			}
 
 			// checks if the keys would scroll the window
@@ -67,7 +69,9 @@ var GamePlayer = Class({
 
 		$(document.body).keyup(function(event){
 
-			var index = keysPressed.indexOf(event.key);
+			key = getKeyFromKeyCode(event.keyCode);
+
+			var index = keysPressed.indexOf(key);
 			// checks that the key is in the array
 			if (index !== -1){
 

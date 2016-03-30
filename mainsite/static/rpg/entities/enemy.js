@@ -35,6 +35,12 @@ var Enemy = Class({
 		]
 	},
 
+	speed: 20,
+
+	isDying: false,
+	dieTime: 0,
+	isDead: false,
+
 	init: function(p){
 
 	},
@@ -51,6 +57,18 @@ var Enemy = Class({
 			this.currentSpriteIndex = 0;
 		}
 
+	},
+
+	die: function(){
+
+
+		this.checkForAnimChange();
+
+		if (new Date().getTime() - this.dieTime >= 2 * this.animationDelay){
+
+			this.isDead = true;
+
+		}
 	},
 
 	getIsAlive: function(){
