@@ -110,20 +110,26 @@ var Entity = Class({
 							startX = - offX;
 							endX = size;
 
-						}else {
+						}else if (this.x > ePos.x){
 
 							startX = 0;
 							endX = offX;
 
+						}else {
+							startX = 0;
+							endX = size;
 						}
 
 						// does the same for Y
 						if (ePos.y > this.y){
 							startY = - offY;
 							endY = size;
-						}else{
+						}else if (this.y > ePos.y){
 							startY = 0;
 							endY = offY;
+						}else {
+							startY = 0;
+							endY = size;
 						}
 
 						// gets the current sprite
