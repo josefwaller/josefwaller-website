@@ -43,14 +43,10 @@ var Entity = Class({
 	},
 
 	superRender: function(ctx) {
-			
-		if (this.currentSpriteIndex >= this.currentAnimation.length){
-			this.currentSpriteIndex = 0;
-		}
 
 		var spriteSet = sprites[this.spriteSetName];
 		var spriteName = this.sprites[this.currentAnimation[this.currentSpriteIndex]];
-		
+
 		var sprite = spriteSet[spriteName].slice();
 		if (this.mirror){
 
@@ -62,8 +58,6 @@ var Entity = Class({
 	},
 
 	checkForAnimChange: function(){
-
-
 		// checks if it needs to change the animation sprite
 		var time = new Date().getTime();
 		if (time - this.lastAnimChange >= this.animationDelay){
@@ -72,6 +66,11 @@ var Entity = Class({
 
 			this.lastAnimChange = time;
 		}
+			
+		if (this.currentSpriteIndex >= this.currentAnimation.length){
+			this.currentSpriteIndex = 0;
+		}
+
 	},
 
 	isInSameArea: function(entity){
@@ -93,7 +92,82 @@ var Entity = Class({
 			if (ePos.x < this.x + this.s){
 				if (ePos.y + eS > this.y){
 					if (ePos.y < this.y + this.s){
-						return true;
+
+						// the blocks are colliding, so it checks if any pixels collide as well
+						var pixelSize = this.s / size;
+						var offX = Math.floor((this.x - ePos.x) / pixelSize);
+						var offY = Math.floor((this.y - ePos.y) / pixelSize);
+
+						// the indexes to start and end at
+						// the only relevent pixels, the ones that have a chance of hitting each other
+						var startX;
+						var startY;
+						var endX;
+						var endY;
+						
+						if (ePos.x > this.x){
+							// if the entity is farther right than thios entity, it can skip the first offX pixels
+							startX = - offX;
+							endX = size;
+
+						}else {
+
+							startX = 0;
+							end = offX;
+
+						}
+
+						// does the same for Y
+						if (ePos.y > this.y){
+							startY = - offY;
+							endY = size;
+						}else{
+							startY = 0;
+							endY = offY;
+						}
+						// gets the current sprite
+						var thisSprite = this.getCurrentSprite();
+						var otherSprite = e.getCurrentSprite();
+
+
+						// cycles through and checks if any pixels hit
+						for (var thisX = startX; thisX < endX; thisX++){
+							for (var thisY = startY; thisY < endY; thisY++){
+
+								if (thisSprite[thisX][thisY] !== null){
+
+									for (var otherX = size - startX; otherX >= 0; otherX--){
+										for (var otherY = size - startY; otherY >= 0; otherY--){
+
+											if (otherSprite[otherX][otherY] !== null){
+
+												// check if the pixels hit
+												var thisPixelOffX = this.x + thisX * pixelSize;
+												var thisPixelOffY = this.y + thisY * pixelSize;
+
+												var otherPixelOffX = ePos.x + otherX * pixelSize;
+												var otherPixelOffY = ePos.y + otherY * pixelSize;
+
+												// checks if they hit
+												if (thisPixelOffX < otherPixelOffX + pixelSize){
+													if (thisPixelOffX + pixelSize > otherPixelOffX){
+														if (thisPixelOffY < otherPixelOffY + pixelSize){
+															if (thisPixelOffY + pixelSize > otherPixelOffY){
+																return true;
+															}
+														}
+													}
+												}
+
+
+											}
+
+										}
+									}
+								}
+							}
+						}
+						// return true;
 					}
 				}
 			}
@@ -126,6 +200,10 @@ var Entity = Class({
 
 	getArea: function(){
 		return this.area;
+	},
+
+	getCurrentSprite: function(){
+		return sprites[this.spriteSetName][this.sprites[this.currentAnimation[this.currentSpriteIndex]]];
 	}
 
 });

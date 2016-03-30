@@ -3,6 +3,8 @@ var keysPressed = [];
 // delta time
 var delta;
 
+var size = 16;
+
 var GamePlayer = Class({
 
 	canvas: null,
@@ -426,30 +428,30 @@ var GamePlayer = Class({
 
 										break;
 
-									case "rangedEnemyOne":
-									case "rangedEnemyTwo":
+									// case "rangedEnemyOne":
+									// case "rangedEnemyTwo":
 
-										var type;
+									// 	var type;
 
-										if (objects[l[x][y]].name === "rangedEnemyOne"){
-											type = 1;
-										}else{
-											type = 2;
-										}
+									// 	if (objects[l[x][y]].name === "rangedEnemyOne"){
+									// 		type = 1;
+									// 	}else{
+									// 		type = 2;
+									// 	}
 
-										this.enemies.push(new RangedEnemy({
-											x: blockSize * x,
-											y: blockSize * y,
-											s: blockSize,
-											area: {
-												x: lX,
-												y: lY
-											},
-											parent: self,
-											type: type
-										}));
+									// 	this.enemies.push(new RangedEnemy({
+									// 		x: blockSize * x,
+									// 		y: blockSize * y,
+									// 		s: blockSize,
+									// 		area: {
+									// 			x: lX,
+									// 			y: lY
+									// 		},
+									// 		parent: self,
+									// 		type: type
+									// 	}));
 
-										break;
+									// 	break;
 
 									default:
 										console.log(objects[l[x][y]].name)

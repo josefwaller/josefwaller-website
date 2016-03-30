@@ -68,28 +68,23 @@ var MeleeEnemy = Class({
 		}else if (!this.isDead){
 
 			// gets player position
-			var playerPos = this.parent.player.getPos();
-			var playerSize = this.parent.player.getSize();
+			var player = this.parent.getPlayer();
 
 			var hitPlayer = false;
 
 			// checks if it hit the player
-			if (playerPos.x + playerSize > this.x){
-				if (playerPos.x < this.x + this.s){
-					if (playerPos.y + playerSize > this.y){
-						if (playerPos.y < this.y + this.s){
+			if (this.checkForCollision(player)){
 
-							this.parent.player.onHit();
-							hitPlayer = true;
-
-						}
-					}
-				}
+				player.onHit();
+				hitPlayer = true;
 			}
 
 			if (!hitPlayer){
 
 				// chase after player
+
+				var playerPos = player.getPos();
+				var playerS = player.getSize();
 
 				// gets the angle to run after the player
 				var disX = playerPos.x - this.x;
