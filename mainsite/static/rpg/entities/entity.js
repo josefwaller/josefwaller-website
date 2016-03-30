@@ -43,10 +43,14 @@ var Entity = Class({
 	},
 
 	superRender: function(ctx) {
+			
+		if (this.currentSpriteIndex >= this.currentAnimation.length){
+			this.currentSpriteIndex = 0;
+		}
 
 		var spriteSet = sprites[this.spriteSetName];
 		var spriteName = this.sprites[this.currentAnimation[this.currentSpriteIndex]];
-
+		
 		var sprite = spriteSet[spriteName].slice();
 		if (this.mirror){
 
@@ -65,10 +69,6 @@ var Entity = Class({
 		if (time - this.lastAnimChange >= this.animationDelay){
 
 			this.currentSpriteIndex++;
-			
-			if (this.currentSpriteIndex >= this.currentAnimation.length){
-				this.currentSpriteIndex = 0;
-			}
 
 			this.lastAnimChange = time;
 		}
@@ -91,8 +91,8 @@ var Entity = Class({
 
 		if (ePos.x + eS > this.x){
 			if (ePos.x < this.x + this.s){
-				if (ePos.y + eS > this.x){
-					if (ePos.y < this.x + this.s){
+				if (ePos.y + eS > this.y){
+					if (ePos.y < this.y + this.s){
 						return true;
 					}
 				}

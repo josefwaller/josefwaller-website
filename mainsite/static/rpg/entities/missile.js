@@ -51,7 +51,7 @@ var Missile = Class({
 
 				if (this.isInSameArea(enemies[i])){
 
-					if (enemies[i].getIsAlive()){
+					if (enemies[i].getIsAlive() === true){
 
 
 						if (this.checkForCollision(enemies[i])){
@@ -69,6 +69,15 @@ var Missile = Class({
 				}
 
 			}
+		}else {
+
+			var player = this.parent.getPlayer();
+
+			if (this.checkForCollision(player)){
+				player.onHit();
+				this.parent.removeMissile(this);
+			}
+
 		}
 
 		this.checkForOutOfBounds();

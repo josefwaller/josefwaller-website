@@ -72,7 +72,7 @@ var Enemy = Class({
 	},
 
 	getIsAlive: function(){
-		return this.isAlive;
+		return (!this.isDead);
 	}
 
 });

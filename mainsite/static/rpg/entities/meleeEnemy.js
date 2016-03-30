@@ -37,6 +37,7 @@ var MeleeEnemy = Class({
 			10
 		]
 	},
+	
 	animationDelay: 200,
 
 	type: null,
