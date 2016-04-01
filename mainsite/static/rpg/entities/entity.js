@@ -95,8 +95,8 @@ var Entity = Class({
 
 						// the blocks are colliding, so it checks if any pixels collide as well
 						var pixelSize = this.s / size;
-						var offX = Math.abs(this.x - ePos.x) / pixelSize;
-						var offY = Math.abs(this.y - ePos.y) / pixelSize;
+						var offX = Math.floor(Math.abs(this.x - ePos.x) / pixelSize);
+						var offY = Math.floor(Math.abs(this.y - ePos.y) / pixelSize);
 
 						// the indexes to start and end at
 						// the only relevent pixels, the ones that have a chance of hitting each other
@@ -107,13 +107,13 @@ var Entity = Class({
 						
 						if (ePos.x > this.x){
 							// if the entity is farther right than thios entity, it can skip the first offX pixels
-							startX = Math.floor(offX);
+							startX = offX;
 							endX = size;
 
 						}else if (this.x > ePos.x){
 
 							startX = 0;
-							endX = size - Math.ceil(offX);
+							endX = size - offX;
 
 						}else {
 							startX = 0;
@@ -122,11 +122,11 @@ var Entity = Class({
 
 						// does the same for Y
 						if (ePos.y > this.y){
-							startY = Math.floor(offY);
+							startY = offY;
 							endY = size;
 						}else if (this.y > ePos.y){
 							startY = 0;
-							endY = size - Math.ceil(offY);
+							endY = size - offY;
 						}else {
 							startY = 0;
 							endY = size;
@@ -209,6 +209,7 @@ var Entity = Class({
 	},
 
 	getCurrentSprite: function(){
+		console.log(this.currentAnimation);
 		return sprites[this.spriteSetName][this.sprites[this.currentAnimation[this.currentSpriteIndex]]];
 	}
 

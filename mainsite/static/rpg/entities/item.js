@@ -24,20 +24,10 @@ var Item = new Class({
 
 	checkForPlayer: function(){
 
-		var playerPos = this.parent.player.getPos();
-		var playerS = this.parent.player.getSize();
-
 		// checks if they are hitting
-		if (playerPos.x + playerS > this.x){
-			if (playerPos.x < this.x + this.s){
-				if (playerPos.y + playerS > this.y){
-					if (playerPos.y < this.y + this.s){
+		if (this.checkForCollision(this.parent.getPlayer())){
 
-						this.onPickUp();
-
-					}
-				}
-			}
+			this.onPickUp();
 		}
 
 	},
@@ -64,6 +54,11 @@ var Item = new Class({
 				this.s);
 		}
 
+	},
+
+	// get set
+	getCurrentSprite: function(){
+		return sprites[this.type + "Weapon"].onGround;
 	}
 
 });
