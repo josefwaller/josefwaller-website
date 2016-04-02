@@ -166,6 +166,12 @@ var GamePlayer = Class({
 
 			}
 
+			for (var i = 0; i < this.npcs.length; i++){
+				if (this.entityIsInArea(this.npcs[i])){
+					this.npcs[i].draw(this.ctx);
+				}
+			}
+
 			this.trimMissiles();
 
 			this.hud.render();
@@ -453,6 +459,40 @@ var GamePlayer = Class({
 
 									// 	break;
 
+									case "npcOne":
+									case "npcTwo":
+									case "npcThree":
+
+										var type;
+
+										switch (objects[l[x][y]].name){
+											case "npcOne":
+												type = 1;
+												break;
+
+											case "npcTwo":
+												type = 2;
+												break;
+
+											case "npcThree":
+												type = 3;
+												break;
+										}
+
+										this.npcs.push(new NPC({
+											x: blockSize * x,
+											y: blockSize * y,
+											s: blockSize,
+											area: {
+												x: lX,
+												y: lY
+											},
+											parent: self,
+											type: type
+										}))
+										break;
+
+
 									default:
 										console.log(objects[l[x][y]].name)
 
@@ -472,7 +512,6 @@ var GamePlayer = Class({
 
 		// adds it to the list
 		this.missiles.push(missile);
-
 	}, 
 	removeMissile: function(missile) {
 
@@ -489,6 +528,7 @@ var GamePlayer = Class({
 
 		this.missilesToRemove = [];
 	},
+
 	// get set 
 	getEnemies: function() {
 		return this.enemies;
