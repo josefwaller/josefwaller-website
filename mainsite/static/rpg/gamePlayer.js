@@ -4,6 +4,12 @@ var keysPressed = [];
 var delta;
 
 var size = 16;
+	
+// the index of the current dialog
+var currentDialog;
+
+// whther or not the dialog is showing
+var dialogIsShowing = false;
 
 var GamePlayer = Class({
 
