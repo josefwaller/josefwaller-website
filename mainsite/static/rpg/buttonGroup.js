@@ -12,8 +12,6 @@ var ButtonGroup = Class({
 
 	selectButton: function(id){
 
-		console.log(id);
-
 		$(this.btnGroup.children()[this.selectedBtn]).removeAttr("selected");
 
 		// Selects a button and sets the crosshairs appropriatly

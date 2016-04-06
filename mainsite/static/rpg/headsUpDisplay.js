@@ -63,9 +63,12 @@ var HeadsUpDisplay = Class({
 
 			// draws the tool
 			if (hasTool[tools[i]]){
+
+				// gets the x and y dimensions
 				var x = this.w - (this.padding + itemSize) - i * itemSize;
 				var y = this.padding;
 
+				// draws the tool's sprite
 				drawSprite(
 					this.ctx,
 					sprites[tools[i] + "Weapon"].onGround,
@@ -73,6 +76,7 @@ var HeadsUpDisplay = Class({
 					y,
 					itemSize);
 
+				// checks if this tool is the selected tool
 				if (selectedTool === tools[i]){
 
 					this.ctx.fillStyle = "#ffffff";
@@ -88,5 +92,22 @@ var HeadsUpDisplay = Class({
 			}
 		}
 
+		// draws the prompt for dialog if the player can talk to somebody
+		if (this.parent.getPlayer().getHasDialog()){
+
+			var fontSize = this.parent.s / 30;
+			var font = "'Press Start 2P'";
+			var ctx = this.parent.getCTX();
+
+			var y = this.parent.s / 3;
+
+			ctx.setFont(fontSize, font);
+
+			var size = ctx.measureText("Press Q", ctx.getFontString(fontSize, font)).width;
+			var x = (this.parent.s - size) / 2;
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillText("Press Q", x, y);
+		}
 	}
 })

@@ -525,5 +525,11 @@ var Player = new Class({
 	setHasDialog: function(hasDialog, dialogNum){
 		this.hasDialog = hasDialog;
 		this.dialogNum = dialogNum;
+	},
+	getHasDialog: function(){
+		return this.hasDialog;
+	},
+	getDialogNum: function(){
+		return this.getDialogNum;
 	}
 })

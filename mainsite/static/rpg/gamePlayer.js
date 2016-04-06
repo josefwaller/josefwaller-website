@@ -552,6 +552,9 @@ var GamePlayer = Class({
 	},
 	getAreaSize: function(){
 		return this.s;
+	},
+	getCTX: function(){
+		return this.ctx;
 	}
 
 });
