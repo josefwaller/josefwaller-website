@@ -60,6 +60,10 @@ var LevelEditor = Class({
 	// divs to hide and show
 	focusToolsDiv: null,
 	unfocusToolsDiv: null,
+
+	// button group managers
+	objectGroupManager: null,
+	toolGroupManager: null,
 	
 	init: function(p) {
 
@@ -84,7 +88,7 @@ var LevelEditor = Class({
 		// Creates example segment
 		segment = {
 			elements: [],
-			background: "one",
+			background: 1,
 		}
 
 		for (var oX = 0; oX < 5; oX++){
@@ -205,7 +209,7 @@ var LevelEditor = Class({
 			});
 
 			// sets it to change background
-			backgroundBtn.click({i: backgroundNum}, function(event) {
+			backgroundBtn.click({i: i}, function(event) {
 
 				changeBackground = event.data.i;
 
@@ -217,6 +221,8 @@ var LevelEditor = Class({
 			backgroundBtns.append(backgroundBtn);
 
 		}
+
+		this.backgroundGroupManager = new ButtonGroup({id: "lvl-edtr-b-group"})
 	},
 	update: function(){
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.w;
@@ -409,11 +415,10 @@ var LevelEditor = Class({
 	},
 	changeBackground: function(bIndex) {
 
-
-		console.log(this);
 		if (this.isFocused){
 
 			level[this.focusedArea.x][this.focusedArea.y].background = bIndex;
+			this.backgroundGroupManager.selectButton(bIndex - 1);
 
 		}
 
@@ -502,7 +507,25 @@ var LevelEditor = Class({
 		// gets the area
 		var area = level[areaX][areaY].elements;
 
-		var backgroundSprite = level[areaX][areaY].background;
+		var strName;
+
+		switch(level[areaX][areaY].background){
+			case 1:
+				strName = "one";
+				break;
+
+			case 2:
+				strName = "two";
+				break;
+
+			case 3:
+				strName = "three";
+				break;
+
+			default:
+				strName = level[areaX][areaY].background;
+		}
+		var backgroundSprite = strName;
 
 		// Draws the background sprite 
 		drawSprite(
