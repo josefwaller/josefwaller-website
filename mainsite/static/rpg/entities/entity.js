@@ -173,7 +173,6 @@ var Entity = Class({
 								}
 							}
 						}
-						// return true;
 					}
 				}
 			}
@@ -209,7 +208,6 @@ var Entity = Class({
 	},
 
 	getCurrentSprite: function(){
-		console.log(this.currentAnimation);
 		return sprites[this.spriteSetName][this.sprites[this.currentAnimation[this.currentSpriteIndex]]];
 	}
 

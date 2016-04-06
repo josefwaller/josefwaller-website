@@ -92,6 +92,9 @@ var Player = new Class({
 
 	mirror: false,
 
+	hasDialog: false,
+	dialogNum: null,
+
 	init: function(p){
 
 		lastAnimChange = new Date().getTime();
@@ -202,13 +205,18 @@ var Player = new Class({
 				// checks for tool switching
 				case "q":
 
-					if (this.lastKeys.indexOf("q") === -1){
+					if (!this.hasDialog){
 
-						if (this.selectedTool === "ranged" && this.hasTool.melee){
-							this.selectedTool = "melee";
-						}else if (this.hasTool.ranged){
-							this.selectedTool = "ranged";
+						if (this.lastKeys.indexOf("q") === -1){
+
+							if (this.selectedTool === "ranged" && this.hasTool.melee){
+								this.selectedTool = "melee";
+							}else if (this.hasTool.ranged){
+								this.selectedTool = "ranged";
+							}
 						}
+					}else {
+						console.log("Dialog!");
 					}
 
 					break;
@@ -513,5 +521,9 @@ var Player = new Class({
 	},
 	getTools: function(){
 		return this.hasTool;
+	},
+	setHasDialog: function(hasDialog, dialogNum){
+		this.hasDialog = hasDialog;
+		this.dialogNum = dialogNum;
 	}
 })

@@ -112,25 +112,20 @@ var GamePlayer = Class({
 				this.activeArea.y);	
 
 
+			for (var i = 0; i < this.npcs.length; i++){
+				if (this.entityIsInArea(this.npcs[i])){
+
+					this.npcs[i].update();
+					this.npcs[i].draw(this.ctx);
+				}
+			}
+
 			if (this.player !== null){
 				// runs the player functions
 				this.player.onKey(keysPressed, 1);
 				this.player.update();
 				this.player.draw(this.ctx);
-
-				var playerPos = this.player.getPos();
-
-				// checks if it should scroll
-
-				if (playerPos.x > this.s - this.player.getSize() || playerPos.x < 0){
-					
-					this.beginScroll(playerPos.x / Math.abs(playerPos.x), 0);
-
-				}
-				if (playerPos.y > this.s - this.player.getSize() || playerPos.y < 0){
-
-					this.beginScroll(0, playerPos.y / Math.abs(playerPos.y));
-				}
+				this.checkForPlayerScroll();
 			}
 
 			// updates everything
@@ -166,15 +161,25 @@ var GamePlayer = Class({
 
 			}
 
-			for (var i = 0; i < this.npcs.length; i++){
-				if (this.entityIsInArea(this.npcs[i])){
-					this.npcs[i].draw(this.ctx);
-				}
-			}
-
 			this.trimMissiles();
 
 			this.hud.render();
+		}
+	},
+	checkForPlayerScroll: function(){
+
+		var playerPos = this.player.getPos();
+
+		// checks if it should scroll
+
+		if (playerPos.x > this.s - this.player.getSize() || playerPos.x < 0){
+			
+			this.beginScroll(playerPos.x / Math.abs(playerPos.x), 0);
+
+		}
+		if (playerPos.y > this.s - this.player.getSize() || playerPos.y < 0){
+
+			this.beginScroll(0, playerPos.y / Math.abs(playerPos.y));
 		}
 	},
 
@@ -434,30 +439,30 @@ var GamePlayer = Class({
 
 										break;
 
-									// case "rangedEnemyOne":
-									// case "rangedEnemyTwo":
+									case "rangedEnemyOne":
+									case "rangedEnemyTwo":
 
-									// 	var type;
+										var type;
 
-									// 	if (objects[l[x][y]].name === "rangedEnemyOne"){
-									// 		type = 1;
-									// 	}else{
-									// 		type = 2;
-									// 	}
+										if (objects[l[x][y]].name === "rangedEnemyOne"){
+											type = 1;
+										}else{
+											type = 2;
+										}
 
-									// 	this.enemies.push(new RangedEnemy({
-									// 		x: blockSize * x,
-									// 		y: blockSize * y,
-									// 		s: blockSize,
-									// 		area: {
-									// 			x: lX,
-									// 			y: lY
-									// 		},
-									// 		parent: self,
-									// 		type: type
-									// 	}));
+										this.enemies.push(new RangedEnemy({
+											x: blockSize * x,
+											y: blockSize * y,
+											s: blockSize,
+											area: {
+												x: lX,
+												y: lY
+											},
+											parent: self,
+											type: type
+										}));
 
-									// 	break;
+										break;
 
 									case "npcOne":
 									case "npcTwo":

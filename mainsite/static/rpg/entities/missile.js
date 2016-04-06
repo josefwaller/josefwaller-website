@@ -53,7 +53,6 @@ var Missile = Class({
 
 					if (enemies[i].getIsAlive() === true){
 
-						console.log("Found suitable enemy");
 						if (this.checkForCollision(enemies[i])){
 
 							enemies[i].onHit();
