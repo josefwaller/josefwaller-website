@@ -208,10 +208,10 @@ var CTXPro = Class({
 		return this.ctx.measureText(text);
 	},
 	getFontString: function(size, font){
-		return size + "px " + font;
+		return size + "px '" + font + "'";
 	},
 	setFont: function(size, font){
-		this.font = Math.round(size * this.unit) + "px " + font;
+		this.font = Math.round(size * this.unit) + "px '" + font + "'";
 		this.ctx.font = this.font;
 	},
 	fillText: function(text, x, y){

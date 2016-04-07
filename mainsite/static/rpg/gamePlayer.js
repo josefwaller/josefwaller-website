@@ -47,7 +47,9 @@ var GamePlayer = Class({
 		y: 0
 	},
 
-	init: function(p){
+	isPaused: false,
+
+	init: function(p) {
 
 		this.canvas = $("#game-canvas");
 		this.ctx = CTXPro({
@@ -69,7 +71,7 @@ var GamePlayer = Class({
 			}
 
 			// checks if the keys would scroll the window
-		    if([32, 37, 38, 39, 40].indexOf(event.keyCode) !== -1) {
+		    if([32, 37, 38, 39, 40].indexOf(event.keyCode) !== -1 && playingGame) {
 		        event.preventDefault();
 		    }
 
@@ -95,7 +97,7 @@ var GamePlayer = Class({
 		this.createGame();
 	},
 
-	update: function(){
+	update: function() {
 		
 		// gets delta time
 		var d = new Date().getTime();
@@ -121,17 +123,22 @@ var GamePlayer = Class({
 			for (var i = 0; i < this.npcs.length; i++){
 				if (this.entityIsInArea(this.npcs[i])){
 
-					this.npcs[i].update();
+					if (!this.isPaused){
+						this.npcs[i].update();
+					}
 					this.npcs[i].draw(this.ctx);
 				}
 			}
 
 			if (this.player !== null){
-				// runs the player functions
-				this.player.onKey(keysPressed, 1);
-				this.player.update();
+
+				if (!this.isPaused){
+					// runs the player functions
+					this.player.onKey(keysPressed, 1);
+					this.player.update();
+					this.checkForPlayerScroll();
+				}
 				this.player.draw(this.ctx);
-				this.checkForPlayerScroll();
 			}
 
 			// updates everything
@@ -140,7 +147,9 @@ var GamePlayer = Class({
 
 				if (this.entityIsInArea(this.items[i])){
 
-					this.items[i].update();
+					if (!this.isPaused){
+						this.items[i].update();
+					}
 					this.items[i].draw(this.ctx);
 				}
 			}
@@ -149,7 +158,9 @@ var GamePlayer = Class({
 
 				if (this.entityIsInArea(this.enemies[i])){
 
-					this.enemies[i].update();
+					if (!this.isPaused){
+						this.enemies[i].update();
+					}
 					this.enemies[i].draw(this.ctx);
 
 				}
@@ -160,7 +171,10 @@ var GamePlayer = Class({
 
 				if (this.entityIsInArea(this.missiles[i])){
 
-					this.missiles[i].update();
+					if (!this.isPaused){
+
+						this.missiles[i].update();
+					}
 					this.missiles[i].draw(this.ctx);
 
 				}
@@ -170,9 +184,10 @@ var GamePlayer = Class({
 			this.trimMissiles();
 
 			this.hud.render();
+			this.hud.onKeys(keysPressed);
 		}
 	},
-	checkForPlayerScroll: function(){
+	checkForPlayerScroll: function() {
 
 		var playerPos = this.player.getPos();
 
@@ -189,7 +204,7 @@ var GamePlayer = Class({
 		}
 	},
 
-	entityIsInArea: function(entity){
+	entityIsInArea: function(entity) {
 
 		var entityArea = entity.getArea();
 
@@ -258,7 +273,7 @@ var GamePlayer = Class({
 		}
 	},
 
-	beginScroll: function(addX, addY){
+	beginScroll: function(addX, addY) {
 
 		// checks if the area exists
 		var canMoveToArea = false;
@@ -310,7 +325,7 @@ var GamePlayer = Class({
 		}
 	},
 
-	drawArea:function(x, y, areaX, areaY){
+	drawArea:function(x, y, areaX, areaY) {
 
 		area = level[areaX][areaY];
 
@@ -338,7 +353,7 @@ var GamePlayer = Class({
 	onMouseHold: function(){},
 	onMiddleClick: function(){},
 
-	createGame: function(){
+	createGame: function() {
 
 		// gets self for reference
 		var self = this;
@@ -529,7 +544,7 @@ var GamePlayer = Class({
 		var index = this.missiles.indexOf(missile);
 		this.missilesToRemove.push(index);
 	},
-	trimMissiles: function(){
+	trimMissiles: function() {
 
 		for (var i = 0; i < this.missilesToRemove.length; i++){
 
@@ -538,6 +553,16 @@ var GamePlayer = Class({
 		}
 
 		this.missilesToRemove = [];
+	},
+
+	startDialog: function(num) {
+
+		this.hud.startDialog(num - 1);
+		this.isPaused = true;
+
+	},
+	unpause: function(){
+		this.isPaused = false;
 	},
 
 	// get set 

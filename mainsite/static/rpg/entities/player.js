@@ -205,18 +205,18 @@ var Player = new Class({
 				// checks for tool switching
 				case "q":
 
-					if (!this.hasDialog){
 
-						if (this.lastKeys.indexOf("q") === -1){
+					if (this.lastKeys.indexOf("q") === -1){
+						if (!this.hasDialog){
 
 							if (this.selectedTool === "ranged" && this.hasTool.melee){
 								this.selectedTool = "melee";
 							}else if (this.hasTool.ranged){
 								this.selectedTool = "ranged";
 							}
+						}else {
+							this.parent.startDialog(this.dialogNum);
 						}
-					}else {
-						console.log("Dialog!");
 					}
 
 					break;
@@ -428,8 +428,8 @@ var Player = new Class({
 			}
 		}
 	},
-
-	draw: function(ctx){
+ 
+	draw: function(ctx){ 
 
 		if (this.isShowing){
 

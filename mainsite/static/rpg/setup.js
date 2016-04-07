@@ -367,7 +367,9 @@ function loadGame(){
 				volumes = data.musicSettings.volumes;
 				barSpeed = data.musicSettings.speed;
 				level = data.level;
+
 				dialogs = data.dialog;
+				dialog.updateDialogs();
 
 				// saves the current game
 				currentGameID = id;
