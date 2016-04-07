@@ -32,6 +32,7 @@ var GamePlayer = Class({
 	enemies: [],
 	missiles: [],
 	npcs: [],
+	barriers: [],
 
 	// a list of the indexes
 	missilesToRemove: [],
@@ -179,6 +180,14 @@ var GamePlayer = Class({
 
 				}
 
+			}
+
+			// draws barriers
+			for (var i = 0; i < this.barriers.length; i++){
+
+				if (this.entityIsInArea(this.barriers[i])){
+					this.barriers[i].draw(this.ctx);
+				}
 			}
 
 			this.trimMissiles();
@@ -518,6 +527,22 @@ var GamePlayer = Class({
 										}))
 										break;
 
+									// fallthrough for both barriers
+									case "breakableBarrier":
+									case "invincibleBarrier":
+
+										var isBreakable = (objects[l[x][y]].name === "breakableBarrier");
+										this.barriers.push(new Barrier({
+											x: blockSize * x,
+											y: blockSize * y,
+											s: blockSize,
+											area: {
+												x: lX,
+												y: lY
+											},
+											parent: self,
+											isBreakable: isBreakable
+										}))
 
 									default:
 										console.log(objects[l[x][y]].name)

@@ -172,7 +172,7 @@ var HeadsUpDisplay = Class({
 			var x = (this.parent.s - size) / 2;
 
 			ctx.fillStyle = "#ffffff";
-			ctx.fillText("Press Q", x, y);
+			ctx.fillBorderedText("Press Q", x, y, 0.3, "#000000", "#ffffff");
 		}
 	},
 

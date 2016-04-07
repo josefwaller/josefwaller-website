@@ -226,6 +226,17 @@ var CTXPro = Class({
 			Math.round(x * this.unit), 
 			Math.round(y * this.unit));
 	},
+	fillBorderedText: function(text, x, y, b, borderColor, textColor){
+
+		this.fillStyle = borderColor;
+		this.fillText(text, x - b, y);
+		this.fillText(text, x + b, y);
+		this.fillText(text, x, y - b);
+		this.fillText(text, x, y + b);
+
+		this.fillStyle = textColor;
+		this.fillText(text, x, y);
+	},
 	fillArc: function(x, y, r, sA, eA){
 
 		this.ctx.fillStyle = this.fillStyle;
