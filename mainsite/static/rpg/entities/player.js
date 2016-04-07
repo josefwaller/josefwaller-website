@@ -507,8 +507,29 @@ var Player = new Class({
 	},
 	move: function(x, y){
 		if (!this.isAttacking){
+
+			// checks it does not hit a barrier
+
+			// records its previous location so that it can move back if needed
+			var prevX = this.x;
+			var prevY = this.y;
+
+			// moves
 			this.x += this.speed * x * delta;
 			this.y += this.speed * y * delta;
+
+			// checks it does not hit a barrier
+			var bars = this.parent.getBarriers();
+			for (var i = 0; i < bars.length; i++){
+				var b = bars[i];
+				if (this.isInSameArea(b)){
+					if (this.checkForCollision(b)){
+						this.x = prevX;
+						this.y = prevY;
+						break;
+					}
+				}
+			}
 		}
 	},
 

@@ -605,6 +605,9 @@ var GamePlayer = Class({
 	},
 	getCTX: function(){
 		return this.ctx;
+	},
+	getBarriers: function(){
+		return this.barriers;
 	}
 
 });
