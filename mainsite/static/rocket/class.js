@@ -6,8 +6,6 @@ function Class (classObj){
 	// Returns a function that returns the class object
 	return (function(params){
 
-		classObj.init(params)
-
 		var newObj = {};
 
 		// checks for super class
@@ -27,6 +25,8 @@ function Class (classObj){
 				newObj[classObjIndex] = classObj[classObjIndex];
 			}
 		}
+
+		newObj.init(params)
 
 		newObj.id = id;
 		id ++;

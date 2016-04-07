@@ -200,45 +200,74 @@ var GamePlayer = Class({
 
 		var playerPos = this.player.getPos();
 
+		var directionX = 0;
+		var directionY = 0;
+		var futureCoords = this.player.getPos();
+
 		// checks if it should scroll
 
 		if (playerPos.x > this.s - this.player.getSize() || playerPos.x < 0){
 
-			// checks if the player would hit a barrier
-			var direction = playerPos.x / Math.abs(playerPos.x);
+			directionX = playerPos.x / Math.abs(playerPos.x);
 
-			var futureCoords = {
-				y: playerPos.Y
-			};
-
-			if (direction === 1){
+			if (directionX === 1){
 				futureCoords.x = 0;
-			}else {
-				futureCoords.x = this.s;
+			}else if (directionX === -1){
+				futureCoords.x = this.s - this.player.getSize();
 			}
+		}
+		if (playerPos.y > this.s - this.player.getSize() || playerPos.y < 0){
+
+			directionY = playerPos.y / Math.abs(playerPos.y);
+
+			if (directionY === 1){
+				futureCoords.y = 0;
+			}else if (directionY === -1){
+				futureCoords.y = this.s - this.player.getSize();
+			}
+		}
+
+		if (directionX !== 0 || directionY !== 0){
+
+			// checks if the player would hit a barrier
 
 			var canScroll = true;
+
+			console.log(futureCoords)
+
 			// checks the player does not hit any barriers
 			for (var i = 0; i < this.barriers.length; i++){
 				var b = this.barriers[i];
 
-				if (b.getArea().x === this.activeArea.x + direction){
-					if (b.getArea().y === this.activeArea.y){
-						canScroll = false;
-						break;
+				if (b.getArea().x === this.activeArea.x + directionX){
+					if (b.getArea().y === this.activeArea.y + directionY){
+
+						var bPos = b.getPos();
+						// ha ha bs
+						var bS = b.getSize();
+
+						var pS = this.player.getSize();
+
+						// checks if the player would hit the barrier
+						if (futureCoords.x < bPos.x + bS){
+							if (futureCoords.x + pS > bPos.x){
+								if (futureCoords.y < bPos.y + bS){
+									if (futureCoords.y + pS > bPos.y){
+										// prevents the player from scrolling
+										canScroll = false;
+										break;
+									}
+								}
+							}
+						}
 					}
 				}
 			}
 
 			if (canScroll){
-				this.beginScroll(direction, 0);
+				this.beginScroll(directionX, directionY);
 
 			}
-
-		}
-		if (playerPos.y > this.s - this.player.getSize() || playerPos.y < 0){
-
-			this.beginScroll(0, playerPos.y / Math.abs(playerPos.y));
 		}
 	},
 
@@ -435,7 +464,11 @@ var GamePlayer = Class({
 											x: blockSize * x,
 											y: blockSize * y,
 											s: blockSize,
-											parent: self
+											parent: self,
+											area: {
+												x: 0,
+												y: 0
+											}
 										});
 
 										this.activeArea.x = lX;
@@ -571,7 +604,9 @@ var GamePlayer = Class({
 											},
 											parent: self,
 											isBreakable: isBreakable
-										}))
+										}));
+
+										break;
 
 									default:
 										console.log(objects[l[x][y]].name)

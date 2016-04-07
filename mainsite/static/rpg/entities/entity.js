@@ -33,13 +33,13 @@ var Entity = Class({
 		this.y = p.y;
 		this.s = p.s;
 
-		if ("area" in p){
+		// the GamePlayer which this item belongs to
+		this.parent = p.parent;
+
+		if (Object.keys(p).indexOf("area") !== -1){
 			// copies the area to not get a reference, which would change with each item
 			this.area = JSON.parse(JSON.stringify(p.area));
 		}
-
-		// the GamePlayer which this item belongs to
-		this.parent = p.parent;
 	},
 
 	superRender: function(ctx) {
@@ -76,7 +76,6 @@ var Entity = Class({
 	isInSameArea: function(entity){
 
 		var entityArea = entity.getArea();
-
 		if (entityArea.x === this.area.x && entityArea.y === this.area.y){
 			return true;
 		}

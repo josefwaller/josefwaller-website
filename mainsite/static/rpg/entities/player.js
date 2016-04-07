@@ -99,6 +99,12 @@ var Player = new Class({
 
 		lastAnimChange = new Date().getTime();
 
+		// IMPORTANT STUFF HERE 
+		// Copies the active area value BY REFERENCE
+		// Entity automatically uses by value, but 
+		// player should always be in active area
+		this.area = this.parent.getActiveArea();
+
 	},
 
 	onKey: function(keys, delta){
@@ -543,6 +549,7 @@ var Player = new Class({
 				var b = bars[i];
 				if (this.isInSameArea(b)){
 					if (this.checkForCollision(b)){
+
 						this.x = prevX;
 						this.y = prevY;
 						break;
