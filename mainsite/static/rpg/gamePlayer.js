@@ -203,8 +203,37 @@ var GamePlayer = Class({
 		// checks if it should scroll
 
 		if (playerPos.x > this.s - this.player.getSize() || playerPos.x < 0){
-			
-			this.beginScroll(playerPos.x / Math.abs(playerPos.x), 0);
+
+			// checks if the player would hit a barrier
+			var direction = playerPos.x / Math.abs(playerPos.x);
+
+			var futureCoords = {
+				y: playerPos.Y
+			};
+
+			if (direction === 1){
+				futureCoords.x = 0;
+			}else {
+				futureCoords.x = this.s;
+			}
+
+			var canScroll = true;
+			// checks the player does not hit any barriers
+			for (var i = 0; i < this.barriers.length; i++){
+				var b = this.barriers[i];
+
+				if (b.getArea().x === this.activeArea.x + direction){
+					if (b.getArea().y === this.activeArea.y){
+						canScroll = false;
+						break;
+					}
+				}
+			}
+
+			if (canScroll){
+				this.beginScroll(direction, 0);
+
+			}
 
 		}
 		if (playerPos.y > this.s - this.player.getSize() || playerPos.y < 0){
@@ -611,3 +640,94 @@ var GamePlayer = Class({
 	}
 
 });
+
+function checkEntitiesForCollision(xOne, yOne, sOne, spriteOne, xTwo, yTwo, sTwo, spriteTwo){
+
+
+	if (xOne + sOne > xTwo){
+		if (xOne < xTwo + sTwo){
+			if (yOne + sOne > yTwo){
+				if (yOne < yTwo + sTwo){
+
+					// the blocks are colliding, so it checks if any pixels collide as well
+					var pixelSize = sTwo / size;
+					var offX = Math.floor(Math.abs(xTwo - xOne) / pixelSize);
+					var offY = Math.floor(Math.abs(yTwo - yOne) / pixelSize);
+
+					// the indexsOne to start and end at
+					// the only relevent pixels, the onsOne that have a chance of hitting each other
+					var startX;
+					var startY;
+					var endX;
+					var endY;
+					
+					if (xOne > xTwo){
+						// if the entity is farther right than thios entity, it can skip the first offX pixels
+						startX = offX;
+						endX = size;
+
+					}else if (xTwo > xOne){
+
+						startX = 0;
+						endX = size - offX;
+
+					}else {
+						startX = 0;
+						endX = size;
+					}
+
+					// dosOne the same for Y
+					if (yOne > yTwo){
+						startY = offY;
+						endY = size;
+					}else if (yTwo > yOne){
+						startY = 0;
+						endY = size - offY;
+					}else {
+						startY = 0;
+						endY = size;
+					}
+
+					// gets the current sprite
+					var thisSprite = spriteTwo;
+					var otherSprite = spriteOne;
+
+					// cyclsOne through and checks if any pixels hit
+					for (var thisX = startX; thisX < endX; thisX++){
+						for (var thisY = startY; thisY < endY; thisY++){
+
+							if (thisSprite[thisX][thisY] !== null){
+
+								for (var otherX = size - startX - 1; otherX >= 0; otherX--){
+									for (var otherY = size - startY - 1; otherY >= 0; otherY--){
+
+										if (otherSprite[otherX][otherY] !== null){
+
+											// check if the pixels hit
+											var thisPixelOffX = xTwo + thisX * pixelSize;
+											var thisPixelOffY = yTwo + thisY * pixelSize;
+
+											var otherPixelOffX = xOne + otherX * pixelSize;
+											var otherPixelOffY = yOne + otherY * pixelSize;
+
+											// checks if they hit
+											if (thisPixelOffX < otherPixelOffX + pixelSize){
+												if (thisPixelOffX + pixelSize > otherPixelOffX){
+													if (thisPixelOffY < otherPixelOffY + pixelSize){
+														if (thisPixelOffY + pixelSize > otherPixelOffY){
+															return true;
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -518,6 +518,25 @@ var Player = new Class({
 			this.x += this.speed * x * delta;
 			this.y += this.speed * y * delta;
 
+			var s = this.parent.getAreaSize();
+
+			// checks that the player does not run out of bounds
+			// stops him/her one pixel out, so that it will still 
+			// trigger the scroll
+			// if the player cannot scroll because there is a barrier there
+			// this stops him/her from running off of the screen
+			if (this.x < -1){
+				this.x = -1;
+			}else if (this.x > s + 1){
+				this.x = s + 1;
+			}
+
+			if (this.y < -1){
+				this.y = -1;
+			}else if (this.y > s + 1){
+				this.y = s + 1;
+			}
+
 			// checks it does not hit a barrier
 			var bars = this.parent.getBarriers();
 			for (var i = 0; i < bars.length; i++){

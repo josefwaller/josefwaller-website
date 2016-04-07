@@ -87,98 +87,13 @@ var Entity = Class({
 
 		ePos = e.getPos();
 		eS = e.getSize();
+		eSprite = e.getCurrentSprite();
 
-		if (ePos.x + eS > this.x){
-			if (ePos.x < this.x + this.s){
-				if (ePos.y + eS > this.y){
-					if (ePos.y < this.y + this.s){
+		var result = checkEntitiesForCollision(
+			this.x, this.y, this.s, this.getCurrentSprite(),
+			ePos.x, ePos.y, eS, eSprite);
 
-						// the blocks are colliding, so it checks if any pixels collide as well
-						var pixelSize = this.s / size;
-						var offX = Math.floor(Math.abs(this.x - ePos.x) / pixelSize);
-						var offY = Math.floor(Math.abs(this.y - ePos.y) / pixelSize);
-
-						// the indexes to start and end at
-						// the only relevent pixels, the ones that have a chance of hitting each other
-						var startX;
-						var startY;
-						var endX;
-						var endY;
-						
-						if (ePos.x > this.x){
-							// if the entity is farther right than thios entity, it can skip the first offX pixels
-							startX = offX;
-							endX = size;
-
-						}else if (this.x > ePos.x){
-
-							startX = 0;
-							endX = size - offX;
-
-						}else {
-							startX = 0;
-							endX = size;
-						}
-
-						// does the same for Y
-						if (ePos.y > this.y){
-							startY = offY;
-							endY = size;
-						}else if (this.y > ePos.y){
-							startY = 0;
-							endY = size - offY;
-						}else {
-							startY = 0;
-							endY = size;
-						}
-
-						// gets the current sprite
-						var thisSprite = this.getCurrentSprite();
-						var otherSprite = e.getCurrentSprite();
-
-						// cycles through and checks if any pixels hit
-						for (var thisX = startX; thisX < endX; thisX++){
-							for (var thisY = startY; thisY < endY; thisY++){
-
-								if (thisSprite[thisX][thisY] !== null){
-
-									for (var otherX = size - startX - 1; otherX >= 0; otherX--){
-										for (var otherY = size - startY - 1; otherY >= 0; otherY--){
-
-											if (otherSprite[otherX][otherY] !== null){
-
-												// check if the pixels hit
-												var thisPixelOffX = this.x + thisX * pixelSize;
-												var thisPixelOffY = this.y + thisY * pixelSize;
-
-												var otherPixelOffX = ePos.x + otherX * pixelSize;
-												var otherPixelOffY = ePos.y + otherY * pixelSize;
-
-												// checks if they hit
-												if (thisPixelOffX < otherPixelOffX + pixelSize){
-													if (thisPixelOffX + pixelSize > otherPixelOffX){
-														if (thisPixelOffY < otherPixelOffY + pixelSize){
-															if (thisPixelOffY + pixelSize > otherPixelOffY){
-																return true;
-															}
-														}
-													}
-												}
-
-
-											}
-
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return false;
+		return result;
 
 	},
 
