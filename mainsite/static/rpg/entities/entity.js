@@ -42,6 +42,55 @@ var Entity = Class({
 		}
 	},
 
+	superMove: function(x, y){
+
+		// checks it does not hit a barrier
+
+		// records its previous location so that it can move back if needed
+		var prev = {
+			x: this.x,
+			y: this.y
+		}
+
+		var translate = {
+			x: x,
+			y: y
+		}
+
+		var s = this.parent.getAreaSize();
+
+		for (var t in translate){
+
+			// moves
+			this[t] += this.speed * translate[t] * delta;
+
+
+			// checks that the player does not run out of bounds
+			// stops him/her one pixel out, so that it will still 
+			// trigger the scroll
+			// if the player cannot scroll because there is a barrier there
+			// this stops him/her from running off of the screen
+			if (this[t] < -1){
+				this[t] = -1;
+			}else if (this[t] > s + 1){
+				this[t] = s + 1;
+			}
+
+			// checks it does not hit a barrier
+			var bars = this.parent.getBarriers();
+			for (var i = 0; i < bars.length; i++){
+				var b = bars[i];
+				if (this.isInSameArea(b) && b.getHealth() > 0){
+					if (this.basicCheckForCollision(b)){
+
+						this[t] = prev[t];
+						break;
+					}
+				}
+			}
+		}
+	},
+
 	superRender: function(ctx) {
 
 		var spriteSet = sprites[this.spriteSetName];

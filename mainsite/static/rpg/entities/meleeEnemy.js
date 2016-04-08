@@ -96,11 +96,11 @@ var MeleeEnemy = Class({
 				// gets the distances X + Y to go,
 				// forms a right triangle between the enemy and the player
 				// with the speed as the hypotenuse
-				var moveX = this.speed * (disX / hyp);
-				var moveY = this.speed * (disY / hyp);
-
-				this.x += moveX * delta;
-				this.y += moveY * delta;
+				var moveX = (disX / hyp);
+				var moveY = (disY / hyp);
+				
+				this.superMove(moveX, 0);
+				this.superMove(0, moveY);
 
 				// changes animation
 				if (Math.abs(disX) > Math.abs(disY)){

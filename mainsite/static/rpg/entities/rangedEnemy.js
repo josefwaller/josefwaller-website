@@ -192,11 +192,11 @@ var RangedEnemy = Class({
 					if (this.y + this.s < playerPos.y){
 
 						this.currentAnimation = this.animations.runDown;
-						this.y += this.speed * delta;
+						this.superMove(0, 1);
 					}else if (this.y - this.s > playerPos.y){
 
 						this.currentAnimation = this.animations.runUp;
-						this.y -= this.speed * delta;
+						this.superMove(0, -1);
 
 					}
 
@@ -207,12 +207,12 @@ var RangedEnemy = Class({
 					if (this.x - this.s > playerPos.x){
 
 						this.mirror = false;
-						this.x -= this.speed * delta;
+						this.superMove(-1, 0);
 
 					}else if (this.x + this.s < playerPos.x){
 
 						this.mirror = true;
-						this.x += this.speed * delta;
+						this.superMove(1, 0);
 					}
 				}
 			}
