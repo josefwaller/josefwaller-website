@@ -138,8 +138,9 @@ var GamePlayer = Class({
 					this.player.onKey(keysPressed, 1);
 					this.player.update();
 					this.checkForPlayerScroll();
+
+					// note that the player is drawn on top of everything
 				}
-				this.player.draw(this.ctx);
 			}
 
 			// updates everything
@@ -189,6 +190,9 @@ var GamePlayer = Class({
 					this.barriers[i].draw(this.ctx);
 				}
 			}
+
+			// draws the plyer on top of everything
+			this.player.draw(this.ctx);
 
 			this.trimMissiles();
 
@@ -428,6 +432,8 @@ var GamePlayer = Class({
 		// clears previous entities
 		this.enemies = [];
 		this.items = [];
+		this.barriers = [];
+		this.npcs = [];
 		this.player = null;
 
 		// creates the HUD

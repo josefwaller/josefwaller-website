@@ -82,6 +82,24 @@ var Entity = Class({
 
 		return false;
 	},
+	basicCheckForCollision: function(e){
+
+		ePos = e.getPos();
+		eS = e.getSize();
+
+		if (this.x + this.s > ePos.x){
+			if (this.x < ePos.x + eS){
+				if (this.y + this.s > ePos.y){
+					if (this.y < ePos.y + eS){
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+
+	},
 	checkForCollision: function(e){
 
 		ePos = e.getPos();

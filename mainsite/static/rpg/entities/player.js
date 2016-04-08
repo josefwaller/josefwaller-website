@@ -203,6 +203,8 @@ var Player = new Class({
 								}));
 
 							}
+
+							this.attack();
 						}
 
 					}
@@ -288,57 +290,6 @@ var Player = new Class({
 			// checks for attacking
 			if (this.isAttacking){
 
-				// checks it has a weapon
-				if (this.hasTool.melee || this.hasTool.ranged){
-
-					// gets the attack position
-					var attackOrigin = this.getPos();
-					var maxOffset = this.s * 3 / 4;
-
-					switch (this.direction){
-
-						case this.dirs.up:
-							attackOrigin.y -= maxOffset;
-							break;
-
-						case this.dirs.down:
-							attackOrigin.y += maxOffset;
-							break;
-
-						case this.dirs.left:
-							attackOrigin.x -= maxOffset;
-							break;
-
-						case this.dirs.right:
-							attackOrigin.x += maxOffset;
-							break;
-					}
-
-					// checks if an enemy is there
-					for (var i = 0; i < this.parent.getEnemies().length; i++){
-
-						var e = this.parent.getEnemies()[i];
-
-						if (e.getArea().x === this.parent.getActiveArea().x && e.getArea().y === this.parent.getActiveArea().y){
-
-							var eS = e.getSize();
-							var eP = e.getPos()
-
-							if (eP.x + eS > attackOrigin.x){
-								if (eP.x < attackOrigin.x + this.s){
-									if (eP.y + eS > attackOrigin.y){
-										if (eP.y < attackOrigin.y + this.s){
-
-											e.onHit();
-
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-
 				// check if player is done attacking
 				var time = new Date().getTime();
 				if (time - this.attackTime > this.attackDuration && !this.spaceIsDown){
@@ -413,6 +364,85 @@ var Player = new Class({
 			}
 		}
 
+	},
+
+	attack: function(){
+
+		// checks it has a weapon
+		if (this.hasTool.melee || this.hasTool.ranged){
+
+			// gets the attack position
+			var attackOrigin = this.getPos();
+			var maxOffset = this.s * 3 / 4;
+
+			switch (this.direction){
+
+				case this.dirs.up:
+					attackOrigin.y -= maxOffset;
+					break;
+
+				case this.dirs.down:
+					attackOrigin.y += maxOffset;
+					break;
+
+				case this.dirs.left:
+					attackOrigin.x -= maxOffset;
+					break;
+
+				case this.dirs.right:
+					attackOrigin.x += maxOffset;
+					break;
+			}
+
+		}
+
+		// checks if an enemy is there
+		for (var i = 0; i < this.parent.getEnemies().length; i++){
+
+			var e = this.parent.getEnemies()[i];
+
+			if (e.getArea().x === this.parent.getActiveArea().x && e.getArea().y === this.parent.getActiveArea().y){
+
+				var eS = e.getSize();
+				var eP = e.getPos()
+
+				if (eP.x + eS > attackOrigin.x){
+					if (eP.x < attackOrigin.x + this.s){
+						if (eP.y + eS > attackOrigin.y){
+							if (eP.y < attackOrigin.y + this.s){
+
+								e.onHit();
+
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// checks if there is a breakable barrier there
+		for (var i = 0; i < this.parent.getBarriers().length; i++){
+
+			var b = this.parent.getBarriers()[i];
+
+			if (b.getArea().x === this.parent.getActiveArea().x && b.getArea().y === this.parent.getActiveArea().y){
+
+				var bS = b.getSize();
+				var bP = b.getPos()
+
+				if (bP.x + bS > attackOrigin.x){
+					if (bP.x < attackOrigin.x + this.s){
+						if (bP.y + bS > attackOrigin.y){
+							if (bP.y < attackOrigin.y + this.s){
+
+								b.onHit();
+
+							}
+						}
+					}
+				}
+			}
+		}
 	},
 
 	onHit: function(){
@@ -547,8 +577,8 @@ var Player = new Class({
 			var bars = this.parent.getBarriers();
 			for (var i = 0; i < bars.length; i++){
 				var b = bars[i];
-				if (this.isInSameArea(b)){
-					if (this.checkForCollision(b)){
+				if (this.isInSameArea(b) && b.getHealth() > 0){
+					if (this.basicCheckForCollision(b)){
 
 						this.x = prevX;
 						this.y = prevY;

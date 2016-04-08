@@ -30,7 +30,23 @@ var Barrier = Class({
 
 	},
 
+	onHit: function(){
+		if (this.isBreakable && this.health > 0){
+			this.health -= 1;
+
+			// changes sprite
+			this.currentAnimation = [2 - this.health];
+
+			console.log(this.currentAnimation)
+		}
+	},
+
 	draw: function(ctx){
 		this.superRender(ctx);
+	},
+
+	// get set
+	getHealth: function(){
+		return this.health;
 	}
 })
