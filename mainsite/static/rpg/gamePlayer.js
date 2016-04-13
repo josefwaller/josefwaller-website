@@ -26,6 +26,7 @@ var GamePlayer = Class({
 	s: 100,
 
 	player: null,
+	goal: null,
 
 	// lists of different entities
 	items: [],
@@ -189,6 +190,11 @@ var GamePlayer = Class({
 				if (this.entityIsInArea(this.barriers[i])){
 					this.barriers[i].draw(this.ctx);
 				}
+			}
+
+			if (this.entityIsInArea(this.goal)){
+				this.goal.update();
+				this.goal.draw(this.ctx);
 			}
 
 			// draws the plyer on top of everything
@@ -424,6 +430,10 @@ var GamePlayer = Class({
 	onMouseHold: function(){},
 	onMiddleClick: function(){},
 
+
+	onWin: function(){
+
+	},
 	createGame: function() {
 
 		// gets self for reference
@@ -612,6 +622,19 @@ var GamePlayer = Class({
 											isBreakable: isBreakable
 										}));
 
+										break;
+
+									case "goal":
+										this.goal = new Goal({
+											x: blockSize * x,
+											y: blockSize * y,
+											s: blockSize,
+											area: {
+												x: lX,
+												y: lY
+											},
+											parent: self
+										});
 										break;
 
 									default:

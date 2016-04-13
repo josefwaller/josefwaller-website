@@ -464,6 +464,10 @@ var Player = new Class({
 			}
 		}
 	},
+
+	onWin: function(){
+		console.log("Win!");
+	},
  
 	draw: function(ctx){ 
 

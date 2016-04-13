@@ -135,6 +135,8 @@ var Art = Class({
 				runUpOne: [],
 				runUpTwo: [],
 				attackUp: [],
+				pickUpItem: [],
+				win: [],
 				dialog: [],
 				life: [],
 			},
@@ -220,6 +222,9 @@ var Art = Class({
 				one: [],
 				two: [],
 				three: []
+			},
+			goal: {
+				onGround: [],
 			}
 		}
 
