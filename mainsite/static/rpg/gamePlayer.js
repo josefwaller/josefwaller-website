@@ -50,6 +50,7 @@ var GamePlayer = Class({
 	},
 
 	isPaused: false,
+	hasWon: false,
 
 	init: function(p) {
 
@@ -433,6 +434,8 @@ var GamePlayer = Class({
 
 	onWin: function(){
 
+		this.isPaused = true;
+		this.hasWon = true;
 	},
 	createGame: function() {
 
