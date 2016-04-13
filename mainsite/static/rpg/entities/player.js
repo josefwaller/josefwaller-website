@@ -14,7 +14,8 @@ var Player = new Class({
 		"runUpTwo",
 		"attackDown",
 		"attackSide",
-		"attackUp"
+		"attackUp",
+		"win"
 	],
 
 	// the different animations
@@ -45,7 +46,8 @@ var Player = new Class({
 			2,
 			4,
 			2
-		]
+		],
+		win: [9]
 	},
 
 	currentAnimation: [0],
@@ -95,6 +97,8 @@ var Player = new Class({
 	hasDialog: false,
 	dialogNum: null,
 
+	hasWon: false,
+
 	init: function(p){
 
 		lastAnimChange = new Date().getTime();
@@ -109,6 +113,10 @@ var Player = new Class({
 
 	onKey: function(keys, delta){
 
+		if (this.hasWon){
+			return;
+
+		}
 		// takes an array of keys
 		for (var i = 0; i < keys.length; i++){
 
@@ -238,6 +246,15 @@ var Player = new Class({
 
 	update: function(){
 
+
+		if (this.hasWon){
+
+			this.currentAnimation = this.animations.win;
+			this.currentSpriteIndex = 0;
+
+		}else{
+
+
 		// Checks if dead
 		// if not, checks if dying
 		// if not, checks for movement
@@ -363,6 +380,7 @@ var Player = new Class({
 				};
 			}
 		}
+		}
 
 	},
 
@@ -466,7 +484,7 @@ var Player = new Class({
 	},
 
 	onWin: function(){
-		console.log("Win!");
+		this.hasWon = true;
 	},
  
 	draw: function(ctx){ 

@@ -51,6 +51,8 @@ var GamePlayer = Class({
 
 	isPaused: false,
 	hasWon: false,
+	winTime: 0,
+	winDelay: 2000,
 
 	init: function(p) {
 
@@ -107,6 +109,13 @@ var GamePlayer = Class({
 		delta = (d - this.lastTime) / 1000;
 		this.lastTime = d;
 
+		// checks if the player has won
+		if (this.hasWon){
+			if (new Date().getTime() - this.winTime >= this.winDelay){
+				onWin();
+			}
+		}
+
 		// draws the area the player is in
 		var area = level[this.activeArea.x][this.activeArea.y];
 
@@ -135,7 +144,7 @@ var GamePlayer = Class({
 
 			if (this.player !== null){
 
-				if (!this.isPaused){
+				if (!this.isPaused || this.hasWon){
 					// runs the player functions
 					this.player.onKey(keysPressed, 1);
 					this.player.update();
@@ -436,11 +445,16 @@ var GamePlayer = Class({
 
 		this.isPaused = true;
 		this.hasWon = true;
+		this.winTime = new Date().getTime();
 	},
+
 	createGame: function() {
 
 		// gets self for reference
 		var self = this;
+
+		this.hasWon = false;
+		this.isPaused = false;
 
 		// clears previous entities
 		this.enemies = [];

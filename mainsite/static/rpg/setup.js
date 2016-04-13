@@ -379,6 +379,11 @@ function loadGame(){
 
 }
 
+function onWin(){
+	hideGameScreen();
+	isPlayingGame = false;
+}
+
 // shows the loading screen
 $(document.body).ready(function(){
 

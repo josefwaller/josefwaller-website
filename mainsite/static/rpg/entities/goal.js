@@ -6,15 +6,20 @@ var Goal = Class({
 		"onGround"
 	],
 
+	used: false,
+
 	init: function(p){
 	},
 
 	update: function(){
 		var player = this.parent.getPlayer();
 
-		if (this.checkForCollision(player)){
-			player.onWin();
-			this.parent.onWin();
+		if (!this.used){
+			if (this.checkForCollision(player)){
+				player.onWin();
+				this.parent.onWin();
+				this.used = true;
+			}
 		}
 	},
 	draw: function(ctx){
