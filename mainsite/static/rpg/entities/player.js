@@ -15,7 +15,8 @@ var Player = new Class({
 		"attackDown",
 		"attackSide",
 		"attackUp",
-		"win"
+		"win",
+		"pickUpItem"
 	],
 
 	// the different animations
@@ -47,7 +48,8 @@ var Player = new Class({
 			4,
 			2
 		],
-		win: [9]
+		win: [9],
+		item: [10]
 	},
 
 	currentAnimation: [0],
@@ -99,6 +101,11 @@ var Player = new Class({
 
 	hasWon: false,
 
+	isPickingUpItem: false,
+	pickedUpItem: "",
+	itemPickUpTime: 0,
+	itemPickUpDelay: 1000,
+
 	init: function(p){
 
 		lastAnimChange = new Date().getTime();
@@ -113,7 +120,7 @@ var Player = new Class({
 
 	onKey: function(keys, delta){
 
-		if (this.hasWon){
+		if (this.hasWon || this.isPickingUpItem){
 			return;
 
 		}
@@ -252,134 +259,145 @@ var Player = new Class({
 			this.currentAnimation = this.animations.win;
 			this.currentSpriteIndex = 0;
 
-		}else{
+		}else if (this.isPickingUpItem){
 
+			this.currentAnimation = this.animations.item;
+			this.currentSpriteIndex = 0;
 
-		// Checks if dead
-		// if not, checks if dying
-		// if not, checks for movement
-
-		if (this.isDying){
-
-			// checks if it has finished dying and the game should restart
-			if (new Date().getTime() - this.deathTime >= this.deathDelay){
-
-				this.parent.createGame();
-
-			}
-
-			this.checkForAnimChange();
-
-			if (this.currentSpriteIndex === 3){
-				this.mirror = true;
-			}else{
-				this.mirror = false;
+			if (new Date().getTime() - this.itemPickUpTime >= this.itemPickUpDelay){
+				this.isPickingUpItem = false;
+				this.currentAnimation = this.animations.runDown;
+				this.parent.unpause();
 			}
 
 		}else {
 
-			// checks if it should change the blink
-			if (this.isBlinking){
 
-				var time = new Date().getTime();
+			// Checks if dead
+			// if not, checks if dying
+			// if not, checks for movement
 
-				// checks if it is done blinking
-				if (time - this.blinkTime > this.blinkDuration * this.numOfBlinks){
-					this.isBlinking = false;
-					this.isShowing = true;
-				}else{
+			if (this.isDying){
 
-					// gets whether or not it should show
-					var timeSince = time - this.blinkTime;
-					var blinksSince = Math.round(timeSince / this.blinkDuration);
+				// checks if it has finished dying and the game should restart
+				if (new Date().getTime() - this.deathTime >= this.deathDelay){
 
-					if (blinksSince % 2 === 0){
+					this.parent.createGame();
 
-						this.isShowing = false;
-
-					}else {
-						this.isShowing = true;
-					}
 				}
 
-			}
+				this.checkForAnimChange();
 
-			// checks for attacking
-			if (this.isAttacking){
-
-				// check if player is done attacking
-				var time = new Date().getTime();
-				if (time - this.attackTime > this.attackDuration && !this.spaceIsDown){
-
-					this.isAttacking = false;
-
-					// changes animation
-					switch (this.direction){
-						case this.dirs.down: 
-							this.currentAnimation = this.animations.runDown;
-							break;
-
-						// fall through for both left and right
-						case this.dirs.left:
-						case this.dirs.right:
-							this.currentAnimation = this.animations.runSide;
-							break;
-
-						case this.dirs.up:
-							this.currentAnimation = this.animations.runUp;
-							break;
-					}
+				if (this.currentSpriteIndex === 3){
+					this.mirror = true;
+				}else{
+					this.mirror = false;
 				}
 
 			}else {
 
-				// checks for movement
-				if (this.translate.x !== 0 || this.translate.y !== 0){
+				// checks if it should change the blink
+				if (this.isBlinking){
 
-					this.mirror = false;
+					var time = new Date().getTime();
 
-					// moves accoring to tranlate
-					this.move(this.translate.x, this.translate.y);
+					// checks if it is done blinking
+					if (time - this.blinkTime > this.blinkDuration * this.numOfBlinks){
+						this.isBlinking = false;
+						this.isShowing = true;
+					}else{
 
-					// checks for animation
-					switch(this.translate.y){
-						case 1:
-							// running down
-							this.currentAnimation = this.animations.runDown;
-							this.direction = this.dirs.down;
-							break;
+						// gets whether or not it should show
+						var timeSince = time - this.blinkTime;
+						var blinksSince = Math.round(timeSince / this.blinkDuration);
 
-						case -1:
-							// running up
-							this.currentAnimation = this.animations.runUp;
-							this.direction = this.dirs.up;
-							break
+						if (blinksSince % 2 === 0){
 
-					}
+							this.isShowing = false;
 
-					// running sideways
-					if (this.translate.x !== 0){
-
-						this.currentAnimation = this.animations.runSide;
-
-						if (this.translate.x == 1){
-							this.mirror = true;
-							this.direction = this.dirs.right;
-						}else{
-							this.direction = this.dirs.left;
+						}else {
+							this.isShowing = true;
 						}
 					}
 
-					this.checkForAnimChange();
-
 				}
 
-				this.translate = {
-					x: 0,
-					y: 0
-				};
+				// checks for attacking
+				if (this.isAttacking){
+
+					// check if player is done attacking
+					var time = new Date().getTime();
+					if (time - this.attackTime > this.attackDuration && !this.spaceIsDown){
+
+						this.isAttacking = false;
+
+						// changes animation
+						switch (this.direction){
+							case this.dirs.down: 
+								this.currentAnimation = this.animations.runDown;
+								break;
+
+							// fall through for both left and right
+							case this.dirs.left:
+							case this.dirs.right:
+								this.currentAnimation = this.animations.runSide;
+								break;
+
+							case this.dirs.up:
+								this.currentAnimation = this.animations.runUp;
+								break;
+						}
+					}
+
+				}else {
+
+					// checks for movement
+					if (this.translate.x !== 0 || this.translate.y !== 0){
+
+						this.mirror = false;
+
+						// moves accoring to tranlate
+						this.move(this.translate.x, this.translate.y);
+
+						// checks for animation
+						switch(this.translate.y){
+							case 1:
+								// running down
+								this.currentAnimation = this.animations.runDown;
+								this.direction = this.dirs.down;
+								break;
+
+							case -1:
+								// running up
+								this.currentAnimation = this.animations.runUp;
+								this.direction = this.dirs.up;
+								break
+
+						}
+
+						// running sideways
+						if (this.translate.x !== 0){
+
+							this.currentAnimation = this.animations.runSide;
+
+							if (this.translate.x == 1){
+								this.mirror = true;
+								this.direction = this.dirs.right;
+							}else{
+								this.direction = this.dirs.left;
+							}
+						}
+
+						this.checkForAnimChange();
+
+					}
+
+					this.translate = {
+						x: 0,
+						y: 0
+					};
+				}
 			}
-		}
 		}
 
 	},
@@ -559,6 +577,19 @@ var Player = new Class({
 
 				}
 
+			}else if (this.isPickingUpItem){
+
+				// gets the sprite
+				toolSprite = sprites[this.pickedUpItem + "Weapon"].onGround;
+
+				// draws it
+				drawSprite(
+					ctx,
+					toolSprite,
+					this.x,
+					this.y - this.s,
+					this.s);
+
 			}
 		}
 
@@ -568,6 +599,17 @@ var Player = new Class({
 
 			this.superMove(x, y);
 		}
+	},
+	pickUpItem: function(type){
+
+		this.hasTool[type] = true;
+		this.selectedTool = type;
+
+		this.isPickingUpItem = true;
+		this.pickedUpItem = type;
+		this.itemPickUpTime = new Date().getTime();
+
+		this.parent.pause();
 	},
 
 	// gets set functions
@@ -589,5 +631,8 @@ var Player = new Class({
 	},
 	getDialogNum: function(){
 		return this.getDialogNum;
+	},
+	getIsPickingUpItem: function(){
+		return this.isPickingUpItem;
 	}
 })

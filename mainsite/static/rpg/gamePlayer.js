@@ -144,7 +144,7 @@ var GamePlayer = Class({
 
 			if (this.player !== null){
 
-				if (!this.isPaused || this.hasWon){
+				if (!this.isPaused || this.hasWon || this.player.getIsPickingUpItem()){
 					// runs the player functions
 					this.player.onKey(keysPressed, 1);
 					this.player.update();
@@ -695,6 +695,9 @@ var GamePlayer = Class({
 		this.hud.startDialog(num - 1);
 		this.isPaused = true;
 
+	},
+	pause: function(){
+		this.isPaused = true;
 	},
 	unpause: function(){
 		this.isPaused = false;

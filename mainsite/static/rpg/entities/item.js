@@ -35,8 +35,7 @@ var Item = new Class({
 	onPickUp: function(){
 
 		this.isUsed = true;
-		this.parent.player.hasTool[this.type] = true;
-		this.parent.player.selectedTool = this.type;
+		(this.parent.getPlayer()).pickUpItem(this.type);
 
 	},
 
