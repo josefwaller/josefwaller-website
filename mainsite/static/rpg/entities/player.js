@@ -430,49 +430,49 @@ var Player = new Class({
 					break;
 			}
 
-		}
 
-		// checks if an enemy is there
-		for (var i = 0; i < this.parent.getEnemies().length; i++){
+			// checks if an enemy is there
+			for (var i = 0; i < this.parent.getEnemies().length; i++){
 
-			var e = this.parent.getEnemies()[i];
+				var e = this.parent.getEnemies()[i];
 
-			if (e.getArea().x === this.parent.getActiveArea().x && e.getArea().y === this.parent.getActiveArea().y){
+				if (e.getArea().x === this.parent.getActiveArea().x && e.getArea().y === this.parent.getActiveArea().y){
 
-				var eS = e.getSize();
-				var eP = e.getPos()
+					var eS = e.getSize();
+					var eP = e.getPos()
 
-				if (eP.x + eS > attackOrigin.x){
-					if (eP.x < attackOrigin.x + this.s){
-						if (eP.y + eS > attackOrigin.y){
-							if (eP.y < attackOrigin.y + this.s){
+					if (eP.x + eS > attackOrigin.x){
+						if (eP.x < attackOrigin.x + this.s){
+							if (eP.y + eS > attackOrigin.y){
+								if (eP.y < attackOrigin.y + this.s){
 
-								e.onHit();
+									e.onHit();
 
+								}
 							}
 						}
 					}
 				}
 			}
-		}
 
-		// checks if there is a breakable barrier there
-		for (var i = 0; i < this.parent.getBarriers().length; i++){
+			// checks if there is a breakable barrier there
+			for (var i = 0; i < this.parent.getBarriers().length; i++){
 
-			var b = this.parent.getBarriers()[i];
+				var b = this.parent.getBarriers()[i];
 
-			if (b.getArea().x === this.parent.getActiveArea().x && b.getArea().y === this.parent.getActiveArea().y){
+				if (b.getArea().x === this.parent.getActiveArea().x && b.getArea().y === this.parent.getActiveArea().y){
 
-				var bS = b.getSize();
-				var bP = b.getPos()
+					var bS = b.getSize();
+					var bP = b.getPos()
 
-				if (bP.x + bS > attackOrigin.x){
-					if (bP.x < attackOrigin.x + this.s){
-						if (bP.y + bS > attackOrigin.y){
-							if (bP.y < attackOrigin.y + this.s){
+					if (bP.x + bS > attackOrigin.x){
+						if (bP.x < attackOrigin.x + this.s){
+							if (bP.y + bS > attackOrigin.y){
+								if (bP.y < attackOrigin.y + this.s){
 
-								b.onHit();
+									b.onHit();
 
+								}
 							}
 						}
 					}
