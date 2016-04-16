@@ -98,7 +98,6 @@ def save_rpg_game (request):
 		# 	sprites: (sprites as JSON),
 		# 	colors: (colors as JSON),
 		# 	notes: (the music notes as JSON),
-		# 	musicSettings: (the music volume and speed as JSON),
 		# 	dialog: (the dialog as JSON)
 		#	id: (the optional ID of the existing game)
 		# }
@@ -118,15 +117,11 @@ def save_rpg_game (request):
 
 			# Gets the components from ID
 			level_save = models.LevelSave.objects.get(pk=ids['level'])
-			music_save = models.MusicSave.objects.get(pk=ids['music'])
 			dialog_save = models.DialogSave.objects.get(pk=ids['dialog'])
 			sprite_set_save = models.SpriteSetSave.objects.get(pk=ids['sprite_set'])
 
 			# saves over the components
 			level_save.levelJSON = json.dumps(data['level'])
-			
-			music_save.notesJSON = json.dumps(data['notes'])
-			music_save.settingsJSON = json.dumps(data['musicSettings'])
 
 			dialog_save.dialogJSON = json.dumps(data['dialog'])
 
@@ -134,7 +129,6 @@ def save_rpg_game (request):
 
 			# saves them
 			level_save.save()
-			music_save.save()
 			dialog_save.save()
 			sprite_set_save.save()
 
@@ -267,12 +261,6 @@ def save_rpg_game (request):
 			)
 			level_save.save()
 
-			music_save = models.MusicSave(
-				notesJSON=data['notes'],
-				settingsJSON=data['musicSettings']
-			)
-			music_save.save()
-
 			dialog_save = models.DialogSave(
 				dialogJSON=data['dialog']
 			)
@@ -282,7 +270,6 @@ def save_rpg_game (request):
 			gameSave = models.GameSave(
 				levelID=level_save.id,
 				spritesID=sprite_set_save.id,
-				musicID=music_save.id,
 				dialogID=dialog_save.id
 			)
 			gameSave.save()
@@ -330,10 +317,6 @@ def get_rpg_game (request):
 
 		level_save = models.LevelSave.objects.get(pk=game_save.levelID)
 		toReturn['level'] = json.loads(level_save.levelJSON)
-
-		music_save = models.MusicSave.objects.get(pk=game_save.musicID)
-		toReturn['notes'] = json.loads(music_save.notesJSON)
-		toReturn['musicSettings'] = json.loads(music_save.settingsJSON)
 
 		dialog_save = models.DialogSave.objects.get(pk=game_save.dialogID)
 		toReturn['dialog'] = json.loads(dialog_save.dialogJSON)
@@ -404,8 +387,6 @@ def get_game_component_ids(game_id):
 
 	level_save = models.LevelSave.objects.get(pk=game_save.levelID)
 
-	music_save = models.MusicSave.objects.get(pk=game_save.musicID)
-
 	dialog_save = models.DialogSave.objects.get(pk=game_save.dialogID)
 
 	# Gets the sprites
@@ -432,7 +413,6 @@ def get_game_component_ids(game_id):
 	toReturn = {
 		"game": game_id,
 		"level": level_save.id,
-		"music": music_save.id,
 		"dialog": dialog_save.id,
 		"sprite_set": sprite_set_save.id,
 		"sprite_objects": indexes,

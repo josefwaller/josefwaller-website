@@ -27,7 +27,7 @@ var colors = [
 var currentScreen;
 
 var art;
-var music;
+// var music;
 var dialog;
 var levelEditor;
 var game;
@@ -65,7 +65,7 @@ function setup () {
 	art = Art({size: size});
 
 	// sets up music canvas
-	music = Music({});
+	// music = Music({});
 
 	// sets up dialog
 	dialog = Dialog({});
@@ -79,8 +79,8 @@ function setup () {
 	// Sets up changing screens
 	$("#level-editor-btn").click({i:0}, changeScreen);
 	$("#art-btn").click({i:1}, changeScreen);
-	$("#music-btn").click({i:2}, changeScreen);
-	$("#dialog-btn").click({i:3}, changeScreen);
+	// $("#music-btn").click({i:2}, changeScreen);
+	$("#dialog-btn").click({i:2}, changeScreen);
 
 	// note that the game button does not call changeScreen
 	$("#game-btn").click(showGameScreen);
@@ -102,7 +102,7 @@ function setup () {
 	screens = {
 		levelEditor: $("#level-editor"),
 		art: $("#art"),
-		music: $("#music"),
+		// music: $("#music"),
 		dialog: $("#dialog"),
 		game: $("#game")
 	}
@@ -163,10 +163,10 @@ function changeScreen(event, i) {
 			break;
 
 		case 2:
-			screens.music.show();
-			break;
+		// 	screens.music.show();
+		// 	break;
 
-		case 3:
+		// case 3:
 			screens.dialog.show();
 			break;
 	}
@@ -188,7 +188,7 @@ function update() {
 		managers = [
 			levelEditor,
 			art,
-			music,
+			// music,
 			dialog
 		];
 
@@ -259,11 +259,11 @@ function saveGame(){
 		level: level, 
 		sprites: sprites,
 		colors: colors,
-		notes: musicTracks,
-		musicSettings: {
-			volumes: volumes,
-			speed: barSpeed
-		},
+		// notes: musicTracks,
+		// musicSettings: {
+		// 	volumes: volumes,
+		// 	speed: barSpeed
+		// },
 		dialog: dialogs
 	}
 
@@ -363,9 +363,10 @@ function loadGame(){
 				// keep after adding color
 				art.updateAllButtons();
 
-				musicTracks = data.notes;
-				volumes = data.musicSettings.volumes;
-				barSpeed = data.musicSettings.speed;
+				// musicTracks = data.notes;
+				// volumes = data.musicSettings.volumes;
+				// barSpeed = data.musicSettings.speed;
+				
 				level = data.level;
 
 				dialogs = data.dialog;

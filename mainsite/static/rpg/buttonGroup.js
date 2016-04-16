@@ -19,6 +19,7 @@ var ButtonGroup = Class({
 		$(this.btnGroup.children()[this.selectedBtn]).attr("selected", "true");
 
 		this.checkForJustification();
+		
 	},
 
 	checkForJustification: function(){

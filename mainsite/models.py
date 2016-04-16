@@ -32,10 +32,10 @@ class SpriteSetSave (models.Model):
 	colorsJSON = models.CharField(max_length=1000)
 
 
-class MusicSave (models.Model):
+# class MusicSave (models.Model):
 
-	notesJSON = models.CharField(max_length=2000)
-	settingsJSON = models.CharField(max_length=500)
+# 	notesJSON = models.CharField(max_length=2000)
+# 	settingsJSON = models.CharField(max_length=500)
 
 class DialogSave (models.Model):
 
@@ -50,6 +50,5 @@ class GameSave (models.Model):
 	# the ids of the associated saves
 	# ex music id is the id for the MusicSave Object for this game
 	spritesID = models.IntegerField()
-	musicID = models.IntegerField()
 	dialogID = models.IntegerField()
 	levelID = models.IntegerField()
