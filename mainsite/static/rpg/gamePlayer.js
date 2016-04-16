@@ -41,7 +41,6 @@ var GamePlayer = Class({
 	lastTime: 0,
 
 	isScrolling: false,
-	scrollDirection: null,
 	scrollTime: null,
 	scrollDuration: 500,
 	scrollDirection: {
@@ -252,8 +251,6 @@ var GamePlayer = Class({
 			// checks if the player would hit a barrier
 
 			var canScroll = true;
-
-			console.log(futureCoords)
 
 			// checks the player does not hit any barriers
 			for (var i = 0; i < this.barriers.length; i++){

@@ -229,11 +229,11 @@ function update() {
 function showGameScreen(){
 
 	// removes the up anim
-	if (screens.game.hasClass("game-up-anim")){
-		screens.game.removeClass("game-up-anim");
+	if (screens.game.hasClass("up-anim")){
+		screens.game.removeClass("up-anim");
 	}
 	// adds the down animation
-	screens.game.addClass("game-down-anim");
+	screens.game.addClass("down-anim");
 
 	// shows the game screen
 	screens.game.show();
@@ -244,10 +244,10 @@ function showGameScreen(){
 }
 function hideGameScreen(){
 
-	if (screens.game.hasClass("game-down-anim")){
-		screens.game.removeClass("game-down-anim");
+	if (screens.game.hasClass("down-anim")){
+		screens.game.removeClass("down-anim");
 	}
-	screens.game.addClass("game-up-anim");
+	screens.game.addClass("up-anim");
 	screens.game.show();
 
 	playingGame = false;
@@ -368,6 +368,8 @@ function loadGame(){
 				// barSpeed = data.musicSettings.speed;
 				
 				level = data.level;
+				
+				// Add counting entities here
 
 				dialogs = data.dialog;
 				dialog.updateDialogs();

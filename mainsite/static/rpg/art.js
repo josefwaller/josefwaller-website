@@ -363,10 +363,9 @@ var Art = Class({
 
 		/*
 			Should make a compass like this
-			   ____
-			 __|__|__
-			|__|__|__|
-			   |__|
+			   /\
+			 <    >
+			   \/
 
 		*/
 

@@ -54,3 +54,9 @@ canvas {
   margin-top: 5px;
 }
 
+/* removes ugly buttons */
+button
+{
+	border: none;
+}
+	

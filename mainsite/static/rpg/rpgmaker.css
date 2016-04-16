@@ -41,19 +41,73 @@ canvas
 	width: 40px;
 }
 
+/* Used for completely centered elements like the loading icon and alert box */
+.center-element-outer-container
+{
+	position: absolute;
+	display: inline-flex;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 
+	/* Hides the loading symbol during the transition */
+	overflow: hidden;
+}
 
-#l1-btn
+.center-element-inner-container
 {
-	background-color: #66ff66;
+	margin: auto 5px;
+	display: block;
+	color: white;
+	height: 100px;
+
+	width: 100%;
+	text-align: center;
 }
-#l2-btn
+.centered-element
 {
-	background-color: #ff9933;
+	font-family: "Raleway";
+	font-size: 20px;
+	text-align:center;
+	display: block;
+	
+	/* Centers the element horizontally */
+	margin: -50px auto;
 }
-#l3-btn
+
+/* The Alert box */
+
+#alert-box
 {
-	background-color: #ff66cc;
+	background-color: #4da6ff;
+	color: #ffffff;
+	width : 350px;
+	min-height: 200px;
+	box-sizing: border-box;
+	padding: 20px;
+	text-align: center;
+}
+#alert-box-btn
+{
+	width: 100px;
+	height: 50px;
+	background-color: #3399ff;
+	margin: auto;
+	margin-top: 25px;
+	padding: 5px;
+	box-sizing: border-box;
+}
+#alert-box-btn:hover
+{
+	color: #3399ff;
+	background-color: #ffffff;
+}
+.alert-box-input
+{
+	margin-top: 20px;
+	border: 0px;
+	color: #000000;
 }
 
 #lvl-edtr-b-group
@@ -130,35 +184,27 @@ canvas
 
 
 /* Game Elements */
-#game
-{
-	position: absolute;
-	height: 100%;
-	width: 100%;
-	left: 0px;
-}
 #game-cont
 {
 	text-align: center;
-	width: 100%;
+	height: 500px;
 }
 #game-canvas-cont
 {
 	width: 500px;
-	display: inline-block;
 }
 #game-canvas
 {
 	background-color: #f00000;
 }
 
-.game-down-anim
+.down-anim
 {
 
-	animation: game-down 1s;
+	animation: down 1s;
 	animation-fill-mode: forwards;
 }
-@keyframes game-down
+@keyframes down
 {
 	0% {
 		top: -100%;
@@ -168,13 +214,13 @@ canvas
 	}
 }
 
-.game-up-anim
+.up-anim
 {
 
-	animation: game-up 1s;
+	animation: up 1s;
 	animation-fill-mode: forwards;
 }
-@keyframes game-up
+@keyframes up
 {
 	0% {
 		top: 0%;
@@ -194,33 +240,9 @@ canvas
 
 #loading
 {
-	position: absolute;
-	display: inline-flex;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: #3399ff;
-
 	/* Hides the loading symbol during the transition */
 	overflow: hidden;
-}
-#loading-container
-{
-	margin: auto 5px;
-	display: block;
-	color: white;
-	height: 100px;
-
-	width: 100%;
-	text-align: center;
-}
-#loading-block
-{
-	margin-top: -50px;
-	font-family: "Raleway";
-	font-size: 20px;
-	text-align:center;
+	background-color: #4da6ff;
 }
 
 #loading-circle
