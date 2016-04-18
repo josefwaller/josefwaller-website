@@ -177,49 +177,52 @@ function changeScreen(event, i) {
 
 function update() {
 
-	if (playingGame){
+	if (!alert.getIsShowing()){
+		
+		if (playingGame){
 
-		m = game;
+			m = game;
 
-	}else {
+		}else {
 
 
-		// gets all the managers
-		managers = [
-			levelEditor,
-			art,
-			// music,
-			dialog
-		];
+			// gets all the managers
+			managers = [
+				levelEditor,
+				art,
+				// music,
+				dialog
+			];
 
-		m = managers[currentScreen];
-	}
+			m = managers[currentScreen];
+		}
 
-	// Resets the pointer
-	$(document.body).css("cursor", "initial");
+		// Resets the pointer
+		$(document.body).css("cursor", "initial");
 
-	// updates
-	m.update();
+		// updates
+		m.update();
 
-	// runs any mouse-related functions
-	if (mouse.down){
-		m.onMouseHold();
-	}else {
-		m.onMouseUp();
-	}
+		// runs any mouse-related functions
+		if (mouse.down){
+			m.onMouseHold();
+		}else {
+			m.onMouseUp();
+		}
 
-	if (mouse.click){
+		if (mouse.click){
 
-		m.onClick();
+			m.onClick();
 
-		mouse.click = false;
+			mouse.click = false;
 
-	}else if (mouse.middleClick){
+		}else if (mouse.middleClick){
 
-		m.onMiddleClick();
+			m.onMiddleClick();
 
-		this.mouse.middleClick = false;
+			this.mouse.middleClick = false;
 
+		}
 	}
 
 	// sets to update again
@@ -288,14 +291,14 @@ function saveGame(){
 
 			if (res == 'failure'){
 
-				alert("Error: please contact the admin at josef@josefwaller.com")
+				alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
 			}else {
 
 				if (currentGameID === null){
-					alert("Your code is " + res);
+					alert.show("Your code is " + res, [], null);
 					currentGameID = res;
 				}else {
-					alert ("Successfully Saved");
+					alert.show("Successfully Saved", [], null);
 				}
 			}
 		}
@@ -306,79 +309,82 @@ function loadGame(){
 
 	var data;
 
-	var id = prompt("Please enter an id:");
+	alert.show("Please enter an id:", ["ID"], function(obj){
+		
+		var id = obj.ID;
+		
+		$.ajax({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			},
+			url: "/rpgmaker_get/",
+			type: "POST",
+			data: JSON.stringify(id),
+			success: function (res){
 
-	$.ajax({
-		beforeSend: function(xhr, settings) {
-			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-				xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			}
-		},
-		url: "/rpgmaker_get/",
-		type: "POST",
-		data: JSON.stringify(id),
-		success: function (res){
+				if (res == 'failure'){
 
-			if (res == 'failure'){
+					alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
+				}else {
+					
+					// now i have to do stuff with this
+					var data = JSON.parse(res);
 
-				alert("Error: please contact the admin at josef@josefwaller.com")
-			}else {
-				
-				// now i have to do stuff with this
-				var data = JSON.parse(res);
+					// checks for each sprite if it is null
+					for (var object in data.sprites){
+						for (var sprite in data.sprites[object]){
 
-				// checks for each sprite if it is null
-				for (var object in data.sprites){
-					for (var sprite in data.sprites[object]){
+							if (data.sprites[object][sprite] === null){
 
-						if (data.sprites[object][sprite] === null){
+								// creates a null filled sprite
 
-							// creates a null filled sprite
+								var empty = [];
 
-							var empty = [];
+								for (var x = 0; x < size; x++){
+									empty.push([]);
+									for (var y = 0; y < size; y++){
 
-							for (var x = 0; x < size; x++){
-								empty.push([]);
-								for (var y = 0; y < size; y++){
+										empty[x].push(null);
 
-									empty[x].push(null);
-
+									}
 								}
+
+							}else {
+
+								sprites[object][sprite] = data.sprites[object][sprite];
+
 							}
 
-						}else {
-
-							sprites[object][sprite] = data.sprites[object][sprite];
-
 						}
-
 					}
+
+					// does everything else
+					colors = data.colors;
+					art.setColorButtons();
+
+					// updates the sprite canvases
+					// keep after adding color
+					art.updateAllButtons();
+
+					// musicTracks = data.notes;
+					// volumes = data.musicSettings.volumes;
+					// barSpeed = data.musicSettings.speed;
+					
+					level = data.level;
+					
+					// Add counting entities here
+
+					dialogs = data.dialog;
+					dialog.updateDialogs();
+
+					// saves the current game
+					currentGameID = id;
 				}
-
-				// does everything else
-				colors = data.colors;
-				art.setColorButtons();
-
-				// updates the sprite canvases
-				// keep after adding color
-				art.updateAllButtons();
-
-				// musicTracks = data.notes;
-				// volumes = data.musicSettings.volumes;
-				// barSpeed = data.musicSettings.speed;
-				
-				level = data.level;
-				
-				// Add counting entities here
-
-				dialogs = data.dialog;
-				dialog.updateDialogs();
-
-				// saves the current game
-				currentGameID = id;
 			}
-		}
-	})
+		})
+	});
 
 }
 
