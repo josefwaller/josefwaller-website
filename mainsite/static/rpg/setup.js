@@ -177,7 +177,7 @@ function changeScreen(event, i) {
 
 function update() {
 
-	if (!alert.getIsShowing()){
+	// if (!alert.getIsShowing()){
 		
 		if (playingGame){
 
@@ -223,7 +223,7 @@ function update() {
 			this.mouse.middleClick = false;
 
 		}
-	}
+	// }
 
 	// sets to update again
 	window.setTimeout(update, 1000/60);
@@ -262,11 +262,6 @@ function saveGame(){
 		level: level, 
 		sprites: sprites,
 		colors: colors,
-		// notes: musicTracks,
-		// musicSettings: {
-		// 	volumes: volumes,
-		// 	speed: barSpeed
-		// },
 		dialog: dialogs
 	}
 
@@ -291,14 +286,14 @@ function saveGame(){
 
 			if (res == 'failure'){
 
-				alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
+				// alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
 			}else {
 
 				if (currentGameID === null){
-					alert.show("Your code is " + res, [], null);
+					// alert.show("Your code is " + res, [], null);
 					currentGameID = res;
 				}else {
-					alert.show("Successfully Saved", [], null);
+					// alert.show("Successfully Saved", [], null);
 				}
 			}
 		}
@@ -309,10 +304,10 @@ function loadGame(){
 
 	var data;
 
-	alert.show("Please enter an id:", ["ID"], function(obj){
+	// alert.show("Please enter an id:", ["ID"], function(obj){
 		
-		var id = obj.ID;
-		
+		// var id = obj.ID;
+		var id = prompt("ID");
 		$.ajax({
 			beforeSend: function(xhr, settings) {
 				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -326,7 +321,7 @@ function loadGame(){
 
 				if (res == 'failure'){
 
-					alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
+					// alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
 				}else {
 					
 					// now i have to do stuff with this
@@ -384,7 +379,7 @@ function loadGame(){
 				}
 			}
 		})
-	});
+	// });
 
 }
 

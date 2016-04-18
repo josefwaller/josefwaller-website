@@ -201,9 +201,12 @@ var GamePlayer = Class({
 				}
 			}
 
-			if (this.entityIsInArea(this.goal)){
-				this.goal.update();
-				this.goal.draw(this.ctx);
+			if (this.goal !== null){
+				
+				if (this.entityIsInArea(this.goal)){
+					this.goal.update();
+					this.goal.draw(this.ctx);
+				}
 			}
 
 			// draws the plyer on top of everything
