@@ -636,6 +636,9 @@ var LevelEditor = Class({
 
 		$("#lvl-edtr-b-group").css("visibility", "visible");
 		$("#lvl-edtr-obj-btns").show();
+		
+		// changes the selected background button
+		this.backgroundGroupManager.selectButton(level[x][y].background - 1);
 	},
 	unfocusArea: function(){
 
