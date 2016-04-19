@@ -82,6 +82,13 @@ var LevelEditor = Class({
 			}
 		}
 
+		// adds the eraser button
+		$("#eraser").click({levelEditor: this}, function(event){
+
+			levelEditor.selectElement("eraser");
+
+		});
+
 		this.focusToolsDiv = $("#lvl-edtr-focus-tools");
 		this.unfocusToolsDiv = $("#lvl-edtr-unfocus-tools");
 
@@ -173,14 +180,6 @@ var LevelEditor = Class({
 			}
 		});
 
-		// adds the eraser button
-		$("#eraser").click({levelEditor: this}, function(event){
-
-			levelEditor.selectElement("eraser");
-
-		});
-
-
 		$("#lvl-edtr-b-group").css("visibility", "hidden");
 		$("#lvl-edtr-obj-btns").hide();
 
@@ -188,13 +187,20 @@ var LevelEditor = Class({
 		$("#remove-area").click(function(event){
 			levelEditor.removeArea();
 		});
+		
+		this.createBackgroundButtons();
+	},
+	createBackgroundButtons: function(){
+		
 
 		// sets background buttons
 		var backgroundBtns = $("#lvl-edtr-b-group");
 
 		backgroundBtns.html("");
 
-		for (var i = 1; i < 4; i++){
+		for (var i = 1; i < Object.keys(sprites.backgrounds).length; i++){
+			
+			console.log(i);
 
 			var backgroundBtn = $("<a class='btn btn-lg lvl-edtr-background-btn' id='lvl-edtr-b" + i + "'></a>");
 
@@ -507,30 +513,10 @@ var LevelEditor = Class({
 		// gets the area
 		var area = level[areaX][areaY].elements;
 
-		var strName;
-
-		switch(level[areaX][areaY].background){
-			case 1:
-				strName = "one";
-				break;
-
-			case 2:
-				strName = "two";
-				break;
-
-			case 3:
-				strName = "three";
-				break;
-
-			default:
-				strName = level[areaX][areaY].background;
-		}
-		var backgroundSprite = strName;
-
 		// Draws the background sprite 
 		drawSprite(
 			this.ctx,
-			sprites.backgrounds[backgroundSprite],
+			sprites.backgrounds[level[areaX][areaY].background],
 			offX, 
 			offY, 
 			maxSize);
@@ -606,6 +592,10 @@ var LevelEditor = Class({
 	},
 	selectElement: function(index){
 		selectedElement = index;
+		
+		if (index === "eraser"){
+			this.objectGroupManager.deselect();
+		}
 	},
 	focusArea: function(x, y){
 
@@ -639,6 +629,9 @@ var LevelEditor = Class({
 		
 		// changes the selected background button
 		this.backgroundGroupManager.selectButton(level[x][y].background - 1);
+		
+		
+		this.createBackgroundButtons();
 	},
 	unfocusArea: function(){
 

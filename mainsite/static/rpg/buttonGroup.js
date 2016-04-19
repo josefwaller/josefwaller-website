@@ -21,6 +21,12 @@ var ButtonGroup = Class({
 		this.checkForJustification();
 		
 	},
+	
+	deselect: function(){
+		
+		// deselects the current selected button
+		$(this.btnGroup.children()[this.selectedBtn]).removeAttr("selected");
+	},
 
 	checkForJustification: function(){
 
@@ -50,7 +56,8 @@ var ButtonGroup = Class({
 			totalWidth += child.width();
 
 		}
-
+		
+		
 		if (totalWidth < this.btnGroup.width() && allFitWidth){
 
 			this.btnGroup.attr("class", "btn-group btn-group-justified");

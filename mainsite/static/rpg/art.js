@@ -219,9 +219,11 @@ var Art = Class({
 				broken: []
 			},
 			backgrounds: {
-				one: [],
-				two: [],
-				three: []
+				1: [],
+				2: [],
+				3: [],
+				4: [],
+				5: []
 			},
 			goal: {
 				onGround: [],
