@@ -708,14 +708,13 @@ var LevelEditor = Class({
 		}
 		
 		this.setUpObjects();
+		this.hasPlayer = false;
 		// cycles through and counts the elements already existing
 		
 		for (var lX = 0; lX < level.length; lX++){
 			for (var lY = 0; lY < level[lX].length; lY++){
 				
 				if (level[lX][lY] !== null){
-					
-					console.log("Non-null area found");
 					
 					var area = level[lX][lY].elements;
 					
@@ -724,9 +723,13 @@ var LevelEditor = Class({
 							
 							if (area[x][y] !== null){
 								
-								console.log(area[x][y]);
-								
 								objects[area[x][y]].num++;
+								
+								if (objects[area[x][y]].name === "player"){
+									this.hasPlayer = true;
+									this.playerX = lX;
+									this.playerY = lY;
+								}
 								
 							}
 							

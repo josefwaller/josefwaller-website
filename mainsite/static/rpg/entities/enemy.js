@@ -60,7 +60,8 @@ var Enemy = Class({
 	},
 
 	die: function(){
-
+		
+		this.isMirrored = false;
 
 		this.checkForAnimChange();
 
