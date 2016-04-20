@@ -207,9 +207,17 @@ canvas
 {
 	width: 500px;
 }
+#game-hud-canvas
+{
+	/* Prevents whitespace at the top */
+	vertical-align: top;
+}
 #game-canvas
 {
 	background-color: #f00000;
+
+	/* Prevents whitespace at the top */
+	vertical-align: top;
 }
 
 .down-anim
@@ -242,12 +250,6 @@ canvas
 	100% {
 		top: -100%;
 	}
-}
-
-/* removes whitespace from below the HUD Canvas */
-#game-hud-canvas
-{
-	margin-bottom: -5px;
 }
 
 /* the loading screen */

@@ -115,6 +115,12 @@ var Player = new Class({
 		// Entity automatically uses by value, but 
 		// player should always be in active area
 		this.area = this.parent.getActiveArea();
+		
+		this.hasTool = {
+			ranged: false,
+			melee: false
+		};
+	
 
 	},
 

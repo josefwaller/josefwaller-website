@@ -415,25 +415,6 @@ var GamePlayer = Class({
 	drawArea:function(x, y, areaX, areaY) {
 
 		area = level[areaX][areaY];
-		
-		// var stringNum;
-		
-		// switch(area.background){
-			
-		// 	case 1:
-		// 		stringNum = "one";
-		// 		break;
-				
-		// 	case 2:
-		// 		stringNum = "two";
-		// 		break;
-				
-		// 	case 3:
-		// 		stringNum = "three";
-		// 		break;
-		// }
-		
-		// console.log(stringNum);
 
 		drawSprite(
 			this.ctx,
