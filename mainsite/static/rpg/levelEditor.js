@@ -54,6 +54,14 @@ var LevelEditor = Class({
 	alertBox: null,
 
 	focusedAreaSize: 0,
+	
+	// whether or not the user has created a player
+	// used to determine whether the user can play or not
+	hasPlayer: false,
+	
+	// the x and y of the area the player is in
+	playerX: 0,
+	playerY: 0,
 
 	objectCanvases: [],
 	backgroundCanvases: [],
@@ -266,6 +274,11 @@ var LevelEditor = Class({
 		if (deleteArea){
 
 			level[this.focusedArea.x][this.focusedArea.y] = null;
+			
+			if (this.focusedArea.x === this.playerX && this.focusedArea.y === this.playerY){
+				this.hasPlayer = false;
+			}
+			
 			this.unfocusArea();
 
 			deleteArea = false;
@@ -383,6 +396,10 @@ var LevelEditor = Class({
 									// removes the former element
 									if (formerElement !== null){
 										objects[formerElement].num--;
+										
+										if (objects[formerElement].name === "player"){
+											this.hasPlayer = false;
+										}
 
 									}
 								}else {
@@ -391,6 +408,12 @@ var LevelEditor = Class({
 
 										level[this.focusedArea.x][this.focusedArea.y].elements[x][y] = selectedElement;
 										objects[selectedElement].num++;
+										
+										if (objects[selectedElement].name === "player"){
+											this.hasPlayer = true;
+											this.playerX = this.focusedArea.x;
+											this.playerY = this.focusedArea.y;
+										}
 
 										if (formerElement !== null){
 											objects[formerElement].num--;

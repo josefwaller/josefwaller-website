@@ -224,6 +224,27 @@ function update() {
 
 function showGameScreen(){
 
+	// checks that an area exists
+	var areaExists = false;
+	
+	for (var x = 0; x < level.length; x++){
+		for (var y = 0; y < level[x].length; y++){
+			if (level[x][y] !== null){
+				areaExists = true;
+			}
+		}
+	}
+	if (!areaExists){
+		alert.show("Please create an area before playing", [], null);
+		return;
+	}
+		
+	// checks that a player exists
+	if (!levelEditor.hasPlayer){
+		alert.show("Please create a player before playing", [], null);
+		return;
+	}
+	
 	// removes the up anim
 	if (screens.game.hasClass("up-anim")){
 		screens.game.removeClass("up-anim");

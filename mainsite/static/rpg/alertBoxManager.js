@@ -120,6 +120,7 @@ var AlertBoxManager = Class({
 		// removes the loading screen when it is done animating
 		this.container.on("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
 	 		alert.isShowing = false;
+			alert.hideLoading();
 		});
 		
 	},
