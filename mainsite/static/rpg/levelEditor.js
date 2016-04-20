@@ -198,9 +198,7 @@ var LevelEditor = Class({
 
 		backgroundBtns.html("");
 
-		for (var i = 1; i < Object.keys(sprites.backgrounds).length; i++){
-			
-			console.log(i);
+		for (var i = 1; i < Object.keys(sprites.backgrounds).length + 1; i++){
 
 			var backgroundBtn = $("<a class='btn btn-lg lvl-edtr-background-btn' id='lvl-edtr-b" + i + "'></a>");
 
@@ -222,6 +220,7 @@ var LevelEditor = Class({
 			})
 
 			backgroundBtn.append(canvas);
+			backgroundBtn.append($("<br>"));
 			backgroundBtn.append("Background " + backgroundNum);
 
 			backgroundBtns.append(backgroundBtn);
@@ -629,9 +628,6 @@ var LevelEditor = Class({
 		
 		// changes the selected background button
 		this.backgroundGroupManager.selectButton(level[x][y].background - 1);
-		
-		
-		this.createBackgroundButtons();
 	},
 	unfocusArea: function(){
 
@@ -642,5 +638,15 @@ var LevelEditor = Class({
 
 		$("#lvl-edtr-b-group").css("visibility", "hidden");
 		$("#lvl-edtr-obj-btns").hide();
+	},
+	
+	onLoad: function(){
+		
+		for (var i = 0; i < this.objectCanvases.length; i++){
+			this.objectCanvases[i].draw();
+		}
+		for (var i = 0; i < this.backgroundCanvases.length; i++){
+			this.backgroundCanvases[i].draw();
+		}
 	}
 });

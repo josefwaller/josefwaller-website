@@ -39,7 +39,6 @@ var mouse = {
 		y:0
 	},
 	click: false,
-	middleClick: false,
 	hold: false
 }
 
@@ -56,7 +55,7 @@ function setup () {
 	loading.addClass("loading-down-anim");
 
 	// removes the loading screen when it is done animating
-	loading.one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
+	loading.on("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
 		loading.html("");
 	});
 
@@ -136,8 +135,6 @@ function setup () {
 	window.setTimeout(update, 1000/60)
 
 }
-
-
 function changeScreen(event, i) {
 
 	// Checks if it was a button click
@@ -177,7 +174,7 @@ function changeScreen(event, i) {
 
 function update() {
 
-	// if (!alert.getIsShowing()){
+	if (!alert.getIsShowing()){
 		
 		if (playingGame){
 
@@ -216,14 +213,10 @@ function update() {
 
 			mouse.click = false;
 
-		}else if (mouse.middleClick){
-
-			m.onMiddleClick();
-
-			this.mouse.middleClick = false;
-
 		}
-	// }
+	}
+	
+	this.mouse.click = false;
 
 	// sets to update again
 	window.setTimeout(update, 1000/60);
@@ -272,6 +265,8 @@ function saveGame(){
 
 	}
 
+	alert.show("Saving..", [], null);
+	alert.showLoading();
 	// sends the data to the server
 	$.ajax({
 		beforeSend: function(xhr, settings) {
@@ -283,17 +278,20 @@ function saveGame(){
 		type: "POST",
 		data: JSON.stringify(toSave),
 		success: function (res){
+			
+			
+			alert.hideLoading();
 
 			if (res == 'failure'){
 
-				// alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
+				alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
 			}else {
 
 				if (currentGameID === null){
-					// alert.show("Your code is " + res, [], null);
+					alert.show("Your code is " + res, [], null);
 					currentGameID = res;
 				}else {
-					// alert.show("Successfully Saved", [], null);
+					alert.show("Successfully Saved", [], null);
 				}
 			}
 		}
@@ -304,10 +302,13 @@ function loadGame(){
 
 	var data;
 
-	// alert.show("Please enter an id:", ["ID"], function(obj){
+	alert.show("Please enter an id:", ["ID"], function(obj){
 		
-		// var id = obj.ID;
-		var id = prompt("ID");
+		var id = obj.ID;
+
+		// shows the loading symbol
+		alert.showLoading();
+
 		$.ajax({
 			beforeSend: function(xhr, settings) {
 				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -321,7 +322,7 @@ function loadGame(){
 
 				if (res == 'failure'){
 
-					// alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
+					alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
 				}else {
 					
 					// now i have to do stuff with this
@@ -374,18 +375,42 @@ function loadGame(){
 					dialogs = data.dialog;
 					dialog.updateDialogs();
 
+					// changes specific things when loading
+					levelEditor.onLoad();
+
 					// saves the current game
 					currentGameID = id;
 				}
 			}
 		})
-	// });
+	});
 
 }
 
 function onWin(){
 	hideGameScreen();
 	isPlayingGame = false;
+}
+
+function createLoading(parent) {
+
+	// creates 8 dots
+	for (var i = 0; i < 8; i++){
+
+		// creates dot and container elements
+		var outerContainer = $("<div id='loading-circle-fixed-container'></div>");
+		var container = $("<div id='loading-circle-container'></div>");
+
+		// sets the css
+		container.css("animation-delay", (i / 10) + "s");
+
+		// appends things to other things
+		outerContainer.append(container);
+		container.append($("<div id='loading-circle-dot'></div>"));
+		parent.append(outerContainer);
+
+	}
+	
 }
 
 // shows the loading screen
@@ -405,23 +430,8 @@ $(document.body).ready(function(){
 	// sets up animation cicle thingy
 	var parent = $("#loading-circle");
 	parent.html("");
-
-	// creates 8 dots
-	for (var i = 0; i < 8; i++){
-
-		// creates dot and container elements
-		var outerContainer = $("<div id='loading-circle-fixed-container'></div>");
-		var container = $("<div id='loading-circle-container'></div>");
-
-		// sets the css
-		container.css("animation-delay", (i / 10) + "s");
-
-		// appends things to other things
-		outerContainer.append(container);
-		container.append($("<div id='loading-circle-dot'></div>"));
-		parent.append(outerContainer);
-
-	}
+	
+	createLoading(parent);
 });
 
 // after loading, shows the stuff

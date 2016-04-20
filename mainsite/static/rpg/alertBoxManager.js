@@ -20,6 +20,9 @@ var AlertBoxManager = Class({
 	// the different labels for returning
 	labels: [],
 	
+	// the div which contains the loading symbol
+	loading: null,
+	
 	// the button
 	button: null,
 	
@@ -37,6 +40,7 @@ var AlertBoxManager = Class({
 		this.text = $("#alert-box-text");
 		this.button = $("#alert-box-btn");
 		this.inputContainer = $("#alert-box-input-container");
+		this.loading = $("#alert-box-loading");
 		
 		// makes the button hide it
 		this.button.click(function(){
@@ -112,7 +116,22 @@ var AlertBoxManager = Class({
 			this.inputs[i].hide();
 		}
 		
-	 	this.isShowing = false;
+
+		// removes the loading screen when it is done animating
+		this.container.on("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
+	 		alert.isShowing = false;
+		});
+		
+	},
+	
+	showLoading: function(){
+		
+		createLoading(this.loading);
+	},
+	
+	hideLoading: function(){
+		
+		this.loading.html("");
 		
 	},
 	

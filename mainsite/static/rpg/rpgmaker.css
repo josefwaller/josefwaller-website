@@ -109,6 +109,20 @@ canvas
 	border: 0px;
 	color: #000000;
 }
+#alert-box-loading
+{
+	/* Sets height and width so that the loading does not take up the whole window */
+	height: 20px;
+	width: 1px;
+	
+	/* Centers it */
+	margin: auto;
+	margin-top: 10px;
+	display: block;
+	
+	/* Makes the loading relative to it and not the window */
+	position: relative;
+}
 
 #lvl-edtr-b-group
 {
