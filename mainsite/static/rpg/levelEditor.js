@@ -48,6 +48,9 @@ var LevelEditor = Class({
 		y: 1
 	},
 
+	// the eraser button
+	eraser: null,
+	
 	alertBox: null,
 
 	focusedAreaSize: 0,
@@ -82,8 +85,9 @@ var LevelEditor = Class({
 			}
 		}
 
+		this.eraser = $("#lvl-edtr-eraser");
 		// adds the eraser button
-		$("#eraser").click({levelEditor: this}, function(event){
+		this.eraser.click({levelEditor: this}, function(event){
 
 			levelEditor.selectElement("eraser");
 
@@ -135,10 +139,13 @@ var LevelEditor = Class({
 		}
 
 		this.focusedAreaSize = this.h;
-
+		
+		// creates the objects from the sprites
+		// will exclude eerything in this array
 		var notElements = [
 			"backgrounds"
 		];
+		
 		objects = [];
 
 		for (var i in sprites){
@@ -170,6 +177,7 @@ var LevelEditor = Class({
 					break;
 			}
 		}
+		
 
 		// sets the zoom out button to zoom out
 		this.focusToolsDiv.css("visibility", "hidden");
@@ -227,7 +235,7 @@ var LevelEditor = Class({
 
 		}
 
-		this.backgroundGroupManager = new ButtonGroup({id: "lvl-edtr-b-group"})
+		this.backgroundGroupManager = new ButtonGroup({id: "lvl-edtr-b-group"});
 	},
 	update: function(){
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.w;
@@ -274,6 +282,9 @@ var LevelEditor = Class({
 		var btnGroup = $("#lvl-edtr-obj-btns");
 		btnGroup.html("");
 
+		// creates the button group for the object buttons
+		this.objectGroupManager = new ButtonGroup({id: "lvl-edtr-obj-btns"});
+
 		for (var i = 0; i < objects.length; i++){
 
 			var btn = $("<a class='btn btn-lg'></a>");
@@ -290,7 +301,7 @@ var LevelEditor = Class({
 			btn.append("<br>" + getNameFromCamel(objects[i].name));
 
 			btn.click({levelEditor: this, i: i}, function(event){
-
+			
 				event.data.levelEditor.selectElement(event.data.i);
 
 			})
@@ -298,6 +309,9 @@ var LevelEditor = Class({
 			btnGroup.append(btn);
 
 		}
+
+		// selects the first element
+		this.selectElement(0);
 	},
 	onMouseUp: function(){},
 	onMouseHold: function(){},
@@ -594,6 +608,11 @@ var LevelEditor = Class({
 		
 		if (index === "eraser"){
 			this.objectGroupManager.deselect();
+			this.eraser.attr("selected", "selected");
+			
+		}else {
+			this.objectGroupManager.selectButton(index);
+			this.eraser.removeAttr("selected");
 		}
 	},
 	focusArea: function(x, y){
