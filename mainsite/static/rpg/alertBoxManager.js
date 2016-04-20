@@ -83,10 +83,27 @@ var AlertBoxManager = Class({
 			this.inputContainer.append($("<br>"));
 		}
 		
+		this.inputs[0].focus();
+		
 		// records the callback
 		this.callback = callback;
 		
+		if (this.callback === null){
+			this.button.click(function(){
+				alert.hide();
+			});
+		}else {
+			
+			this.button.unbind("click");
+		}
+		
+		this.button.click(function(){
+			alert.doCallback()
+		});
+		
 		this.isShowing = true;
+		
+		this.hideLoading();
 		
 	},
 
@@ -99,6 +116,26 @@ var AlertBoxManager = Class({
 		// adds the down animation
 		this.container.addClass("up-anim");
 		
+		// hides all inputs
+		for (var i = 0; i < this.inputs.length; i++){
+			this.inputs[i].hide();
+		}
+		
+
+		// removes the loading screen when it is done animating
+		this.container.on("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
+			
+			// checks it is still hiding
+			if (alert.container.hasClass("up-anim")){
+				alert.isShowing = false;
+				alert.hideLoading();
+			}
+		});
+		
+	},
+	
+	doCallback: function(){
+		
 		// creates a return object 
 		var returnObj = {};
 		
@@ -110,19 +147,6 @@ var AlertBoxManager = Class({
 		if (this.callback !== null && this.callback !== undefined){
 			this.callback(returnObj);
 		}
-		
-		// hides all inputs
-		for (var i = 0; i < this.inputs.length; i++){
-			this.inputs[i].hide();
-		}
-		
-
-		// removes the loading screen when it is done animating
-		this.container.on("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
-	 		alert.isShowing = false;
-			alert.hideLoading();
-		});
-		
 	},
 	
 	showLoading: function(){

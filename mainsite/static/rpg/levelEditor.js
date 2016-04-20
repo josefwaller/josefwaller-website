@@ -670,6 +670,8 @@ var LevelEditor = Class({
 		
 		// changes the selected background button
 		this.backgroundGroupManager.selectButton(level[x][y].background - 1);
+		
+		this.selectElement(0);
 	},
 	unfocusArea: function(){
 
@@ -689,6 +691,11 @@ var LevelEditor = Class({
 		}
 		for (var i = 0; i < this.backgroundCanvases.length; i++){
 			this.backgroundCanvases[i].draw();
+		}
+		
+		if (this.isFocused){
+			
+			this.selectElement(0);
 		}
 	}
 });

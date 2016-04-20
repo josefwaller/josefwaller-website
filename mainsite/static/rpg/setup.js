@@ -27,7 +27,6 @@ var colors = [
 var currentScreen;
 
 var art;
-// var music;
 var dialog;
 var levelEditor;
 var game;
@@ -160,10 +159,6 @@ function changeScreen(event, i) {
 			break;
 
 		case 2:
-		// 	screens.music.show();
-		// 	break;
-
-		// case 3:
 			screens.dialog.show();
 			break;
 	}
@@ -187,7 +182,6 @@ function update() {
 			managers = [
 				levelEditor,
 				art,
-				// music,
 				dialog
 			];
 
@@ -340,15 +334,26 @@ function loadGame(){
 			type: "POST",
 			data: JSON.stringify(id),
 			success: function (res){
+				
+				console.log(res);
+					
+				// now i have to do stuff with this
+				var data = JSON.parse(res);
 
-				if (res == 'failure'){
+				if (data.status == 'failure'){
 
 					alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
+					
+				}else if (data.status === "notexist"){
+				
+					alert.show("No Setup was found at that ID", [], null);
+					
+				}else if (data.status === "notvalid"){
+					
+					alert.show("Please enter a valid integer", [], null);
+					
 				}else {
 					
-					// now i have to do stuff with this
-					var data = JSON.parse(res);
-
 					// checks for each sprite if it is null
 					for (var object in data.sprites){
 						for (var sprite in data.sprites[object]){
@@ -386,10 +391,6 @@ function loadGame(){
 					// updates the sprite canvases
 					// keep after adding color
 					art.updateAllButtons();
-
-					// musicTracks = data.notes;
-					// volumes = data.musicSettings.volumes;
-					// barSpeed = data.musicSettings.speed;
 					
 					level = data.level;
 					
@@ -399,10 +400,32 @@ function loadGame(){
 					dialog.updateDialogs();
 
 					// changes specific things when loading
+					// Note: Must show all screens so that they can scale their elements properly
+					
+					for (var s in screens){
+						screens[s].show();
+					}
+					
 					levelEditor.onLoad();
+					art.onLoad();
+					dialog.onLoad();
+					
+					levelEditor.update();
+					art.update()
+					dialog.update();
+
+					for (var s in screens){
+						screens[s].hide();
+					}
 
 					// saves the current game
 					currentGameID = id;
+					
+					// shows the default screen
+					changeScreen(null, currentScreen);
+					
+					alert.hide();
+					
 				}
 			}
 		})

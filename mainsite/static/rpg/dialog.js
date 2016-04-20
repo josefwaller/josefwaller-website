@@ -159,5 +159,6 @@ var Dialog = Class({
 	// Filler functions
 	onMouseUp:function(){},
 	onMouseHold:function(){},
-	onClick:function(){}
+	onClick:function(){},
+	onLoad: function(){}
 });

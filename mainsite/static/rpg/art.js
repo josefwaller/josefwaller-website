@@ -1232,6 +1232,13 @@ var Art = Class({
 
 		// sets sprites to new sprite
 		return newSprite;
+	},
+	onLoad: function(){
+		
+		this.updateAllButtons();
+		
+		this.changeSelectedObject("player");
+		this.changeSprite("runDownOne");
 	}
 })
 

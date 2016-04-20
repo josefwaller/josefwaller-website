@@ -304,6 +304,12 @@ def get_rpg_game (request):
 		# Parses the data
 		data = json.loads(json_data)
 
+		# checks it is a game object
+		try:
+			int(data)
+		except:
+			return HttpResponse(json.dumps({"status": "notvalid"}))
+
 		# gets the game object
 		try:
 			game_save = models.GameSave.objects.get(pk=data)
@@ -367,7 +373,7 @@ def get_rpg_game (request):
 		print (''.join('!! ' + line for line in lines))  # Log it or whatever here
 
 		error_message = "failure"
-		return HttpResponse(error_message)
+		return HttpResponse(json.dumps({"status": error_message}))
 
 # Checks if a sprite is just all null
 def list_is_empty(list):
