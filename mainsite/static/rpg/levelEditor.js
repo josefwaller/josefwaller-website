@@ -188,7 +188,7 @@ var LevelEditor = Class({
 		
 
 		// sets the zoom out button to zoom out
-		this.focusToolsDiv.css("visibility", "hidden");
+		this.focusToolsDiv.hide();
 
 		$("#zoom-out").click(function() {
 			if (levelEditor.isFocused){
@@ -196,7 +196,7 @@ var LevelEditor = Class({
 			}
 		});
 
-		$("#lvl-edtr-b-group").css("visibility", "hidden");
+		$("#lvl-edtr-b-group").hide();
 		$("#lvl-edtr-obj-btns").hide();
 
 		// adds the remove area button
@@ -556,7 +556,13 @@ var LevelEditor = Class({
 			offX, 
 			offY, 
 			maxSize);
-
+			
+		// draws a slightly transparent black rectangle on top to darken the background
+		this.ctx.fillStyle = "#000000";
+		this.ctx.globalAlpha = 0.2;
+		this.ctx.fillRect(offX, offY, maxSize, maxSize);
+		this.ctx.globalAlpha = 1;
+		
 		elementSize = maxSize / 5;
 
 		// Cycles through and draws all relevent sprites
