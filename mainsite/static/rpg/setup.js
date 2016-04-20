@@ -367,6 +367,8 @@ function loadGame(){
 
 									}
 								}
+								
+								sprites[object][sprite] = empty.slice();
 
 							}else {
 
