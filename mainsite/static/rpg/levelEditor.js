@@ -148,44 +148,7 @@ var LevelEditor = Class({
 
 		this.focusedAreaSize = this.h;
 		
-		// creates the objects from the sprites
-		// will exclude eerything in this array
-		var notElements = [
-			"backgrounds"
-		];
-		
-		objects = [];
-
-		for (var i in sprites){
-
-			// Copies sprites
-			if ($.inArray(i, notElements) === -1){
-
-				objects.push({
-					name: i,
-					object: i,
-					sprite: Object.keys(sprites[i])[0],
-					maxNum: 3,
-					num: 0
-				});
-
-			}
-
-			var index = objects.length - 1;
-
-			// changes the max value if it needs to be changed
-			switch (i){
-
-				case "player":
-					objects[index].maxNum = 1;
-					break;
-
-				case ("breakableBarrier" || "invincibleBarrier"):
-					objects[index].maxNum = 20;
-					break;
-			}
-		}
-		
+		this.setUpObjects();		
 
 		// sets the zoom out button to zoom out
 		this.focusToolsDiv.hide();
@@ -325,6 +288,46 @@ var LevelEditor = Class({
 
 		// selects the first element
 		this.selectElement(0);
+	},
+	setUpObjects: function(){
+	
+		// creates the objects from the sprites
+		// will exclude eerything in this array
+		var notElements = [
+			"backgrounds"
+		];
+		
+		objects = [];
+
+		for (var i in sprites){
+
+			// Copies sprites
+			if ($.inArray(i, notElements) === -1){
+
+				objects.push({
+					name: i,
+					object: i,
+					sprite: Object.keys(sprites[i])[0],
+					maxNum: 3,
+					num: 0
+				});
+
+			}
+
+			var index = objects.length - 1;
+
+			// changes the max value if it needs to be changed
+			switch (i){
+
+				case "player":
+					objects[index].maxNum = 1;
+					break;
+
+				case ("breakableBarrier" || "invincibleBarrier"):
+					objects[index].maxNum = 20;
+					break;
+			}
+		}	
 	},
 	onMouseUp: function(){},
 	onMouseHold: function(){},
@@ -703,5 +706,36 @@ var LevelEditor = Class({
 			
 			this.selectElement(0);
 		}
+		
+		this.setUpObjects();
+		// cycles through and counts the elements already existing
+		
+		for (var lX = 0; lX < level.length; lX++){
+			for (var lY = 0; lY < level[lX].length; lY++){
+				
+				if (level[lX][lY] !== null){
+					
+					console.log("Non-null area found");
+					
+					var area = level[lX][lY].elements;
+					
+					for (var x = 0; x < area.length; x++){
+						for (var y = 0; y < area[x].length; y++){
+							
+							if (area[x][y] !== null){
+								
+								console.log(area[x][y]);
+								
+								objects[area[x][y]].num++;
+								
+							}
+							
+						}
+					}
+				}
+			}
+		}
+		
 	}
+	
 });

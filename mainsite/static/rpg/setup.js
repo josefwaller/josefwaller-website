@@ -334,8 +334,6 @@ function loadGame(){
 			type: "POST",
 			data: JSON.stringify(id),
 			success: function (res){
-				
-				console.log(res);
 					
 				// now i have to do stuff with this
 				var data = JSON.parse(res);
