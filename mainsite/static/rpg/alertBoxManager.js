@@ -83,7 +83,9 @@ var AlertBoxManager = Class({
 			this.inputContainer.append($("<br>"));
 		}
 		
-		this.inputs[0].focus();
+		if (this.inputs.length > 0){
+			this.inputs[0].focus();
+		}
 		
 		// records the callback
 		this.callback = callback;

@@ -24,9 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '98w3kl6-xg(91_(k_#7+(s+vj=qt6@xo#b&xes3=_xej-xtf$_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True;#os.environ.get('DEBUG', False)
+DEBUG = os.environ.get('DEBUG', False)
 
-ALLOWED_HOSTS = ['.josefwaller-website.herokuapp.com', '.josefwaller.com']
+ALLOWED_HOSTS = ['.josefwaller-website.herokuapp.com', '.josefwaller.com', 'localhost']
 
 
 # Application definition
@@ -76,7 +76,6 @@ WSGI_APPLICATION = 'josefwaller_website.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 if DEBUG:
-
     CURRENT_DIR = "/Users/Josef/Documents/Github/josefwaller-website/dev_db/"
     DATABASES = {
         'default': {

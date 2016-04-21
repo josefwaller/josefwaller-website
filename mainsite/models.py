@@ -20,7 +20,7 @@ class SpriteObjectSave (models.Model):
 	# a dictionary of the prites for this object
 	# for example, player would have runDownOne, runDownTwo, etc
 	# and each would be an id pointing towards a SpriteSave object
-	spritesDictionaryJSON = models.CharField(max_length=200)
+	spritesDictionaryJSON = models.CharField(max_length=500)
 
 class SpriteSetSave (models.Model):
 
@@ -29,7 +29,7 @@ class SpriteSetSave (models.Model):
 	# SpriteObjectSave object that saves all the sprites 
 	# for player
 	spriteDictionaryJSON = models.CharField(max_length=4000)
-	colorsJSON = models.CharField(max_length=1000)
+	colorsJSON = models.CharField(max_length=1100)
 
 
 # class MusicSave (models.Model):

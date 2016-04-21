@@ -82,6 +82,7 @@ var Art = Class({
 	// The buttons
 	copyButton: null,
 	mirrorButton: null,
+	eraseButton: null,
 
 	// Alert box for copying
 	copyAlertBox: null,
@@ -315,7 +316,7 @@ var Art = Class({
 			x: x,
 			y: this.offsetY + 90,
 			w: 200,
-			h: (this.h - (this.offsetY + 90)) / 3 - 20,
+			h: (this.h - (this.offsetY + 90)) / 4 - 20,
 			text: "Copy Sprite",
 
 			onClick: function(){
@@ -339,9 +340,20 @@ var Art = Class({
 			}
 		})
 
+		this.eraseButton = new Button({
+			x: x,
+			y: this.mirrorButton.y + this.mirrorButton.h + 10,
+			w: 200,
+			h: this.mirrorButton.h,
+			text: "Remove",
+			onClick: function() {
+				art.eraseSprite();
+			}
+		})
+
 		// Sets the animation display coordinates
 		this.animationDisplay.x = x,
-		this.animationDisplay.y = this.mirrorButton.y + this.mirrorButton.h + 10;
+		this.animationDisplay.y = this.eraseButton.y + this.mirrorButton.h + 10;
 		// width is only half to fit the compass
 		this.animationDisplay.w = 100;
 		this.animationDisplay.h = Math.round(this.mirrorButton.h);
@@ -621,6 +633,22 @@ var Art = Class({
 
 		}
 	},
+	eraseSprite: function(){
+		
+		sprites[selectedObject][selectedSprite] = [];
+		
+		for (var x = 0; x < size; x++){
+			
+			sprites[selectedObject][selectedSprite].push([]);
+			
+			for (var y = 0; y < size; y++){
+				
+				sprites[selectedObject][selectedSprite].push(null);
+			}
+			
+		}
+		
+	},
 	onClick: function() {
 
 		if (!this.isCopying){
@@ -858,6 +886,7 @@ var Art = Class({
 
 		this.copyButton.draw(ct, this.mouseX, this.mouseY);
 		this.mirrorButton.draw(ct, this.mouseX, this.mouseY);
+		this.eraseButton.draw(ct, this.mouseX, this.mouseY);
 	},
 	drawAnimation: function() {
 
