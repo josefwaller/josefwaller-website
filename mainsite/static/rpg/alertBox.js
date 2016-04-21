@@ -206,5 +206,10 @@ var AlertBox = new Class({
 		this.isDeactivating = true;
 		this.isActive = false;
 		this.isActivating = false;
+	},
+	
+	isShowing: function(){
+		return (!this.isActive && !(this.isActivating || this.isDeactivating));
+			
 	}
 });

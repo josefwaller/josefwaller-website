@@ -86,11 +86,15 @@ var Art = Class({
 
 	// Alert box for copying
 	copyAlertBox: null,
+	
+	// alert box for deleting
+	eraseAlertBox: null,
 
 	// Status variables
 	isErasing: false,
 	isCopying: false,
 	isClickingCancel: false,
+	isDeleting: false,
 
 	// Used when the user copies a sprite
 	// The object ot copy to
@@ -312,11 +316,15 @@ var Art = Class({
 		});
 
 		// Creats the buttons
+		
+		var buttonY = this.offsetY + 90;
+		var buttonW = 200;
+		var buttonH = (this.h - (this.offsetY + 90)) / 4 - 20;
 		this.copyButton = new Button({
 			x: x,
-			y: this.offsetY + 90,
-			w: 200,
-			h: (this.h - (this.offsetY + 90)) / 4 - 20,
+			y: buttonY,
+			w: buttonW,
+			h: buttonH,
 			text: "Copy Sprite",
 
 			onClick: function(){
@@ -331,9 +339,9 @@ var Art = Class({
 
 		this.mirrorButton = new Button({
 			x: x,
-			y: this.copyButton.y + this.copyButton.h + 10,
-			w: 200,
-			h: this.copyButton.h,
+			y: buttonY + buttonH + 10,
+			w: buttonW,
+			h: buttonH,
 			text: "Mirror",
 			onClick: function() {
 				art.mirrorSprite();
@@ -342,12 +350,13 @@ var Art = Class({
 
 		this.eraseButton = new Button({
 			x: x,
-			y: this.mirrorButton.y + this.mirrorButton.h + 10,
-			w: 200,
-			h: this.mirrorButton.h,
+			y: buttonY + 2 * (buttonH + 10),
+			w: buttonW,
+			h: buttonH,
 			text: "Remove",
 			onClick: function() {
-				art.eraseSprite();
+				art.eraseAlertBox.activate();
+				art.isDeleting = true;
 			}
 		})
 
@@ -373,7 +382,7 @@ var Art = Class({
 		// creates the compass for shifting the sprite up/down/left or right
 		this.compassSize = 100 / 3;
 		this.compassX = x + 100;
-		this.compassY = this.mirrorButton.y + this.mirrorButton.h + 10;
+		this.compassY = this.eraseButton.y + this.eraseButton.h + 10;
 
 		/*
 			Should make a compass like this
@@ -508,6 +517,19 @@ var Art = Class({
 			text:"Choose a sprite to copy below."
 		});
 
+		this.eraseAlertBox = new AlertBox({
+			w: this.w,
+			h: this.h,
+			title: "Erase Sprite?",
+			text: "Are you sure you want to erase this sprite?",
+			buttons: [{
+				text: "Erase",
+				onClick: function(){
+					art.eraseSprite()
+				}
+			}]
+		});
+		
 		// create the color buttons
 		this.setColorButtons();
 
@@ -566,16 +588,43 @@ var Art = Class({
 		this.splitX = this.offsetX + this.size * this.pixelSize + 15;
 
 		//initially draws all quadrants
-		this.drawCanvasArea();
-		this.drawAnimation();
-		this.drawSide();
+		this.drawAll();
 	},
 	update: function() {
 		// Sets mouse position
 		this.mouseX = (mouse.pos.x - this.canvas.offset().left) / this.canvas.width() * this.w;
 		this.mouseY = (mouse.pos.y - this.canvas.offset().top) / this.canvas.height() * this.h;
 
-		if (!this.isCopying){
+		if (this.isCopying){
+
+			this.drawCanvasArea();
+			this.drawSide();
+			this.drawAnimation();
+			this.copyAlertBox.draw(this.ct, this.mouseX, this.mouseY);
+
+			// checks if it is still copying
+			if (!this.copyAlertBox.isActive && !(this.copyAlertBox.isActivating || this.copyAlertBox.isDeactivating)){
+				this.isCopying = false;
+
+				// Switches back to selected object if the user copied a sprite from a different object
+				this.changeSelectedObject(this.copyObject);
+				this.changeSprite(this.copySprite);
+
+				this.drawCanvasArea();
+				this.drawSide();
+				this.drawAnimation();
+			}
+			
+		}else if (this.isDeleting){
+			
+			this.drawAll();
+			this.eraseAlertBox.draw(this.ct, this.mouseX, this.mouseY);
+			
+			if (this.eraseAlertBox.isShowing()){
+				this.isDeleting = false;
+			}
+			
+		}else {
 
 			if (shift[0] !== 0 || shift[1] !== 0){
 				// shifts the selected sprite
@@ -611,29 +660,18 @@ var Art = Class({
 				this.drawAnimation();
 				this.lastAnimTime = new Date().getTime();
 			}
-		}else {
-
-			this.drawCanvasArea();
-			this.drawSide();
-			this.drawAnimation();
-			this.copyAlertBox.draw(this.ct, this.mouseX, this.mouseY);
-
-			// checks if it is still copying
-			if (!this.copyAlertBox.isActive && !(this.copyAlertBox.isActivating || this.copyAlertBox.isDeactivating)){
-				this.isCopying = false;
-
-				// Switches back to selected object if the user copied a sprite from a different object
-				this.changeSelectedObject(this.copyObject);
-				this.changeSprite(this.copySprite);
-
-				this.drawCanvasArea();
-				this.drawSide();
-				this.drawAnimation();
-			}
 
 		}
 	},
+	drawAll: function(){
+	
+		this.drawCanvasArea();
+		this.drawAnimation();
+		this.drawSide();	
+	},
 	eraseSprite: function(){
+		
+		this.alertBox
 		
 		sprites[selectedObject][selectedSprite] = [];
 		
@@ -643,10 +681,14 @@ var Art = Class({
 			
 			for (var y = 0; y < size; y++){
 				
-				sprites[selectedObject][selectedSprite].push(null);
+				sprites[selectedObject][selectedSprite][x].push(null);
 			}
 			
 		}
+		
+		this.updateSelectedButtons();
+		
+		this.eraseAlertBox.deActivate();
 		
 	},
 	onClick: function() {
@@ -660,6 +702,7 @@ var Art = Class({
 
 			this.copyButton.checkForClick(this.mouseX, this.mouseY);
 			this.mirrorButton.checkForClick(this.mouseX, this.mouseY);
+			this.eraseButton.checkForClick(this.mouseX, this.mouseY);
 
 			for (var i = 0; i < this.compassButtons.length; i++){
 				this.compassButtons[i].checkForClick(this.mouseX, this.mouseY);
@@ -668,6 +711,8 @@ var Art = Class({
 		}
 
 		this.copyAlertBox.onClick(this.mouseX, this.mouseY);
+			
+		this.eraseAlertBox.onClick(this.mouseX, this.mouseY);
 	},
 	onMouseUp: function() {
 		// Deselects all the bars
@@ -733,7 +778,7 @@ var Art = Class({
 		}
 
 		// Checks if the mouse is on the canvas
-		if (!changingColor && !this.isCopying){
+		if (!changingColor && !this.isCopying && !this.isDeleting){
 			if (this.mouseX > this.offsetX && this.mouseX < this.offsetX + this.size * this.pixelSize){
 				if (this.mouseY > this.offsetY && this.mouseY < this.offsetY + this.size * this.pixelSize){
 
