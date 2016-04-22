@@ -52,3 +52,7 @@ class GameSave (models.Model):
 	spritesID = models.IntegerField()
 	dialogID = models.IntegerField()
 	levelID = models.IntegerField()
+	
+	# the password for this game
+	# needed to edit but not to play
+	password = models.CharField(max_length=50)

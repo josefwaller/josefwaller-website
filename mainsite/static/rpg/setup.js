@@ -6,6 +6,9 @@ var screens;
 // The ID of the current game, so that when saving it will overwrite
 var currentGameID = null;
 
+// the current game's password, so that the user does nbot have to enter it in every time
+var password = "";
+
 var btnColors = {
 	color: "#3399ff",
 	text:"#ffffff",
@@ -317,7 +320,7 @@ function loadGame(){
 
 	var data;
 
-	alert.show("Please enter an id:", ["ID"], function(obj){
+	alert.show("Please enter an id and password:", ["ID", "Password"], function(obj){
 		
 		var id = obj.ID;
 
@@ -351,6 +354,10 @@ function loadGame(){
 					alert.show("Please enter a valid integer", [], null);
 					
 				}else {
+					
+					// was successful
+					// saves password
+					password = obj.password;
 					
 					// checks for each sprite if it is null
 					for (var object in data.sprites){

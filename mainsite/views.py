@@ -100,6 +100,7 @@ def save_rpg_game (request):
 		# 	notes: (the music notes as JSON),
 		# 	dialog: (the dialog as JSON)
 		#	id: (the optional ID of the existing game)
+		#	password: (The password to be saved with the setup)
 		# }
 		#  Returns the id of the gameSave, which has references to the other saves
 	
@@ -113,7 +114,11 @@ def save_rpg_game (request):
 		if ('id' in data):
 
 			# gets the components from the game
-			ids = get_game_component_ids(data['id'])
+			ids = get_game_component_ids(game_id=data['id'], password=data['password'])
+			
+			# check if no game was found
+			if (ids == None):
+				return HttpResponse(json.dumps({"status":"wrongpass"}))
 
 			# Gets the components from ID
 			level_save = models.LevelSave.objects.get(pk=ids['level'])
@@ -205,6 +210,30 @@ def save_rpg_game (request):
 		else:
 
 			# Creates a new save for each field
+			
+			#checks that the password is legitimate
+			invalid_chars = [
+				'',
+				'/',
+				'!',
+				'@',
+				'#',
+				'$',
+				'%',
+				'^',
+				'&',
+				'*',
+				'(',
+				')',
+				'<',
+				'>',
+				'~'
+			]
+			
+			for c in invalid_chars:
+				
+				if c in data['password']:
+					return HttpResponse(json.dumps({"status":"badpass"}))
 
 			sprite_set_save_dict = {}
 			# creates a new sprite save for each sprite
@@ -306,7 +335,7 @@ def get_rpg_game (request):
 
 		# checks it is a game object
 		try:
-			int(data)
+			int(data['id'])
 		except:
 			return HttpResponse(json.dumps({"status": "notvalid"}))
 
@@ -387,9 +416,9 @@ def list_is_empty(list):
 	return True
 
 # Gets the IDS of all the components (Music, sprites, etc) from the game ID
-def get_game_component_ids(game_id):
+def get_game_component_ids(game_id, password):
 
-	game_save = models.GameSave.objects.get(id=game_id)
+	game_save = models.GameSave.objects.get(id=game_id, password=password)
 
 	level_save = models.LevelSave.objects.get(pk=game_save.levelID)
 
