@@ -7,7 +7,7 @@ var screens;
 var currentGameID = null;
 
 // the current game's password, so that the user does nbot have to enter it in every time
-var password = "";
+var password = null;
 
 var btnColors = {
 	color: "#3399ff",
@@ -282,7 +282,21 @@ function saveGame(){
 		toSave.id = currentGameID;
 
 	}
-
+	if (password === null){
+		alert.show("Please create a password", ["Password"], function(obj){
+			toSave.password = obj.Password;
+			sendSaveData(toSave);
+		});
+	}else {
+		toSave.password = password;
+		sendSaveData(toSave);
+	}
+			
+	
+}
+function sendSaveData(data){
+	
+	console.log(currentGameID);
 	alert.show("Saving..", [], null);
 	alert.showLoading();
 	// sends the data to the server
@@ -294,20 +308,28 @@ function saveGame(){
 		},
 		url: "/rpgmaker_save/",
 		type: "POST",
-		data: JSON.stringify(toSave),
+		data: JSON.stringify(data),
 		success: function (res){
 			
-			
+			res = JSON.parse(res);
 			alert.hideLoading();
 
-			if (res == 'failure'){
+			if (res.status == 'failure'){
 
 				alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
+			}else if (res.status === "badpass"){
+				
+				alert.show("Error: The password and ID do not match", [],  null);
+			}else if (res.status === "nopass"){
+				
+				alert.show("Please enter a password", [], null);
+				
 			}else {
 
 				if (currentGameID === null){
 					alert.show("Your code is " + res, [], null);
 					currentGameID = res;
+					password = data.password;
 				}else {
 					alert.show("Successfully Saved", [], null);
 				}
@@ -320,9 +342,13 @@ function loadGame(){
 
 	var data;
 
+	if (currentGameID === null || password === null){
+		
+	}
 	alert.show("Please enter an id and password:", ["ID", "Password"], function(obj){
 		
 		var id = obj.ID;
+		var password = obj.Password;
 
 		// shows the loading symbol
 		alert.showLoading();
@@ -335,7 +361,9 @@ function loadGame(){
 			},
 			url: "/rpgmaker_get/",
 			type: "POST",
-			data: JSON.stringify(id),
+			data: JSON.stringify({
+				id: id,
+				password: password}),
 			success: function (res){
 					
 				// now i have to do stuff with this
@@ -353,11 +381,11 @@ function loadGame(){
 					
 					alert.show("Please enter a valid integer", [], null);
 					
-				}else {
+				}else if (data.status === "wrongpass"){
 					
-					// was successful
-					// saves password
-					password = obj.password;
+					alert.show("The password for the ID is wrong", [], null);
+					
+				}else {
 					
 					// checks for each sprite if it is null
 					for (var object in data.sprites){
@@ -437,7 +465,9 @@ function loadGame(){
 	});
 
 }
-
+function sendLoadData(){
+	
+}
 function onWin(){
 	hideGameScreen();
 	isPlayingGame = false;

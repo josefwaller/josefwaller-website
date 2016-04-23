@@ -109,7 +109,7 @@ def save_rpg_game (request):
 
 		# Parses the data
 		data = json.loads(json_data)
-
+		
 		# checks if it has an id attached
 		if ('id' in data):
 
@@ -211,9 +211,13 @@ def save_rpg_game (request):
 
 			# Creates a new save for each field
 			
+			# checks the password is more than nothing
+			if (data['password'] == ""):
+				return HttpResponse(json.dumps({"status":"nopass"}))
+			
 			#checks that the password is legitimate
 			invalid_chars = [
-				'',
+				'?',
 				'/',
 				'!',
 				'@',
@@ -299,7 +303,8 @@ def save_rpg_game (request):
 			gameSave = models.GameSave(
 				levelID=level_save.id,
 				spritesID=sprite_set_save.id,
-				dialogID=dialog_save.id
+				dialogID=dialog_save.id,
+				password=data['password']
 			)
 			gameSave.save()
 
@@ -314,7 +319,7 @@ def save_rpg_game (request):
 		print (''.join('!! ' + line for line in lines))  # Log it or whatever here
 
 		error_message = "failure"
-		return HttpResponse(error_message)
+		return HttpResponse(json.dumps({"status": error_message}))
 
 def get_rpg_game (request):
 
@@ -332,6 +337,8 @@ def get_rpg_game (request):
 
 		# Parses the data
 		data = json.loads(json_data)
+		
+		print(data)
 
 		# checks it is a game object
 		try:
@@ -341,10 +348,14 @@ def get_rpg_game (request):
 
 		# gets the game object
 		try:
-			game_save = models.GameSave.objects.get(pk=data)
+			game_save = models.GameSave.objects.get(pk=data['id'])
 		except :
 			return HttpResponse(json.dumps({"status": "notexist"}))
-
+			
+		# for some reason, django saves charField as a stringified string
+		if (json.loads(game_save.password) != data['password']):
+			return HttpResponse(json.dumps({"status":"wrongpass"}))
+			
 		toReturn = {}
 
 		# Gets all easy to get values
