@@ -110,6 +110,8 @@ def save_rpg_game (request):
 		# Parses the data
 		data = json.loads(json_data)
 		
+		print(data['password'])
+		
 		# checks if it has an id attached
 		if ('id' in data):
 
@@ -206,7 +208,10 @@ def save_rpg_game (request):
 				sprite_object_save.save()
 
 
-			return HttpResponse("Success")
+			# returns the id
+			return HttpResponse(json.dumps({
+				"status": "ok"
+			}))
 		else:
 
 			# Creates a new save for each field
@@ -234,11 +239,13 @@ def save_rpg_game (request):
 				'~'
 			]
 			
+			
 			for c in invalid_chars:
 				
 				if c in data['password']:
 					return HttpResponse(json.dumps({"status":"badpass"}))
-
+					
+			print(data['password'])
 			sprite_set_save_dict = {}
 			# creates a new sprite save for each sprite
 			for sprite_object_key in data['sprites']:
@@ -282,9 +289,9 @@ def save_rpg_game (request):
 
 			# jsonifies all the data
 			for key in data:
-				data[key] = json.dumps(data[key])
-				# prints the number of characters
-				# print("The value %s is %s characters long." % (key, len(data[key])))
+			
+				if key != "password":
+					data[key] = json.dumps(data[key])
 
 
 			# Saves everthing else, since sprites has to be such a trouble child
@@ -298,7 +305,8 @@ def save_rpg_game (request):
 				dialogJSON=data['dialog']
 			)
 			dialog_save.save()
-
+			
+			print(data['password'])
 			#Creates the game save incorporating all of the ids
 			gameSave = models.GameSave(
 				levelID=level_save.id,
@@ -309,7 +317,10 @@ def save_rpg_game (request):
 			gameSave.save()
 
 			# returns the id
-			return HttpResponse(gameSave.id)
+			return HttpResponse(json.dumps({
+				"status": "ok",
+				"id": gameSave.id
+			}))
 
 
 	except:
@@ -337,8 +348,6 @@ def get_rpg_game (request):
 
 		# Parses the data
 		data = json.loads(json_data)
-		
-		print(data)
 
 		# checks it is a game object
 		try:
@@ -353,8 +362,11 @@ def get_rpg_game (request):
 			return HttpResponse(json.dumps({"status": "notexist"}))
 			
 		# for some reason, django saves charField as a stringified string
-		if (json.loads(game_save.password) != data['password']):
-			return HttpResponse(json.dumps({"status":"wrongpass"}))
+		# actually i fixed it, I am just an idiot
+		
+		if 'password' in data:
+			if (game_save.password != data['password']):
+				return HttpResponse(json.dumps({"status":"wrongpass"}))
 			
 		toReturn = {}
 
@@ -428,8 +440,13 @@ def list_is_empty(list):
 
 # Gets the IDS of all the components (Music, sprites, etc) from the game ID
 def get_game_component_ids(game_id, password):
-
-	game_save = models.GameSave.objects.get(id=game_id, password=password)
+	
+	try:
+		print(password);
+		game_save = models.GameSave.objects.get(id=game_id, password=password)
+		
+	except models.GameSave.DoesNotExist:
+		return None
 
 	level_save = models.LevelSave.objects.get(pk=game_save.levelID)
 

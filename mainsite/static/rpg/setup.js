@@ -296,10 +296,10 @@ function saveGame(){
 }
 function sendSaveData(data){
 	
-	console.log(currentGameID);
 	alert.show("Saving..", [], null);
 	alert.showLoading();
 	// sends the data to the server
+	
 	$.ajax({
 		beforeSend: function(xhr, settings) {
 			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -324,12 +324,18 @@ function sendSaveData(data){
 				
 				alert.show("Please enter a password", [], null);
 				
-			}else {
+			}else if (res.status === "wrongpass"){
+				
+				alert.show("The password and GameID do not match", [], null);
+				
+			}else if (res.status === "ok"){
 
 				if (currentGameID === null){
-					alert.show("Your code is " + res, [], null);
-					currentGameID = res;
+					
+					alert.show("Your code is " + res.id, [], null);
+					currentGameID = res.id;
 					password = data.password;
+					
 				}else {
 					alert.show("Successfully Saved", [], null);
 				}
@@ -348,7 +354,7 @@ function loadGame(){
 	alert.show("Please enter an id and password:", ["ID", "Password"], function(obj){
 		
 		var id = obj.ID;
-		var password = obj.Password;
+		var thisPassword = obj.Password;
 
 		// shows the loading symbol
 		alert.showLoading();
@@ -363,7 +369,7 @@ function loadGame(){
 			type: "POST",
 			data: JSON.stringify({
 				id: id,
-				password: password}),
+				password: thisPassword}),
 			success: function (res){
 					
 				// now i have to do stuff with this
@@ -453,6 +459,7 @@ function loadGame(){
 
 					// saves the current game
 					currentGameID = id;
+					password = thisPassword;
 					
 					// shows the default screen
 					changeScreen(null, currentScreen);
