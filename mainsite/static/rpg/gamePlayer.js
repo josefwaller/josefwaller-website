@@ -415,6 +415,15 @@ var GamePlayer = Class({
 	drawArea:function(x, y, areaX, areaY) {
 
 		area = level[areaX][areaY];
+		
+		// draws black underneath
+		this.ctx.fillStyle = "#000000";
+		this.ctx.fillRect(
+			x,
+			y,
+			this.s,
+			this.s
+		);
 
 		drawSprite(
 			this.ctx,
