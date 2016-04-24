@@ -77,10 +77,13 @@ var AlertBoxManager = Class({
 			this.labels.push(labels[i]);
 			
 			// adds a new line to the input container
-			this.inputContainer.append(labels[i] + ": ");
+			var singleInputContainer = $("<div class='alert-box-single-input'></div");
+			
+			singleInputContainer.append(labels[i] + ": ");
 			this.inputs[i] = $("<input class='alert-box-input'></input>");
-			this.inputContainer.append(this.inputs[i]);
-			this.inputContainer.append($("<br>"));
+			singleInputContainer.append(this.inputs[i]);
+			
+			this.inputContainer.append(singleInputContainer);
 		}
 		
 		if (this.inputs.length > 0){
@@ -153,12 +156,14 @@ var AlertBoxManager = Class({
 	
 	showLoading: function(){
 		
+		this.loading.show();
 		createLoading(this.loading);
 	},
 	
 	hideLoading: function(){
 		
 		this.loading.html("");
+		this.loading.hide();
 		
 	},
 	

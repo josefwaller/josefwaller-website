@@ -103,9 +103,18 @@ canvas
 	color: #3399ff;
 	background-color: #ffffff;
 }
+#alert-box-input-container
+{
+	margin-top: 10px;
+}
+.alert-box-single-input
+{
+	text-align: right;
+	margin-right: 20px;
+	margin-bottom: 5px;
+}
 .alert-box-input
 {
-	margin-top: 20px;
 	border: 0px;
 	color: #000000;
 	padding: 2px;
