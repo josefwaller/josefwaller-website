@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>RPGPlayer - josefwaller.com</title>		
+		
+		{% include 'partials/links.html' %}
+		
+		{% load staticfiles %}
+		<link type="text/css" rel="Stylesheet" href="{% static 'rpg/rpgmaker.css'%}">
+		
+		<!-- classes in javascript -->
+		<script src="{% static 'rocket/class.js' %}" type="text/javascript"></script>
+		
+		<!-- the script that manages playing the game -->
+		<script src="{% static 'rpg/gamePlayer.js' %}" type="text/javascript"></script>
+		
+		<!-- script that sets up playing the game -->
+		<script src="{% static 'rpg/gameSetup.js' %}" type="text/javascript"></script>
+		
+		<!-- different utility scripts -->
+		<script src="{% static 'rpg/reusableFunctions.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/headsUpDisplay.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/alertBoxManager.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/ctxPro.js' %}" type="text/javascript"></script>
+
+		<!-- Entities to be used when playing the game -->
+		<script src="{% static 'rpg/entities/entity.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/entities/player.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/entities/item.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/entities/enemy.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/entities/meleeEnemy.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/entities/rangedEnemy.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/entities/missile.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/entities/npc.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/entities/barrier.js' %}" type="text/javascript"></script>
+		<script src="{% static 'rpg/entities/goal.js' %}" type="text/javascript"></script>
+		
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Raleway|Press+Start+2P' rel='stylesheet' type='text/css'>
+	</head>
+	{% csrf_token %}
+	<body>
+		
+		{% include 'partials/header.html' %}
+		
+		<div class="container">
+			
+			<div class="col-md-8 col-centered">
+				<canvas id="game-hud-canvas"></canvas>
+				<canvas id="game-canvas"></canvas>
+			</div>
+		</div>
+		<!-- the alert box -->
+		<div class="center-element-outer-container" id="alert-box-container">
+			<div class="center-element-inner-container">
+				<div id="alert-box" class="centered-element">
+					<span id="alert-box-text">Testing Alert Box. Hello World!</span>
+					<div id="alert-box-input-container">
+						<div class="alert-box-single-input">
+							ID: <input class="alert-input"></input>
+						</div>
+						Password: <input class="alert-input"></input>
+					</div>
+					<div id="alert-box-loading">
+					</div>
+					<button id="alert-box-btn" href="#">Ok</button>
+				</div>
+			</div>
+		</div> 
+	</div>
+		
+		{% include 'partials/footer-ad.html' %}
+		
+	</body>
+	<script type="text/javascript">
+	
+		// gets the ID of the game
+		var gameID = {{object.id}};
+		
+		// starts the game
+		startGame();
+	</script>
+</html>

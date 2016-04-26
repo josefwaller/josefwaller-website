@@ -28,6 +28,11 @@ class RocketView (generic.TemplateView):
 class RPGMakerView (generic.TemplateView):
 	template_name = 'rpgmaker.html'
 
+class RPGPlayerView (generic.DetailView):
+
+	queryset = models.GameSave.objects.all()
+	template_name = 'rpgplayer.html'
+
 def save_evolution (request):
 
 	try:
@@ -140,7 +145,7 @@ def save_rpg_game (request):
 			sprite_set_save.save()
 
 			# saves over the sprites
-			for sprite_object_key in ids['sprites']:
+			for sprite_object_key in data['sprites']:
 
 				sprite_object_save = models.SpriteObjectSave.objects.get(pk=ids['sprite_objects'][sprite_object_key])
 
@@ -148,9 +153,12 @@ def save_rpg_game (request):
 				# modefied sprites will be saved over the former sprites
 				sprite_indexes = json.loads(sprite_object_save.spritesDictionaryJSON)
 
-				for sprite_key in ids['sprites'][sprite_object_key]:
+				for sprite_key in data['sprites'][sprite_object_key]:
 					
-					sprite_id = ids['sprites'][sprite_object_key][sprite_key]
+					try:
+						sprite_id = ids['sprites'][sprite_object_key][sprite_key]
+					except:
+						sprite_id = None
 
 					sprite_data = data['sprites'][sprite_object_key][sprite_key]
 
@@ -415,6 +423,7 @@ def get_rpg_game (request):
 
 
 		toReturn['sprites'] = sprite_dict
+		toReturn['status'] = "ok"
 		#returns the data
 		return HttpResponse(json.dumps(toReturn))
 
@@ -426,6 +435,8 @@ def get_rpg_game (request):
 
 		error_message = "failure"
 		return HttpResponse(json.dumps({"status": error_message}))
+
+
 
 # Checks if a sprite is just all null
 def list_is_empty(list):

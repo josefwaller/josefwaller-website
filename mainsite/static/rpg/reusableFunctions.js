@@ -21,7 +21,54 @@ function drawSprite(ctx, sprite, offX, offY, s){
 		}
 	}
 }
+function setUpObjects(){
 
+	var objectNames = [
+		"player",
+		"meleeEnemyOne",
+		"meleeEnemyTwo",
+		"rangedEnemyOne",
+		"rangedEnemyTwo",
+		"npcOne",
+		"npcTwo",
+		"npcThree",
+		"meleeWeapon",
+		"rangedWeapon",
+		"invincibleBarrier",
+		"breakableBarrier",
+		"goal"
+		
+	];
+	
+	objects = [];
+
+	for (var i in objectNames){
+
+		// creates a new object
+		objects.push({
+			name: objectNames[i],
+			object: objectNames[i],
+			sprite: Object.keys(sprites[objectNames[i]])[0],
+			maxNum: 3,
+			num: 0
+		});
+
+		var index = objects.length - 1;
+
+		// changes the max value if it needs to be changed
+		switch (i){
+
+			case "player":
+				objects[index].maxNum = 1;
+				break;
+
+			case ("breakableBarrier" || "invincibleBarrier"):
+				objects[index].maxNum = 20;
+				break;
+		}
+	}
+		
+}
 function getKeyFromKeyCode(keyCode){
 
 	// returns a string representation of the key

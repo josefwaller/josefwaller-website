@@ -148,7 +148,7 @@ var LevelEditor = Class({
 
 		this.focusedAreaSize = this.h;
 		
-		this.setUpObjects();		
+		setUpObjects();		
 
 		// sets the zoom out button to zoom out
 		this.focusToolsDiv.hide();
@@ -288,46 +288,6 @@ var LevelEditor = Class({
 
 		// selects the first element
 		this.selectElement(0);
-	},
-	setUpObjects: function(){
-	
-		// creates the objects from the sprites
-		// will exclude eerything in this array
-		var notElements = [
-			"backgrounds"
-		];
-		
-		objects = [];
-
-		for (var i in sprites){
-
-			// Copies sprites
-			if ($.inArray(i, notElements) === -1){
-
-				objects.push({
-					name: i,
-					object: i,
-					sprite: Object.keys(sprites[i])[0],
-					maxNum: 3,
-					num: 0
-				});
-
-			}
-
-			var index = objects.length - 1;
-
-			// changes the max value if it needs to be changed
-			switch (i){
-
-				case "player":
-					objects[index].maxNum = 1;
-					break;
-
-				case ("breakableBarrier" || "invincibleBarrier"):
-					objects[index].maxNum = 20;
-					break;
-			}
-		}	
 	},
 	onMouseUp: function(){},
 	onMouseHold: function(){},
@@ -707,7 +667,7 @@ var LevelEditor = Class({
 			this.selectElement(0);
 		}
 		
-		this.setUpObjects();
+		setUpObjects();
 		this.hasPlayer = false;
 		// cycles through and counts the elements already existing
 		

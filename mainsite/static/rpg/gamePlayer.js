@@ -496,7 +496,7 @@ var GamePlayer = Class({
 
 							// checks that there is an object there
 							if (l[x][y] !== null){
-
+								
 								switch(objects[l[x][y]].name){
 
 									case "player":
@@ -634,6 +634,8 @@ var GamePlayer = Class({
 									// fallthrough for both barriers
 									case "breakableBarrier":
 									case "invincibleBarrier":
+									
+										console.log("barrire");
 
 										var isBreakable = (objects[l[x][y]].name === "breakableBarrier");
 										this.barriers.push(new Barrier({
