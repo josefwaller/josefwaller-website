@@ -28,6 +28,9 @@ class RocketView (generic.TemplateView):
 class RPGMakerView (generic.TemplateView):
 	template_name = 'rpgmaker.html'
 
+class RPGPlayerWithoutIDView (generic.TemplateView):
+	template_name = 'rpgplayer_no_id.html'
+	
 class RPGPlayerView (generic.DetailView):
 
 	queryset = models.GameSave.objects.all()

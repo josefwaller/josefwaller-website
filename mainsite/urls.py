@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^rocket/$', views.RocketView.as_view(), name="rocket"),
     
     url(r'^rpgmaker/$', views.RPGMakerView.as_view(), name="rpgmaker"),
+    url(r'^rpgplayer/$', views.RPGPlayerWithoutIDView.as_view(), name="rpgplayer_no_id"),
     url(r'^rpgplayer/(?P<pk>[0-9]+)/$', views.RPGPlayerView.as_view(), name="rpgplayer"),
 
     url(r'^evolution_save/$', views.save_evolution, name="save evolution"),
