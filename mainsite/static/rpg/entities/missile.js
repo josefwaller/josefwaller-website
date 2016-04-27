@@ -102,13 +102,13 @@ var Missile = Class({
 
 		var transX = this.x + this.s / 2;
 		var transY = this.y + this.s / 2;
-
-		// moves to the middle of the sprite
-		ctx.translate(transX, transY);
+		
+		
 		// rotates
 		var rotation;
 
 		switch(this.direction){
+			
 			case this.dirs.left:
 				// no rotation needed
 				rotation = 0;
@@ -126,7 +126,12 @@ var Missile = Class({
 				break;
 
 		}
+		
+		console.log(rotation / Math.PI);
 
+
+		// moves to the middle of the sprite
+		ctx.translate(transX, transY);
 		ctx.rotate(rotation);
 		ctx.translate(- transX, - transY);
 

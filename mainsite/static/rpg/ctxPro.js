@@ -254,6 +254,6 @@ var CTXPro = Class({
 		this.ctx.translate(x * this.unit, y * this.unit);
 	},
 	rotate: function(r){
-		this.ctx.rotate(r * this.unit);
+		this.ctx.rotate(r);
 	}
 });

@@ -135,7 +135,7 @@ function onWin(){
 		{
 			text: "Play Again",
 			callback: function(){
-				console.log("Playing again");
+				window.location.reload();
 			}
 		}]
 	);
