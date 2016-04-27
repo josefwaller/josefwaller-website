@@ -39,17 +39,18 @@
 
 	width = 234;
 	height = 60;
-	div.css("height", height + "px")
-	div.css("width", width + "px")
+	div.css("height", height + "px");
+	div.css("width", width + "px");
 
-	fillerDiv = $("#space-filler-div")
-	fillerDiv.css("height", height + "px")
+	fillerDiv = $("#space-filler-div");
+	fillerDiv.css("height", height + "px");
 
 </script>
 
 <style>
 #outside-div
 {
+	pointer-events: none;
 	position: fixed;
 	bottom: 0;
 	left: 0;
@@ -58,6 +59,7 @@
 }
 #inside-div
 {
+	pointer-events: auto;
 	background-color: #000000;
 	height: 90px;
 	width: 728px;
