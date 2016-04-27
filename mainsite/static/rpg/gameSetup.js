@@ -7,13 +7,25 @@ var objects;
 
 var game;
 
-var alert;
+var endBox = {
+	container: null,
+	buttonGroup: null,
+	canvas: null,
+}
 
 var playingGame = true;
 
 function startGame(){
 	
-	console.log(gameID);
+	endBox.container = $("#end-box-container");
+	endBox.butttonGroup = $("#end-box-button-cont");
+	endBox.canvas = $("#end-box-canvas");
+	
+	endBox.container.hide();
+	endBox.container.addClass("up-anim");
+	
+	endBox.canvas.height($("#end-box").height() - 20);
+	endBox.canvas.width(endBox.canvas.height());
 	
 	// gets the game info
 	$.ajax({
@@ -72,6 +84,21 @@ function startGame(){
 					}
 				}
 				
+				// draws the win sprite on the canvas
+				var ctx = new CTXPro({
+					canvas: endBox.canvas,
+					w: 100,
+					h: 100
+				});
+				
+				drawSprite(
+					ctx,
+					sprites.player.win,
+					0,
+					0,
+					100
+				);
+				
 				setUpObjects();
 				
 				game = new GamePlayer({});
@@ -97,10 +124,43 @@ function update(){
 
 function onWin(){
 	
-	alert.show("You Win! Thanks for Playing", [], null);
-	
-	console.log("ASDF");
+	showEndScreen(
+		"", 
+		[{
+			text: "Make your own", 
+			callback: function(){
+				window.location.href = "/rpgmaker/"
+			}
+		},
+		{
+			text: "Play Again",
+			callback: function(){
+				console.log("Playing again");
+			}
+		}]
+	);
 	
 	playingGame = false;
+	
+}
+
+function showEndScreen(message, buttonLabels){
+	
+	endBox.container.show();
+	if (endBox.container.hasClass("up-anim")){
+		endBox.container.removeClass("up-anim");
+	}
+	endBox.container.addClass("down-anim");
+	endBox.butttonGroup.html("");
+	
+	for (var i = 0; i < buttonLabels.length; i++){
+		
+		var button = $("<button class='end-box-btn'></button>");
+		
+		button.text(buttonLabels[i].text);
+		button.click(buttonLabels[i].callback);
+		
+		endBox.butttonGroup.append(button);
+	}
 	
 }

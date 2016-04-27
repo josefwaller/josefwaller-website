@@ -629,12 +629,12 @@ var LevelEditor = Class({
 		this.focusedArea.y = y;
 
 		// displays the zoom out button
-		this.focusToolsDiv.css("visibility", "visible");
+		this.focusToolsDiv.show();
 
 		// displays the object buttons
 		this.fillObjectButtons();
 
-		$("#lvl-edtr-b-group").css("visibility", "visible");
+		$("#lvl-edtr-b-group").show();
 		$("#lvl-edtr-obj-btns").show();
 		
 		// changes the selected background button
@@ -647,9 +647,9 @@ var LevelEditor = Class({
 		this.isUnzooming = true;
 		this.zoomTime = new Date().getTime();
 
-		this.focusToolsDiv.css("visibility", "hidden");
+		this.focusToolsDiv.hide();
 
-		$("#lvl-edtr-b-group").css("visibility", "hidden");
+		$("#lvl-edtr-b-group").hide();
 		$("#lvl-edtr-obj-btns").hide();
 	},
 	

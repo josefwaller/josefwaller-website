@@ -100,7 +100,7 @@ canvas
 }
 #alert-box-btn:hover
 {
-	color: #3399ff;
+	color: #4da6ff;
 	background-color: #ffffff;
 }
 #alert-box-input-container
@@ -133,6 +133,36 @@ canvas
 	
 	/* Makes the loading relative to it and not the window */
 	position: relative;
+}
+
+#end-box
+{
+	display: block;
+	width: 600px;
+	height: 300px;
+	background-color: #4da6ff;
+	color: #ffffff;
+	padding: 10px;
+}
+#end-box-canvas
+{
+	float: left;
+	width: 50%;
+	height: 100%;
+}
+#end-box-text
+{
+	min-height: 75%;
+}
+.end-box-btn
+{
+	background-color: #3399ff;
+	color: #ffffff;
+	margin: 5px;
+}
+.end-box-btn:hover
+{
+	background-color: #4da6ff;
 }
 
 #lvl-edtr-b-group
