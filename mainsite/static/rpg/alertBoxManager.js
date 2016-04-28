@@ -157,12 +157,14 @@ var AlertBoxManager = Class({
 	showLoading: function(){
 		
 		this.loading.show();
+		this.button.hide();
 		createLoading(this.loading);
 	},
 	
 	hideLoading: function(){
 		
 		this.loading.html("");
+		this.button.show();
 		this.loading.hide();
 		
 	},

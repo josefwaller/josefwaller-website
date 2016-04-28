@@ -36,9 +36,6 @@ var NPC = Class({
 		var p = this.parent.getPlayer();
 		var playerPos = p.getPos();
 
-		// initially sets dialog to false
-		p.setHasDialog(false, null);
-
 		var difX = this.x - playerPos.x;
 		var difY = this.y - playerPos.y;
 		var difTotal = Math.sqrt(Math.pow(difX, 2) + Math.pow(difY, 2));	

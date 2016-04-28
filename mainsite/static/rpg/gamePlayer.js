@@ -131,6 +131,9 @@ var GamePlayer = Class({
 				this.activeArea.y);	
 
 
+			// initially sets dialog to false
+			this.player.setHasDialog(false, null);
+
 			for (var i = 0; i < this.npcs.length; i++){
 				if (this.entityIsInArea(this.npcs[i])){
 
