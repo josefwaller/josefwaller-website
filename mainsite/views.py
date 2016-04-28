@@ -377,6 +377,7 @@ def get_rpg_game (request):
 		
 		if 'password' in data:
 			if (game_save.password != data['password']):
+			
 				return HttpResponse(json.dumps({"status":"wrongpass"}))
 			
 		toReturn = {}

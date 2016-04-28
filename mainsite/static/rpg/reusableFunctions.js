@@ -69,6 +69,26 @@ function setUpObjects(){
 	}
 		
 }
+function setUpLoading(){
+	
+
+	// gets loading divs
+	var loading = $("#loading");
+	var loadingCont = $("#loading-container");
+
+	// shows the loading screen and hides the rest
+	loading.show();
+	$("#rpgmaker-container").hide();
+
+	// sets the margin for the vetically aligned div
+	loadingCont.css("margin-top", (loading.height() - loadingCont.height()) / 2);
+
+	// sets up animation cicle thingy
+	var parent = $("#loading-circle");
+	parent.html("");
+	
+	createLoading(parent);
+}
 function getKeyFromKeyCode(keyCode){
 
 	// returns a string representation of the key
@@ -96,4 +116,25 @@ function getKeyFromKeyCode(keyCode){
 
 	}
 
+}
+
+function createLoading(parent) {
+
+	// creates 8 dots
+	for (var i = 0; i < 8; i++){
+
+		// creates dot and container elements
+		var outerContainer = $("<div id='loading-circle-fixed-container'></div>");
+		var container = $("<div id='loading-circle-container'></div>");
+
+		// sets the css
+		container.css("animation-delay", (i / 10) + "s");
+
+		// appends things to other things
+		outerContainer.append(container);
+		container.append($("<div id='loading-circle-dot'></div>"));
+		parent.append(outerContainer);
+
+	}
+	
 }

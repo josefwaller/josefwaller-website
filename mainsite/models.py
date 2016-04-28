@@ -55,4 +55,4 @@ class GameSave (models.Model):
 	
 	# the password for this game
 	# needed to edit but not to play
-	password = models.CharField(max_length=50)
+	password = models.CharField(max_length=50, default="password")
