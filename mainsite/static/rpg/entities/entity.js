@@ -72,8 +72,8 @@ var Entity = Class({
 			// this stops him/her from running off of the screen
 			if (this[t] < -1){
 				this[t] = -1;
-			}else if (this[t] > s + 1){
-				this[t] = s + 1;
+			}else if (this[t] > s - this.s + 1){
+				this[t] = s - this.s + 1;
 			}
 
 			// checks it does not hit a barrier

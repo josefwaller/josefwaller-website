@@ -237,8 +237,7 @@ var GamePlayer = Class({
 			}else if (directionX === -1){
 				futureCoords.x = this.s - this.player.getSize();
 			}
-		}
-		if (playerPos.y > this.s - this.player.getSize() || playerPos.y < 0){
+		}else if (playerPos.y > this.s - this.player.getSize() || playerPos.y < 0){
 
 			directionY = playerPos.y / Math.abs(playerPos.y);
 
@@ -275,6 +274,7 @@ var GamePlayer = Class({
 									if (futureCoords.y + pS > bPos.y){
 										// prevents the player from scrolling
 										canScroll = false;
+										console.log("Would hit barrier");
 										break;
 									}
 								}
