@@ -185,6 +185,11 @@ input:focus
 	margin-bottom: 5px;
 }
 
+#level-editor, #art, #dialog
+{
+	max-height: 100%;
+}
+
 
 
 /* Dialog Page */

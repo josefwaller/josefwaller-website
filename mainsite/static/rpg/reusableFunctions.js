@@ -56,13 +56,19 @@ function setUpObjects(){
 		var index = objects.length - 1;
 
 		// changes the max value if it needs to be changed
-		switch (i){
+		switch (objectNames[i]){
 
 			case "player":
+			case "npcOne":
+			case "npcTwo":
+			case "npcThree":
+			case "rangedWeapon":
+			case "meleeWeapon":
 				objects[index].maxNum = 1;
 				break;
 
-			case ("breakableBarrier" || "invincibleBarrier"):
+			case "breakableBarrier":
+			case "invincibleBarrier":
 				objects[index].maxNum = 20;
 				break;
 		}
