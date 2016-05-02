@@ -11,6 +11,7 @@ var endBox = {
 	container: null,
 	buttonGroup: null,
 	canvas: null,
+	textBox: null
 }
 
 var playingGame = true;
@@ -20,6 +21,7 @@ function startGame(){
 	endBox.container = $("#end-box-container");
 	endBox.butttonGroup = $("#end-box-button-cont");
 	endBox.canvas = $("#end-box-canvas");
+	endBox.textBox = $("#end-box-text");
 	
 	endBox.container.hide();
 	endBox.container.addClass("up-anim");
@@ -43,9 +45,8 @@ function startGame(){
 		
 			var data = JSON.parse(res);
 			
-			if (data.status == "ok"){
+			if (data.status === "ok"){
 				
-				console.log(data);
 				level = data.level;
 				dialogs = data.dialog;
 				colors = data.colors;
@@ -101,8 +102,23 @@ function startGame(){
 				
 				setUpObjects();
 				
+				var levelIsVerified = verifyLevel();
+				
+				if (!levelIsVerified){
+					showEndScreen("This level is incomplete", 
+					[{
+						text: "Return to RPGMaker",
+						callback: function(){
+							window.location = "/rpgmaker";
+						}
+					}]);
+					endBox.canvas.remove();
+					return;
+				}
+				
 				game = new GamePlayer({});
-	
+				
+				hideLoading();
 				update();
 				
 			}else {
@@ -111,6 +127,43 @@ function startGame(){
 			}
 		}
 	})
+}
+
+function verifyLevel() {
+	
+	// checks for an area, a player and a goal
+	var hasArea = false;
+	var hasPlayer = false;
+	var hasGoal = false;
+	for (var lX = 0; lX < level.length; lX++){
+		for (var lY = 0; lY < level[lX].length; lY++){
+			
+			if (level[lX][lY] !== null){
+				hasArea = true;
+				var area = level[lX][lY].elements;
+				for (var x = 0; x < area.length; x++){
+					for (var y = 0; y < area[x].length; y++){
+						
+						var objIndex = area[x][y];
+						
+						if (objIndex !== null){
+							if (objects[objIndex].name === "player"){
+								hasPlayer = true;
+							}else if (objects[objIndex].name === "goal"){
+								hasGoal = true;
+							}
+						}
+						
+						if (hasGoal && hasPlayer && hasArea){
+							return true;
+						}
+						
+					}
+				}
+			}
+		}
+	}
+	return false;
 }
 
 function update(){
@@ -125,7 +178,7 @@ function update(){
 function onWin(){
 	
 	showEndScreen(
-		"", 
+		"Congratulations, you win!", 
 		[{
 			text: "Make your own", 
 			callback: function(){
@@ -152,6 +205,7 @@ function showEndScreen(message, buttonLabels){
 	}
 	endBox.container.addClass("down-anim");
 	endBox.butttonGroup.html("");
+	endBox.textBox.text(message);
 	
 	for (var i = 0; i < buttonLabels.length; i++){
 		
@@ -164,3 +218,8 @@ function showEndScreen(message, buttonLabels){
 	}
 	
 }
+
+$(document.body).ready(function() {
+	setUpLoading();
+});
+$(window).on("load", startGame);

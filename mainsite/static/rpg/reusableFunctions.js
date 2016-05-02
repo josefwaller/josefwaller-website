@@ -144,3 +144,13 @@ function createLoading(parent) {
 	}
 	
 }
+function hideLoading(){
+	
+	var loading = $("#loading");
+	loading.addClass("loading-down-anim");
+
+	// removes the loading screen when it is done animating
+	loading.on("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
+		loading.html("");
+	});
+}

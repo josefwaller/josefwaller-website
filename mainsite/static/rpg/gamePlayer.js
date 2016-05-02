@@ -637,8 +637,6 @@ var GamePlayer = Class({
 									// fallthrough for both barriers
 									case "breakableBarrier":
 									case "invincibleBarrier":
-									
-										console.log("barrire");
 
 										var isBreakable = (objects[l[x][y]].name === "breakableBarrier");
 										this.barriers.push(new Barrier({
