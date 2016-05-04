@@ -45,7 +45,7 @@ function startGame(){
 		
 			var data = JSON.parse(res);
 			
-			if (data.status === "ok"){
+			if (data.status === "success"){
 				
 				level = data.level;
 				dialogs = data.dialog;
@@ -105,7 +105,7 @@ function startGame(){
 				var levelIsVerified = verifyLevel();
 				
 				if (!levelIsVerified){
-					showEndScreen("This level is incomplete", 
+					showEndScreen("This level is incomplete. It is missing a player and/or a goal.", 
 					[{
 						text: "Return to RPGMaker",
 						callback: function(){
@@ -121,9 +121,28 @@ function startGame(){
 				hideLoading();
 				update();
 				
+			}else if (data.status === "notexist"){
+				
+				showEndScreen("No game was found at that ID.",
+					[{
+						text: "Return to RPGMaker",
+						callback: function(){
+							window.location = "/rpgmaker";
+						}
+					}]
+				);
+				endBox.canvas.hide();
 			}else {
-				console.log(data);
-				// add error messages later
+				
+				showEndScreen("There was a problem getting the level.",
+					[{
+						text: "Return to RPGMaker",
+						callback: function(){
+							window.location = "/rpgmaker";
+						}
+					}]
+				);
+				endBox.canvas.hide();
 			}
 		}
 	})

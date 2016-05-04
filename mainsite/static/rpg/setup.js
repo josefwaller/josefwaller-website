@@ -408,11 +408,7 @@ function loadGame(){
 				// now i have to do stuff with this
 				var data = JSON.parse(res);
 
-				if (data.status == 'failure'){
-
-					alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
-					
-				}else if (data.status === "notexist"){
+				if (data.status === "notexist"){
 				
 					alert.show("No Setup was found at that ID", [], null);
 					
@@ -424,7 +420,7 @@ function loadGame(){
 					
 					alert.show("The password for the ID is wrong", [], null);
 					
-				}else {
+				}else if (data.status === "success"){
 					
 					// checks for each sprite if it is null
 					for (var object in data.sprites){
@@ -498,6 +494,11 @@ function loadGame(){
 					changeScreen(null, currentScreen);
 					
 					alert.hide();
+					
+				}else {
+					
+					console.log(data.status);
+					alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
 					
 				}
 			}

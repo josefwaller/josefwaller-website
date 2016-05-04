@@ -427,7 +427,7 @@ def get_rpg_game (request):
 
 
 		toReturn['sprites'] = sprite_dict
-		toReturn['status'] = "ok"
+		toReturn['status'] = "success"
 		#returns the data
 		return HttpResponse(json.dumps(toReturn))
 
