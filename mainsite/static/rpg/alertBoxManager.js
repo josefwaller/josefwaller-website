@@ -71,16 +71,39 @@ var AlertBoxManager = Class({
 		// gives all the labels their own input box
 		this.labels = [];
 		this.inputContainer.html("");
+		
 		for (var i = 0; i < labels.length; i++){
 			
+			var name;
+			var type;
+			
+			// if the label is a string, just uses it
+			if (typeof labels[i] === "string"){
+				name = labels[i];
+				type = null;
+				
+			// if its an object, checks for type
+			// mainly for passwords having type='password'
+			}else if (typeof labels[i] === "object"){
+				name = labels[i].name;
+				type = labels[i].type;
+				
+			// somthing went wrong :(
+			}else {
+				console.error("Unsupported labels type " + typeof(labels[i]));
+				return;
+			}
 			// adds it to local copy 
-			this.labels.push(labels[i]);
+			this.labels.push(name);
 			
 			// adds a new line to the input container
 			var singleInputContainer = $("<div class='alert-box-single-input'></div");
 			
-			singleInputContainer.append(labels[i] + ": ");
+			singleInputContainer.append(name + ": ");
 			this.inputs[i] = $("<input class='alert-box-input'></input>");
+			if (type !== null){
+				this.inputs[i].attr("type", type);
+			}
 			singleInputContainer.append(this.inputs[i]);
 			
 			this.inputContainer.append(singleInputContainer);

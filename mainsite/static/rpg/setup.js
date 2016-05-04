@@ -50,10 +50,6 @@ var playingGame = false;
 
 function setup () {
 
-
-	//hides the loading screen
-	hideLoading();
-
 	$("#rpgmaker-container").show();
 	// Sets up art canvas
 	art = Art({size: size});
@@ -78,6 +74,16 @@ function setup () {
 
 	// note that the game button does not call changeScreen
 	$("#game-btn").click(showGameScreen);
+	
+	// nor the launch button
+	$("#launch-btn").click(function(){
+		saveGame(function(){
+			
+			if (currentGameID !== null){
+				window.open("/rpgplayer/" + currentGameID);
+			}
+		});
+	});
 
 	//sets up load and save screens
 	$("#save").click(saveGame);
@@ -127,6 +133,11 @@ function setup () {
 
 	// sets screen to default
 	changeScreen(null, 0);
+
+	//hides the loading screen
+	hideLoading();
+	
+	// sets to update
 	window.setTimeout(update, 1000/60)
 
 }
@@ -259,7 +270,7 @@ function hideGameScreen(){
 
 	playingGame = false;
 }
-function saveGame(){
+function saveGame(callback){
 
 	// gets the save data
 	var toSave = {
@@ -268,7 +279,7 @@ function saveGame(){
 		colors: colors,
 		dialog: dialogs
 	}
-
+	console.log(callback);
 	// Checks if it is a loaded game
 	if (currentGameID !== null){
 
@@ -276,24 +287,30 @@ function saveGame(){
 
 	}
 	if (password === null){
-		alert.show("Please create a password", ["Password"], function(obj){
+		alert.show("Please create a password", [
+			{
+				name:"Password",
+				type: "password"
+			}], function(obj){
 			toSave.password = obj.Password;
-			sendSaveData(toSave);
+			sendSaveData(toSave, callback);
 		});
 	}else {
 		toSave.password = password;
-		sendSaveData(toSave);
+		sendSaveData(toSave, callback);
 	}
 			
 	
 }
-function sendSaveData(data){
+function sendSaveData(data, callback){
 	
 	alert.show("Saving..", [], null);
 	alert.showLoading();
 	// sends the data to the server
 	
-	$.ajax({
+	console.log(callback);
+	
+	var ajaxSettings = {
 		beforeSend: function(xhr, settings) {
 			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
@@ -322,20 +339,36 @@ function sendSaveData(data){
 				alert.show("The password and GameID do not match", [], null);
 				
 			}else if (res.status === "ok"){
-
-				if (currentGameID === null){
-					
-					alert.show("Your code is " + res.id, [], null);
+				
+				// records whether the game already had an ID
+				var pastID = currentGameID;
+				
+				if (res.id !== undefined){
 					currentGameID = res.id;
 					password = data.password;
+				}
+
+				if (typeof callback !== "function"){
 					
+					if (pastID === null){
+						
+						alert.show("Your ID is " + currentGameID, [], null);
+						
+					}else {
+						alert.show("Successfully Saved", [], null);
+					}
 				}else {
-					alert.show("Successfully Saved", [], null);
+					alert.show("Your ID is " + currentGameID, [], function(){
+						callback();
+						alert.hide()
+					});
 				}
 			}
 		}
-
-	});
+	}
+	
+	// sends the request
+	$.ajax(ajaxSettings);
 }
 function loadGame(){
 
@@ -344,7 +377,14 @@ function loadGame(){
 	if (currentGameID === null || password === null){
 		
 	}
-	alert.show("Please enter an id and password:", ["ID", "Password"], function(obj){
+	alert.show("Please enter an id and password:", 
+	[
+		"ID", 
+		{
+			name: "Password",
+			type: "password"
+		}
+	], function(obj){
 		
 		var id = obj.ID;
 		var thisPassword = obj.Password;
