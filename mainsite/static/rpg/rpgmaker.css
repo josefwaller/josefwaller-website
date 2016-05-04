@@ -321,6 +321,9 @@ input:focus
 	/* Hides the loading symbol during the transition */
 	overflow: hidden;
 	background-color: #4da6ff;
+	position: fixed;
+	width: 100%;
+	height: 100%;
 }
 
 #loading-circle
