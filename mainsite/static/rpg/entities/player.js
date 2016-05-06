@@ -184,7 +184,7 @@ var Player = new Class({
 									break;
 
 								default:
-									console.log(this.direction)
+									console.error(" Invalid Direction: " + this.direction)
 							}
 
 							// checks if the player is using the ranged weapon, then it should create a missile
@@ -411,7 +411,7 @@ var Player = new Class({
 	attack: function(){
 
 		// checks it has a weapon
-		if (this.hasTool.melee || this.hasTool.ranged){
+		if (this.hasTool.melee){
 
 			// gets the attack position
 			var attackOrigin = this.getPos();

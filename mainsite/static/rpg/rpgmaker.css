@@ -43,20 +43,16 @@ canvas
 }
 
 /* The RPGPlayer Screen */
-#id-button, #maker-button
+#no-id-table > tbody > tr > td
 {
-	border: 0px;
-}
-#id-input
-{
-	border-radius: 0px;
-	box-shadow: none;
+	width: 50%;
 }
 
-input:focus
+#id-input
 {
-	outline: none;
+	width: 100%;
 }
+
 /* Used for completely centered elements like the loading icon and alert box */
 .center-element-outer-container
 {

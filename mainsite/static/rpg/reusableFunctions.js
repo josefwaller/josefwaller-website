@@ -66,10 +66,17 @@ function setUpObjects(){
 			case "meleeWeapon":
 				objects[index].maxNum = 1;
 				break;
+				
+			case "meleeEnemyOne":
+			case "meleeEnemyTwo":
+			case "rangedEnemyOne":
+			case "rangedEnemyTwo":
+				objects[index].maxNum = 5;
+				break;
 
 			case "breakableBarrier":
 			case "invincibleBarrier":
-				objects[index].maxNum = 20;
+				objects[index].maxNum = 40;
 				break;
 		}
 	}

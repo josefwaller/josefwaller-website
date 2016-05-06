@@ -126,8 +126,6 @@ var Missile = Class({
 				break;
 
 		}
-		
-		console.log(rotation / Math.PI);
 
 
 		// moves to the middle of the sprite

@@ -277,7 +277,6 @@ var GamePlayer = Class({
 									if (futureCoords.y + pS > bPos.y){
 										// prevents the player from scrolling
 										canScroll = false;
-										console.log("Would hit barrier");
 										break;
 									}
 								}
@@ -667,7 +666,7 @@ var GamePlayer = Class({
 										break;
 
 									default:
-										console.log(objects[l[x][y]].name)
+										console.error(objects[l[x][y]].name + " was not created by gamePlayer");
 
 								}
 							}
@@ -783,7 +782,7 @@ function checkEntitiesForCollision(xOne, yOne, sOne, spriteOne, xTwo, yTwo, sTwo
 						startY = 0;
 						endY = size;
 					}
-
+					
 					// gets the current sprite
 					var thisSprite = spriteTwo;
 					var otherSprite = spriteOne;
@@ -807,10 +806,10 @@ function checkEntitiesForCollision(xOne, yOne, sOne, spriteOne, xTwo, yTwo, sTwo
 											var otherPixelOffY = yOne + otherY * pixelSize;
 
 											// checks if they hit
-											if (thisPixelOffX < otherPixelOffX + pixelSize){
-												if (thisPixelOffX + pixelSize > otherPixelOffX){
-													if (thisPixelOffY < otherPixelOffY + pixelSize){
-														if (thisPixelOffY + pixelSize > otherPixelOffY){
+											if (thisPixelOffX <= otherPixelOffX + pixelSize){
+												if (thisPixelOffX + pixelSize >= otherPixelOffX){
+													if (thisPixelOffY <= otherPixelOffY + pixelSize){
+														if (thisPixelOffY + pixelSize >= otherPixelOffY){
 															return true;
 														}
 													}

@@ -235,7 +235,20 @@ var LevelEditor = Class({
 		}
 
 		if (deleteArea){
-
+			
+			// cycles through and reduces the number of entities out that are being destroyed
+			var elements = level[this.focusedArea.x][this.focusedArea.y].elements;
+			for (var x = 0; x < elements.length; x++){
+				for (var y = 0; y < elements[x].length; y++){
+					
+					var elem = elements[x][y];
+					
+					if (elem !== null){
+						objects[elem].num--;
+					}
+					
+				}
+			}
 			level[this.focusedArea.x][this.focusedArea.y] = null;
 			
 			if (this.focusedArea.x === this.playerX && this.focusedArea.y === this.playerY){

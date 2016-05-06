@@ -74,7 +74,6 @@ var MeleeEnemy = Class({
 
 			// checks if it hit the player
 			if (this.checkForCollision(player)){
-				console.log("Hit");
 
 				player.onHit();
 				hitPlayer = true;

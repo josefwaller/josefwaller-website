@@ -36,8 +36,6 @@ var Barrier = Class({
 
 			// changes sprite
 			this.currentAnimation = [2 - this.health];
-
-			console.log(this.currentAnimation)
 		}
 	},
 

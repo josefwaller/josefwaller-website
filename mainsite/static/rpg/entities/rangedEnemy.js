@@ -49,9 +49,9 @@ var RangedEnemy = Class({
 	animationDelay: 200,
 
 	lastShootTime: 0,
-	shootDelay: 2000,
+	shootDelay: 1000,
 
-	speed: 10,
+	speed: 30,
 
 	init: function(p){
 

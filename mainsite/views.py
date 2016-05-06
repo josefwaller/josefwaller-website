@@ -6,7 +6,6 @@ from . import models
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 import json
-import pprint
 import sys
 import traceback
 
@@ -117,8 +116,6 @@ def save_rpg_game (request):
 
 		# Parses the data
 		data = json.loads(json_data)
-		
-		print(data['password'])
 		
 		# checks if it has an id attached
 		if ('id' in data):
@@ -256,7 +253,6 @@ def save_rpg_game (request):
 				if c in data['password']:
 					return HttpResponse(json.dumps({"status":"badpass"}))
 					
-			print(data['password'])
 			sprite_set_save_dict = {}
 			# creates a new sprite save for each sprite
 			for sprite_object_key in data['sprites']:
@@ -317,7 +313,6 @@ def save_rpg_game (request):
 			)
 			dialog_save.save()
 			
-			print(data['password'])
 			#Creates the game save incorporating all of the ids
 			gameSave = models.GameSave(
 				levelID=level_save.id,
@@ -457,7 +452,7 @@ def list_is_empty(list):
 def get_game_component_ids(game_id, password):
 	
 	try:
-		print(password);
+	
 		game_save = models.GameSave.objects.get(id=game_id, password=password)
 		
 	except models.GameSave.DoesNotExist:

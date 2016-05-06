@@ -130,8 +130,6 @@ var CTXPro = Class({
 
 		this.ctx.fill();
 
-		console.log(x, y, s);
-
 	},
 	borderRect: function(x, y, w, h, thick){
 

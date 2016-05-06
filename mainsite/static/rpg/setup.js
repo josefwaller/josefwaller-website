@@ -279,7 +279,6 @@ function saveGame(callback){
 		colors: colors,
 		dialog: dialogs
 	}
-	console.log(callback);
 	// Checks if it is a loaded game
 	if (currentGameID !== null){
 
@@ -307,8 +306,6 @@ function sendSaveData(data, callback){
 	alert.show("Saving..", [], null);
 	alert.showLoading();
 	// sends the data to the server
-	
-	console.log(callback);
 	
 	var ajaxSettings = {
 		beforeSend: function(xhr, settings) {
@@ -497,7 +494,6 @@ function loadGame(){
 					
 				}else {
 					
-					console.log(data.status);
 					alert.show("Error: please contact the admin at josef@josefwaller.com", [], null)
 					
 				}
