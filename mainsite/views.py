@@ -498,3 +498,9 @@ def get_game_component_ids(game_id, password):
 	# for example, toReturn["sprite_objects"]["player"] would return the id of the player SpriteObjectSave
 
 	return toReturn
+	
+def get_resume(req):
+
+	resume = open("Josef Waller Resume.pdf", "rb").read()
+	
+	return HttpResponse(resume, content_type="application/pdf");
