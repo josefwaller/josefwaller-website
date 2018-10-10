@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get("SECRET", "adfsaajghlkagkjle")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False);
 
-ALLOWED_HOSTS = ['.josefwaller-website.herokuapp.com', '.josefwaller.com', 'localhost']
+ALLOWED_HOSTS = ['.josefwaller.ca', 'localhost']
 
 
 # Application definition
